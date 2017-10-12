@@ -48,10 +48,7 @@ public abstract class GameObject {
 		return motionY;
 	}
 
-	public void render(Graphics g) {
-		
-		
-	}
+	public abstract void render(Graphics g) ;
 	
 	
 }
