@@ -23,7 +23,7 @@ public class Turret extends GameObject{
         xd = (double) x;
         yd = (double ) y;
         bounds.setLocation(x, y);
-        rotate = Math.pow(Math.sin(Math.abs((mouseX - xd)) / Math.abs((mouseY - yd))), -1);
+        rotate = Math.pow(Math.tan(Math.abs((mouseX - xd)) / Math.abs((mouseY - yd))), -1);
     }
 
     @Override
