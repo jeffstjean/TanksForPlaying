@@ -3,7 +3,7 @@ import java.awt.image.BufferedImage;
 public class SpriteSheetReader {
 
 	private BufferedImage[] sprites;
-	int size = 32;
+	int size = 84;
 
 	public SpriteSheetReader() {
 
