@@ -18,7 +18,7 @@ public class Bullet extends GameObject {
         bounds = new Rectangle(x, y, size, size);
         game = g;
         rotate = 0;
-        body = ImageLoader.imageLoader("./graphics/Bullet.png");
+        body = ImageLoader.imageLoader("./graphics/Bullet.png"); 
 
     }
     

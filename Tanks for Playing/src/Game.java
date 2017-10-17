@@ -153,7 +153,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     }
 
     public static int getMouseY() {
-        return mouseY;
+        return mouseY; 
     }
 
     private synchronized void stop() {

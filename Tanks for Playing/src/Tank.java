@@ -124,7 +124,7 @@ private double rotate;
         }
         g2d.rotate(rotate, x + size/2, y + size/2);
                 g2d.drawImage(body, x, y, size, size, null);
-        g2d.rotate(-rotate, x + size/2, y + size/2);
+        g2d.rotate(-rotate, x + size/2, y + size/2); 
     }
 
     public int getSize() {
