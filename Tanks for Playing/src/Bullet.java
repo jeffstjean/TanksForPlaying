@@ -2,14 +2,12 @@
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
-public class Bullet extends GameObject implements MouseListener {
+public class Bullet extends GameObject {
 
     private Rectangle bounds;
-    private final int size = 64;
+    private final int size = 15;
     private final int speed = 2;
     private Game game;
     private BufferedImage body;
@@ -38,7 +36,6 @@ public class Bullet extends GameObject implements MouseListener {
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.draw(bounds);
-        
         g2d.drawImage(body, x, y, size, size, null);
     }
     
@@ -46,29 +43,8 @@ public class Bullet extends GameObject implements MouseListener {
         return size;
     }
 
-    @Override
-    public void mouseClicked(MouseEvent me) {
-        System.out.println("Mouse pressed");
-    }
-
-    @Override
-    public void mousePressed(MouseEvent me) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent me) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent me) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void mouseExited(MouseEvent me) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void shoot() {
+        System.out.println("Shoot");
     }
 
 }

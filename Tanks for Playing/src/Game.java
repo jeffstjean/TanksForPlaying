@@ -7,7 +7,7 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.event.MouseInputListener;
 
-public class Game implements Runnable, KeyListener, MouseInputListener{
+public class Game implements Runnable, KeyListener, MouseInputListener {
 
     private static Renderer renderer;
     private boolean running = false;
@@ -18,14 +18,15 @@ public class Game implements Runnable, KeyListener, MouseInputListener{
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
     public final String TITLE = "Tanks For Playing";
-    private Tank tank;    
+    private Tank tank;
+    private Bullet bullet;
     private static Controller controller;
     public HashMap<Integer, Key> keyBindings = new HashMap<Integer, Key>();
     private Turret turret;
     public static boolean other[] = new boolean[256];
     private static int mouseX, mouseY;
-    
-    
+    private final int MOUSECLICKTYPE = 0; // 0 = pressed, 1 = released, 2 = clicked
+
     public void run() {
         init();
         long lastTime = System.nanoTime();
@@ -66,7 +67,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener{
 
     @Override
     public void keyTyped(KeyEvent ke) {
- 
+
     }
 
     @Override
@@ -83,17 +84,23 @@ public class Game implements Runnable, KeyListener, MouseInputListener{
 
     @Override
     public void mouseClicked(MouseEvent me) {
-       
+        if(MOUSECLICKTYPE == 2) {
+            bullet.shoot();
+        }
     }
 
     @Override
     public void mousePressed(MouseEvent me) {
-      
+        if(MOUSECLICKTYPE == 0) {
+            bullet.shoot();
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        
+        if(MOUSECLICKTYPE == 1) {
+            bullet.shoot();
+        }
     }
 
     @Override
@@ -108,14 +115,14 @@ public class Game implements Runnable, KeyListener, MouseInputListener{
 
     @Override
     public void mouseDragged(MouseEvent me) {
-        
+
     }
 
     @Override
     public void mouseMoved(MouseEvent me) {
         mouseX= me.getX();
         mouseY= me.getY();
-        
+
     }
 
     public static enum STATE {
@@ -134,9 +141,11 @@ public class Game implements Runnable, KeyListener, MouseInputListener{
         handler = new Handler();
         tank = new Tank(100, 100, ID.Tank, this);
         turret = new Turret(tank.getX(), tank.getY(), ID.Turret, tank);
+        bullet = new Bullet(200, 200, ID.Bullet, this);
         handler.addObject(tank);
         handler.addObject(turret);
-        
+        handler.addObject(bullet);
+
     }
 
     public static int getMouseX() {
@@ -148,9 +157,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener{
     }
 
     private synchronized void stop() {
-        if (!running) {
+        if (!running)
             return;
-        }
         running = false;
         try {
             th.join();
@@ -163,9 +171,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener{
     private synchronized void start() {
         // If the program is already running then do nothing but if not running,
         // make it run and start the thread
-        if (running) {
+        if (running)
             return;
-        }
         running = true;
         th = new Thread(this);
         th.start();
@@ -190,23 +197,21 @@ public class Game implements Runnable, KeyListener, MouseInputListener{
         frame.setResizable(false);
         frame.add(renderer);
         frame.setVisible(true);
-      
+
         game.start();
         frame.addKeyListener(game);
         frame.addMouseMotionListener(game);
+        frame.addMouseListener(game);
     }
 
-    public void bind(Integer keyCode, Key key){
-    keyBindings.put(keyCode, key);
-}
-
-public void releaseAll(){
-    for(Key key : keyBindings.values()){
-        key.isDown = false;
+    public void bind(Integer keyCode, Key key) {
+        keyBindings.put(keyCode, key);
     }
-}
 
+    public void releaseAll() {
+        for (Key key : keyBindings.values()) {
+            key.isDown = false;
+        }
+    }
 
-
-    
 }
