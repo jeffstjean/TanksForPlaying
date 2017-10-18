@@ -26,9 +26,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public static boolean other[] = new boolean[256];
     private static int mouseX, mouseY;
     private final int MOUSECLICKTYPE = 0; // 0 = pressed, 1 = released, 2 = clicked
+
     private LinkedList<Wall> walls;
-    
-    
+
+
     @Override
     public void run() {
         init();
@@ -76,14 +77,22 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     @Override
     public void keyPressed(KeyEvent ke) {
         other[ke.getExtendedKeyCode()] = true;
+        try {
         keyBindings.get(ke.getKeyCode()).isDown = true;
+        } catch (Exception e) {
+            
+        }
         //updates the key bindings
     }
 
     @Override
     public void keyReleased(KeyEvent ke) {
         other[ke.getExtendedKeyCode()] = false;
-        keyBindings.get(ke.getKeyCode()).isDown = false;
+        try {
+            keyBindings.get(ke.getKeyCode()).isDown = false;
+        } catch (Exception e) {
+
+        }
         //updates the key bindings
     }
 
@@ -119,7 +128,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         mouseY = me.getY();
         //gets the x and y location of the mouse
     }
-    
 
     @Override
     public void mouseEntered(MouseEvent me) {
@@ -189,15 +197,14 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         return mouseY;
     }
 
+
     private final synchronized void stop() {
         if (!running) {
             return;
-        }
         running = false;
         try {
             th.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
         }
         System.exit(1);
     }
@@ -205,9 +212,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private final synchronized void start() {
         // If the program is already running then do nothing but if not running,
         // make it run and start the thread
-        if (running) {
+        if (running)
             return;
-        }
         running = true;
         th = new Thread(this);
         th.start();
