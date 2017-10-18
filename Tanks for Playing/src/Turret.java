@@ -12,7 +12,7 @@ public class Turret extends GameObject{
     private double xd,yd,rotate;
     private double mouseX, mouseY;
     private BufferedImage turret;
-    private int coolDown = 20, coolDownCounter = 20;
+    private int coolDown = 20, coolDownCounter = 20, turretShootCounter = 8;
     public Turret(int x, int y, ID id, Tank t) {
         super(x, y, id);
         tank = t;
@@ -22,6 +22,9 @@ public class Turret extends GameObject{
 
     @Override
     public void tick() {
+        if(turretShootCounter == 0)
+            turret = ImageLoader.imageLoader("./graphics/TurretGreen.png");
+        turretShootCounter --;
         coolDownCounter++; // increases the time since last shot by 1
         mouseX = tank.getGame().getMouseX();
         mouseY = tank.getGame().getMouseY();
@@ -37,6 +40,7 @@ public class Turret extends GameObject{
         // sets the amount the turret needs to rotate based on the mouse location
         if(Key.shoot.isDown && coolDownCounter > coolDown) {
             shoot();
+            turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
             coolDownCounter = 0;
             // shoots and sets timer back to 0 if conditions are met
         }
@@ -54,9 +58,10 @@ public class Turret extends GameObject{
     }
     
     private void shoot(){
+        turretShootCounter = 10;
         double subX = -(tank.getSize() / 2 * Math.sin(rotate));
         double subY = (tank.getSize() / 2 * Math.cos(rotate));
-        tank.getGame().getHandler().addObject(new Bullet(x + (int)subX, y + (int)subY, ID.Bullet, rotate, 5));
+        Game.getHandler().addObject(new Bullet(x + (int)subX, y + (int)subY, ID.Bullet, rotate, 5));
     }
     
 }
