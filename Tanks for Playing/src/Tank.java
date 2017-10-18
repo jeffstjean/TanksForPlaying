@@ -26,14 +26,6 @@ private double rotate;
         bounds = new Rectangle(x, y, size, size);
         game = g;
         rotate = 0;
-        File file = new File("./test.txt");
-        PrintWriter writer;
-        try {
-            writer = new PrintWriter(file);
-            writer.println("test");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
 
         body = ImageLoader.imageLoader("./graphics/TankGreen.png");
 
@@ -59,7 +51,7 @@ private double rotate;
         } else {
             motionX = 0;
         }
-
+        // sets movement based on keys pressed
         if (motionX == 0 && motionY == 0) {
             moveDir = moveDirection.NONE;
         } else if (motionX < 0 && motionY == 0) {
@@ -79,18 +71,20 @@ private double rotate;
         } else if (motionX > 0 && motionY > 0) {
             moveDir = moveDirection.DOWN_RIGHT;
         }
-
+        // sets enum to be the correct directional value
+          
         x += motionX;
         y += motionY;
+        // moves tank and rectangle
         bounds.setLocation(x, y);
-
+        
     }
 
     @Override
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.draw(bounds);
-        
+        // draws rectangle
         g2d.drawImage(body, x, y, size, size, null);
         switch (moveDir){
             case NONE:
@@ -122,9 +116,10 @@ private double rotate;
                break;
                 
         }
-        g2d.rotate(rotate, x + size/2, y + size/2);
-                g2d.drawImage(body, x, y, size, size, null);
-        g2d.rotate(-rotate, x + size/2, y + size/2); 
+        // sets the rotation value based on direction
+        g2d.rotate(rotate, x + size/2, y + size/2); // rotates graphics
+        g2d.drawImage(body, x, y, size, size, null);//draws image with rotated graphics
+        g2d.rotate(-rotate, x + size/2, y + size/2); //rotates graphics back
     }
 
     public int getSize() {

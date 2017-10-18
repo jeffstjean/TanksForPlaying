@@ -1,11 +1,12 @@
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 
 public abstract class GameObject {
 	protected int x, y;
 	protected ID id;
 	public int motionX, motionY;
-	
+	protected Rectangle bounds;
 	public GameObject(int x, int y, ID id){
 		this.x = x;
 		this.y = y;

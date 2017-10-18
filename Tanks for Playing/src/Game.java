@@ -19,7 +19,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public static final int HEIGHT = 720;
     public final String TITLE = "Tanks For Playing";
     private Tank tank;
-    private static Controller controller;
     public HashMap<Integer, Key> keyBindings = new HashMap<Integer, Key>();
     private Turret turret;
     public static boolean other[] = new boolean[256];
@@ -60,8 +59,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     }
 
     private void tick() {
-        renderer.repaint();
-        handler.tick();
+        renderer.repaint(); // tells renderer to repaint if it hasn't already
+        handler.tick(); // tells handler to tick all game objects
     }
 
     @Override
@@ -73,64 +72,75 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public void keyPressed(KeyEvent ke) {
         other[ke.getExtendedKeyCode()] = true;
         keyBindings.get(ke.getKeyCode()).isDown = true;
+        //updates the key bindings
     }
 
     @Override
     public void keyReleased(KeyEvent ke) {
         other[ke.getExtendedKeyCode()] = false;
         keyBindings.get(ke.getKeyCode()).isDown = false;
+        //updates the key bindings
     }
 
     @Override
     public void mouseClicked(MouseEvent me) {
-        if(MOUSECLICKTYPE == 2) {
-            
+        if (MOUSECLICKTYPE == 2) {
+
         }
-                mouseX= me.getX();
-        mouseY= me.getY();
+        mouseX = me.getX();
+        mouseY = me.getY();
+        // gets the mouse's x and y location
     }
 
     @Override
     public void mousePressed(MouseEvent me) {
         //if(MOUSECLICKTYPE == 0) {
-            Key.shoot.isDown = true;
+        Key.shoot.isDown = true;
+        //sets the key shoot to be down when clicked
         //}
-                mouseX= me.getX();
-        mouseY= me.getY();
+        mouseX = me.getX();
+        mouseY = me.getY();
+        //get the x and y location of the mouse for aiming
     }
 
     @Override
     public void mouseReleased(MouseEvent me) {
-       // if(MOUSECLICKTYPE == 1) {
-           Key.shoot.isDown = false;
-       // }
-               mouseX= me.getX();
-        mouseY= me.getY();
+        // if(MOUSECLICKTYPE == 1) {
+        Key.shoot.isDown = false;
+        //sets the key binding of shoot to up 
+        // }
+        mouseX = me.getX();
+        mouseY = me.getY();
+        //gets the x and y location of the mouse
     }
+    
 
     @Override
     public void mouseEntered(MouseEvent me) {
-                mouseX= me.getX();
-        mouseY= me.getY();
+        mouseX = me.getX();
+        mouseY = me.getY();
+        //gets the x and y location of the mouse
     }
 
     @Override
     public void mouseExited(MouseEvent me) {
-                mouseX= me.getX();
-        mouseY= me.getY();
+        mouseX = me.getX();
+        mouseY = me.getY();
+        // gets the x and y location of the mouse
     }
 
     @Override
     public void mouseDragged(MouseEvent me) {
-        mouseX= me.getX();
-        mouseY= me.getY();
+        mouseX = me.getX();
+        mouseY = me.getY();
+        // gets the x and y location of the mouse
     }
 
     @Override
     public void mouseMoved(MouseEvent me) {
-        mouseX= me.getX();
-        mouseY= me.getY();
-
+        mouseX = me.getX();
+        mouseY = me.getY();
+//gets the x and y location of the mouse
     }
 
     public static enum STATE {
@@ -139,6 +149,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     public Game() {
         renderer = new Renderer();
+        // initiallizes the renderer
     }
 
     public void init() {
@@ -146,12 +157,15 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         bind(KeyEvent.VK_A, Key.left);
         bind(KeyEvent.VK_S, Key.down);
         bind(KeyEvent.VK_D, Key.right);
+        // sets the keybindings
         handler = new Handler();
         tank = new Tank(100, 100, ID.Tank, this);
+        // inits tank at 100 100 and gives it the game instance
         turret = new Turret(tank.getX(), tank.getY(), ID.Turret, tank);
+        // creates a turret for the tank
         handler.addObject(tank);
         handler.addObject(turret);
-
+// adds the two objects to the handler
     }
 
     public static int getMouseX() {
@@ -159,12 +173,13 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     }
 
     public static int getMouseY() {
-        return mouseY; 
+        return mouseY;
     }
 
     private synchronized void stop() {
-        if (!running)
+        if (!running) {
             return;
+        }
         running = false;
         try {
             th.join();
@@ -177,8 +192,9 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private synchronized void start() {
         // If the program is already running then do nothing but if not running,
         // make it run and start the thread
-        if (running)
+        if (running) {
             return;
+        }
         running = true;
         th = new Thread(this);
         th.start();
@@ -186,6 +202,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     public static void render(Graphics2D g) {
         handler.render(g);
+        // has handler render all gameObjects
     }
 
     public static void main(String[] args) {
@@ -202,6 +219,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         // Sets the program so it cannot be re-sizable
         frame.setResizable(false);
         frame.add(renderer);
+        // adds the renderer to the jFrame
         frame.setVisible(true);
 
         game.start();

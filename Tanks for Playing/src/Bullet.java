@@ -12,13 +12,17 @@ public class Bullet extends GameObject {
     
     private BufferedImage bullet;
     private double rotate;
+    
+    
     public Bullet(int x, int y, ID id, double r, int s) {
         super(x, y, id);
         bounds = new Rectangle(x, y, size, size);
         speed = s;
   
         motionX = (int) (speed * Math.cos(r + Math.toRadians(90)));
+        // sets the x speed of the bullet using trig
         motionY = (int) (speed * Math.sin(r + Math.toRadians(90)));
+        // sets the y speed of the bullet using trig
         rotate = r;
         bullet = ImageLoader.imageLoader("./graphics/Bullet.png"); 
 
@@ -30,7 +34,9 @@ public class Bullet extends GameObject {
     public void tick() {
         x += motionX;
         y+= motionY;
+        // moves bullet by preset x and y speeds
         bounds.setLocation(x, y);
+        // moves the bounds box
     }
 
 
@@ -38,6 +44,7 @@ public class Bullet extends GameObject {
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.draw(bounds);
+        // draws the image of the bullet and rectangle
         g2d.drawImage(bullet, x, y, size, size, null);
     }
     

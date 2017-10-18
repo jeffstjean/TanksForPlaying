@@ -22,35 +22,40 @@ public class Turret extends GameObject{
 
     @Override
     public void tick() {
-        coolDownCounter++;
+        coolDownCounter++; // increases the time since last shot by 1
         mouseX = tank.getGame().getMouseX();
         mouseY = tank.getGame().getMouseY();
+        
         x = tank.getX() + tank.getSize() / 2;
         y = tank.getY() + tank.getSize() / 2;
+        // sets x and y based on x and y of the tank it is attached to
         xd = (double) x;
         yd = (double ) y;
+        
         bounds.setLocation(x, y);
         rotate = Math.atan2((mouseY - yd), (mouseX - xd)) - Math.PI / 2;
+        // sets the amount the turret needs to rotate based on the mouse location
         if(Key.shoot.isDown && coolDownCounter > coolDown) {
             shoot();
             coolDownCounter = 0;
+            // shoots and sets timer back to 0 if conditions are met
         }
+        
      
     }
 
     @Override
     public void render(Graphics g) {
         g2d = (Graphics2D) g;
-        g2d.rotate(rotate + Math.toRadians(90), xd ,yd );
-
-       
-        g2d.drawImage(turret, x - 16, y - 16, 64,32, null);
-       g2d.rotate(-(rotate + Math.toRadians(90)), xd ,yd );
+        g2d.rotate(rotate + Math.toRadians(90), xd ,yd );//rotates graphics
+        g2d.drawImage(turret, x - 16, y - 16, 64,32, null);//renders image
+       g2d.rotate(-(rotate + Math.toRadians(90)), xd ,yd );//rotates grpahics back
         
     }
     
     private void shoot(){
         tank.getGame().getHandler().addObject(new Bullet(x, y, ID.Bullet, rotate, 5));
+        // creates a new bullet object and adds it to the handler
     }
     
 }
