@@ -12,10 +12,9 @@ public class Bullet extends GameObject {
     
     private BufferedImage bullet;
     private double rotate;
-    
-    
-    public Bullet(int x, int y, ID id, double r, int s) {
-        super(x, y, id);
+
+    public Bullet(int x, int y, int width, int height, ID id, int s, double r) {
+        super(x, y, width, height, id);
         bounds = new Rectangle(x, y, size, size);
         speed = s;
   
@@ -25,15 +24,17 @@ public class Bullet extends GameObject {
         // sets the y speed of the bullet using trig
         rotate = r;
         bullet = ImageLoader.imageLoader("./graphics/Bullet.png"); 
-
     }
+    
+    
+
     
 
 
     @Override
     public void tick() {
         x += motionX;
-        y+= motionY;
+        y += motionY;
         // moves bullet by preset x and y speeds
         bounds.setLocation(x, y);
         // moves the bounds box

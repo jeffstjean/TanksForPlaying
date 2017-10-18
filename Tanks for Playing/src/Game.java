@@ -3,7 +3,9 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import javax.swing.JFrame;
 import javax.swing.event.MouseInputListener;
 
@@ -24,7 +26,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public static boolean other[] = new boolean[256];
     private static int mouseX, mouseY;
     private final int MOUSECLICKTYPE = 0; // 0 = pressed, 1 = released, 2 = clicked
-
+    private LinkedList<Wall> walls;
+    
+    
+    @Override
     public void run() {
         init();
         long lastTime = System.nanoTime();
@@ -87,6 +92,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         if (MOUSECLICKTYPE == 2) {
 
         }
+        
         mouseX = me.getX();
         mouseY = me.getY();
         // gets the mouse's x and y location
@@ -157,12 +163,19 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         bind(KeyEvent.VK_A, Key.left);
         bind(KeyEvent.VK_S, Key.down);
         bind(KeyEvent.VK_D, Key.right);
+        walls = new LinkedList<Wall>();
         // sets the keybindings
         handler = new Handler();
-        tank = new Tank(100, 100, ID.Tank, this);
+        tank = new Tank(100, 100, 64, 64, ID.Tank, this);
         // inits tank at 100 100 and gives it the game instance
-        turret = new Turret(tank.getX(), tank.getY(), ID.Turret, tank);
+        turret = new Turret(tank.getX(), tank.getY(), 10,10,ID.Turret, tank);
         // creates a turret for the tank
+        walls.add(new Wall(10, 100, 20, 500, ID.Wall));
+        
+        for (int i = 0; i < walls.size(); i++) {
+            handler.addObject(walls.get(i));
+        }
+        
         handler.addObject(tank);
         handler.addObject(turret);
 // adds the two objects to the handler
@@ -176,7 +189,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         return mouseY;
     }
 
-    private synchronized void stop() {
+    private final synchronized void stop() {
         if (!running) {
             return;
         }
@@ -189,7 +202,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         System.exit(1);
     }
 
-    private synchronized void start() {
+    private final synchronized void start() {
         // If the program is already running then do nothing but if not running,
         // make it run and start the thread
         if (running) {

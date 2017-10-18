@@ -3,14 +3,19 @@ import java.awt.Rectangle;
 
 
 public abstract class GameObject {
-	protected int x, y;
+	protected int x, y, height ,width;
 	protected ID id;
 	public int motionX, motionY;
 	protected Rectangle bounds;
-	public GameObject(int x, int y, ID id){
+        protected boolean intersecting;
+	public GameObject(int x, int y, int width, int height, ID id){
 		this.x = x;
 		this.y = y;
 		this.id = id;
+                this.height = height;
+                this.width = width;
+                bounds = new Rectangle(x,y, width, height);
+                intersecting = false;
 	}
 
 	public abstract void tick();
