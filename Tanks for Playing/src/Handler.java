@@ -13,7 +13,7 @@ public class Handler {
             if(temp1.id == ID.Tank){
             for (int j = 0; j < object.size(); j++) {
                 GameObject temp2 = object.get(j);
-                if(!(temp2 == temp1) && (temp2.id != ID.Turret)){
+                if(!(temp2 == temp1) && (temp2.id != ID.Turret) && (temp2.id != ID.Bullet)){
                     if (temp2.bounds.intersects(temp1.bounds)){
                         temp1.intersecting = true;
                        
