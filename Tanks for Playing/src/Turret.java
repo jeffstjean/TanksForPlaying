@@ -12,9 +12,12 @@ public class Turret extends GameObject{
     private double xd,yd,rotate;
     private double mouseX, mouseY;
     private BufferedImage turret;
-    private int coolDown = 20, coolDownCounter = 20, turretShootCounter = 8;
-    public Turret(int x, int y, ID id, Tank t) {
-        super(x, y, id);
+
+    private int coolDown = 20, coolDownCounter = 20;
+
+    public Turret(int x, int y, int width, int height, ID id, Tank t) {
+        super(x, y, width, height, id);
+
         tank = t;
         bounds = new Rectangle(x,y, 10, 10);
         turret = ImageLoader.imageLoader("./graphics/TurretGreen.png");
@@ -58,10 +61,13 @@ public class Turret extends GameObject{
     }
     
     private void shoot(){
+
+
         turretShootCounter = 10;
         double subX = -(tank.getSize() / 2 * Math.sin(rotate));
         double subY = (tank.getSize() / 2 * Math.cos(rotate));
         Game.getHandler().addObject(new Bullet(x + (int)subX, y + (int)subY, ID.Bullet, rotate, 5));
+
     }
     
 }

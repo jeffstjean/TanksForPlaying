@@ -9,27 +9,33 @@ import java.io.PrintWriter;
 
 public class Tank extends GameObject {
 
-    private Rectangle bounds;
     private int size = 64;
     private int speed = 2;
     private Game game;
     private BufferedImage body;
 private double rotate;
+
+    public Tank(int x, int y, int width, int height, ID id, Game g) {
+        super(x, y, width, height, id);
+        game = g;
+        rotate = 0;
+
+        body = ImageLoader.imageLoader("./graphics/TankGreen.png");
+
+    
+    
+    
+    
+    }
+    
+    
     private enum moveDirection {
         UP, DOWN, LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT, NONE,
     };
 
     private moveDirection moveDir = moveDirection.NONE;
 
-    public Tank(int x, int y, ID id, Game g) {
-        super(x, y, id);
-        bounds = new Rectangle(x, y, size, size);
-        game = g;
-        rotate = 0;
-
-        body = ImageLoader.imageLoader("./graphics/TankGreen.png");
-
-    }
+    
 
     public Game getGame() {
         return game;
@@ -72,9 +78,10 @@ private double rotate;
             moveDir = moveDirection.DOWN_RIGHT;
         }
         // sets enum to be the correct directional value
-          
-        x += motionX;
-        y += motionY;
+        if (intersecting){
+            motionX = -motionX;
+            motionY = - motionY;
+        }
         // moves tank and rectangle
         bounds.setLocation(x, y);
         
