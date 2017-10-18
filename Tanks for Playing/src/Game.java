@@ -19,7 +19,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public static final int HEIGHT = 720;
     public final String TITLE = "Tanks For Playing";
     private Tank tank;
-    private Bullet bullet;
     private static Controller controller;
     public HashMap<Integer, Key> keyBindings = new HashMap<Integer, Key>();
     private Turret turret;
@@ -85,37 +84,46 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     @Override
     public void mouseClicked(MouseEvent me) {
         if(MOUSECLICKTYPE == 2) {
-            bullet.shoot();
+            
         }
+                mouseX= me.getX();
+        mouseY= me.getY();
     }
 
     @Override
     public void mousePressed(MouseEvent me) {
-        if(MOUSECLICKTYPE == 0) {
-            bullet.shoot();
-        }
+        //if(MOUSECLICKTYPE == 0) {
+            Key.shoot.isDown = true;
+        //}
+                mouseX= me.getX();
+        mouseY= me.getY();
     }
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        if(MOUSECLICKTYPE == 1) {
-            bullet.shoot();
-        }
+       // if(MOUSECLICKTYPE == 1) {
+           Key.shoot.isDown = false;
+       // }
+               mouseX= me.getX();
+        mouseY= me.getY();
     }
 
     @Override
     public void mouseEntered(MouseEvent me) {
-        
+                mouseX= me.getX();
+        mouseY= me.getY();
     }
 
     @Override
     public void mouseExited(MouseEvent me) {
-        
+                mouseX= me.getX();
+        mouseY= me.getY();
     }
 
     @Override
     public void mouseDragged(MouseEvent me) {
-
+        mouseX= me.getX();
+        mouseY= me.getY();
     }
 
     @Override
@@ -141,10 +149,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         handler = new Handler();
         tank = new Tank(100, 100, ID.Tank, this);
         turret = new Turret(tank.getX(), tank.getY(), ID.Turret, tank);
-        bullet = new Bullet(200, 200, ID.Bullet, this);
         handler.addObject(tank);
         handler.addObject(turret);
-        handler.addObject(bullet);
 
     }
 
@@ -212,6 +218,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         for (Key key : keyBindings.values()) {
             key.isDown = false;
         }
+    }
+
+    public static Handler getHandler() {
+        return handler;
     }
 
 }
