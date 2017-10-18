@@ -54,8 +54,9 @@ public class Turret extends GameObject{
     }
     
     private void shoot(){
-        tank.getGame().getHandler().addObject(new Bullet(x, y, ID.Bullet, rotate, 5));
-        // creates a new bullet object and adds it to the handler
+        double subX = -(tank.getSize() / 2 * Math.sin(rotate));
+        double subY = (tank.getSize() / 2 * Math.cos(rotate));
+        tank.getGame().getHandler().addObject(new Bullet(x + (int)subX, y + (int)subY, ID.Bullet, rotate, 5));
     }
     
 }
