@@ -3,11 +3,15 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.event.MouseInputListener;
+
 
 public class Game implements Runnable, KeyListener, MouseInputListener {
 
@@ -26,7 +30,11 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public static boolean other[] = new boolean[256];
     private static int mouseX, mouseY;
     private final int MOUSECLICKTYPE = 0; // 0 = pressed, 1 = released, 2 = clicked
-
+    private ByteBuffer bb;
+    private byte[] allBytes = new byte[256];
+   private int enemyX, enemyY, enemyPointing;
+   private double enemyRotate;
+   
     private LinkedList<Wall> walls;
 
 
@@ -67,6 +75,9 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private void tick() {
         renderer.repaint(); // tells renderer to repaint if it hasn't already
         handler.tick(); // tells handler to tick all game objects
+        createBytes();
+        
+       
     }
 
     @Override
@@ -189,6 +200,12 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         
         handler.addObject(tank);
         handler.addObject(turret);
+        
+        
+       
+        
+        
+        
 // adds the two objects to the handler
     }
 
@@ -265,4 +282,68 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         return handler;
     }
 
+    
+    private void createBytes(){
+        allBytes[0] = 1; // says its an in game byte
+        
+        //the x encoder start
+        bb = ByteBuffer.allocate(4);
+        bb.putInt(tank.getX());
+        byte[] temp = bb.array();
+        for (int i = 0; i < temp.length; i++) {
+            allBytes[i + 1] = temp[i];
+        }
+        // the x encoder end
+        // the y encoder start
+        bb = ByteBuffer.allocate(4);
+        bb.putInt(tank.getY());
+        temp = bb.array();
+        for (int i = 0; i < temp.length; i++) {
+            allBytes[i + 5] = temp[i];
+        }
+        // y encoder end
+        
+        // the rotation encoder start
+        bb = ByteBuffer.allocate(8);
+        bb.putDouble(turret.getRotate());
+        temp = bb.array();
+        for (int i = 0; i < temp.length; i++) {
+            allBytes[i + 10] = temp[i];
+        }
+        // rotation encoder end        
+        
+        allBytes[19] = (byte) tank.getMoveDir().ordinal();
+        
+    }
+    
+    private void decodeBytes(byte[] bmain){
+        
+        byte[] temp = new byte[4]; 
+        if (bmain[0] == 1){
+            for (int i = 0; i < 4; i++) {
+                temp[i] = bmain[i+1];
+            }
+            bb = ByteBuffer.wrap(temp);
+            enemyX = bb.getInt();
+            
+            
+            for (int i = 0; i < 4; i++) {
+                temp[i] = bmain[i+5];
+            }
+            bb = ByteBuffer.wrap(temp);
+            enemyY = bb.getInt();
+            
+            temp = new byte[8];
+            for (int i = 0; i < 8; i++) {
+                temp[i] = bmain[i+10];
+            }
+            bb = ByteBuffer.wrap(temp);
+            enemyRotate = bb.getDouble();
+            
+            enemyPointing = bmain[19];
+            
+        }
+        
+    }
+    
 }
