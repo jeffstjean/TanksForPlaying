@@ -3,6 +3,10 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +38,14 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private byte[] allBytes = new byte[256];
    private int enemyX, enemyY, enemyPointing;
    private double enemyRotate;
+   private EnemyTank enemyTank;
+   private byte[] buf = new byte[256];
+   private String [] host = {"localhost"};
+   private DatagramSocket socket;
+   private InetAddress address;
+   private DatagramPacket packet;
+   private final int PORT = 4447;
+   
    
     private LinkedList<Wall> walls;
 
@@ -76,6 +88,19 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         renderer.repaint(); // tells renderer to repaint if it hasn't already
         handler.tick(); // tells handler to tick all game objects
         createBytes();
+        packet = new DatagramPacket(allBytes, allBytes.length, address, PORT);
+        try {
+            
+            socket.send(packet);
+            
+            packet = new DatagramPacket(buf, buf.length);
+            socket.receive(packet);
+            
+            decodeBytes(packet.getData());
+        } catch (IOException ex) {
+            System.out.println("servererrorspot1");
+        }
+        enemyTank.setVals(enemyX, enemyY, enemyPointing);
         
        
     }
@@ -182,11 +207,23 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         bind(KeyEvent.VK_A, Key.left);
         bind(KeyEvent.VK_S, Key.down);
         bind(KeyEvent.VK_D, Key.right);
+        try{
+            socket = new DatagramSocket();
+            address = InetAddress.getByName(host[0]);
+            packet = new DatagramPacket(allBytes, allBytes.length, address, PORT);
+        }catch (Exception e){
+            System.out.println("shit server error");
+        }
+        
+        
+        
         walls = new LinkedList<Wall>();
         // sets the keybindings
         handler = new Handler();
         tank = new Tank(100, 100, 64, 64, ID.Tank, this);
+        enemyTank = new EnemyTank(400, 100, 64, 64, ID.Tank, this);
         // inits tank at 100 100 and gives it the game instance
+        
         turret = new Turret(tank.getX(), tank.getY(), 10,10,ID.Turret, tank);
         // creates a turret for the tank
         walls.add(new Wall(10, 10, 30, HEIGHT - 70, ID.LeftWall));
@@ -199,6 +236,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         }
         
         handler.addObject(tank);
+        handler.addObject(enemyTank);
         handler.addObject(turret);
         
         
