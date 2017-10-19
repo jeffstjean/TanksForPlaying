@@ -1,0 +1,46 @@
+
+public class ByteArrayTest {
+
+	public static void main(String[] args) {
+
+		// Sending variables
+		String sendType = "Hi";
+		boolean sendIsShooting = true;
+		int sendX = 5, sendY = 10;
+		double sendRotate = 12.2;
+
+		// Receiving variables
+		String receiveType;
+		boolean receiveIsShooting;
+		int receiveX, receiveY;
+		double receiveRotate;
+
+		// Encode into string
+		String send = sendType + "," + sendIsShooting + "," + sendX + "," + sendY + "," + sendRotate;
+
+		// Convert to byte array
+		byte[] bytes = send.getBytes();
+
+		// Print
+		System.out.println(send + " -> " + bytes);
+
+		// Decode into string
+		String receivedString = new String(bytes);
+
+		// Tokenize
+		String[] resultArray = receivedString.split(",");
+
+		// Set variables
+		receiveType = resultArray[0];
+		receiveIsShooting = Boolean.parseBoolean(resultArray[1]);
+		receiveX = Integer.parseInt(resultArray[2]);
+		receiveY = Integer.parseInt(resultArray[3]);
+		receiveRotate = Double.parseDouble(resultArray[4]);
+
+		// Print result
+		System.out.println("\n\nType: " + receiveType + "\nShooting: " + receiveIsShooting + "\nX: " + receiveX
+				+ "\nY: " + receiveY + "\nRotate: " + receiveRotate);
+
+	}
+
+}
