@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 
 public class Bullet extends GameObject {
 
-    private Rectangle bounds;
+   
     private final int size = 15;
     private int speed = 2;
     
@@ -15,7 +15,7 @@ public class Bullet extends GameObject {
 
     public Bullet(int x, int y, int width, int height, ID id, int s, double r) {
         super(x, y, width, height, id);
-        bounds = new Rectangle(x, y, size, size);
+        bounds .setBounds(x, y, size, size);
         speed = s;
   
         motionX = (int) (speed * Math.cos(r + Math.toRadians(90)));
@@ -38,7 +38,24 @@ public class Bullet extends GameObject {
         // moves bullet by preset x and y speeds
         bounds.setLocation(x, y);
         // moves the bounds box
+        if(aliveForTicks > 200) Game.handler.removeObject(this);
     }
+
+    @Override
+    public void collision(GameObject gO) {
+       if(gO.id == ID.TopWall || gO.id == ID.BottomWall) motionY = -motionY;
+       if(gO.id == ID.RightWall || gO.id == ID.LeftWall) motionX = -motionX;
+       if(gO.id == ID.Bullet) {
+           Game.handler.removeObject(gO);
+           Game.handler.removeObject(this);
+       }
+       if(gO.id ==ID.BreakableWall){
+           gO.collision(this);
+           Game.handler.removeObject(this);
+       }
+    }
+
+
 
 
     @Override

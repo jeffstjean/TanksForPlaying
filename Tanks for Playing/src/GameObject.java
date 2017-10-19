@@ -8,6 +8,7 @@ public abstract class GameObject {
 	public int motionX, motionY;
 	protected Rectangle bounds;
         protected boolean intersecting;
+        protected int aliveForTicks;
 	public GameObject(int x, int y, int width, int height, ID id){
 		this.x = x;
 		this.y = y;
@@ -16,6 +17,7 @@ public abstract class GameObject {
                 this.width = width;
                 bounds = new Rectangle(x,y, width, height);
                 intersecting = false;
+                aliveForTicks = 0;
 	}
 
 	public abstract void tick();
@@ -53,7 +55,11 @@ public abstract class GameObject {
 	public int getmotionY(){
 		return motionY;
 	}
-
+        
+        public void collision(GameObject gO){
+            
+        }
+        
 	public abstract void render(Graphics g) ;
 	
 	

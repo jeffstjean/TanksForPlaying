@@ -14,12 +14,16 @@ public class Tank extends GameObject {
     private Game game;
     private BufferedImage body;
 private double rotate;
+private Rectangle top, bottom, left, right;
 
     public Tank(int x, int y, int width, int height, ID id, Game g) {
         super(x, y, width, height, id);
         game = g;
         rotate = 0;
-
+        top = new Rectangle(x + 10,y - 10, size - 20, 10);
+        bottom = new Rectangle (x + 10, y+size, size - 20, 10);
+        left = new Rectangle (x - 10, y+10, 10, size -20);
+        right = new Rectangle (x + size , y - 10, 10, size - 20);
         body = ImageLoader.imageLoader("./graphics/TankGreen.png");
 
     
@@ -79,12 +83,51 @@ private double rotate;
         }
         // sets enum to be the correct directional value
         if (intersecting){
-            motionX = -motionX;
-            motionY = - motionY;
+            
+            
+            
+            
+            
+//            switch (moveDir){
+//               case NONE:
+//               
+//               break;
+//            case LEFT:
+//               x+= 10;
+//               break;
+//            case RIGHT:
+//                x -= 10;
+//               break;
+//            case UP:
+//                y += 10;
+//               break;
+//            case DOWN:
+//               y -= 10;
+//               break;
+//            case UP_LEFT:
+//                y +=10;
+//                x += 10;
+//               break;
+//            case DOWN_LEFT:
+//               y -= 10;
+//               x += 10;
+//               break;
+//            case UP_RIGHT:
+//                y +=10;
+//                x -= 10;
+//               break;
+//            case DOWN_RIGHT:
+//                y -=10;
+//                x-= 10;
+//               break;
+//            }
         }
         // moves tank and rectangle
         bounds.setLocation(x, y);
-        
+        top.setBounds(x + 10,y - 10, size - 20, 10);
+        bottom.setBounds(x + 10, y+size , size - 20, 10);
+        left.setBounds(x-10, y+10, 10, size -20);
+        right.setBounds(x + size , y + 10, 10, size - 20);
     }
 
     @Override
@@ -92,7 +135,7 @@ private double rotate;
         Graphics2D g2d = (Graphics2D) g;
         g2d.draw(bounds);
         // draws rectangle
-        g2d.drawImage(body, x, y, size, size, null);
+        //g2d.drawImage(body, x, y, size, size, null);
         switch (moveDir){
             case NONE:
                
@@ -127,10 +170,31 @@ private double rotate;
         g2d.rotate(rotate, x + size/2, y + size/2); // rotates graphics
         g2d.drawImage(body, x, y, size, size, null);//draws image with rotated graphics
         g2d.rotate(-rotate, x + size/2, y + size/2); //rotates graphics back
+        g2d.draw(top);
+        g2d.draw(bottom);
+        g2d.draw(left);
+        g2d.draw(right);
     }
 
     public int getSize() {
         return size;
+    }
+
+    @Override
+    public void collision(GameObject gO) {
+        if ( top.intersects(gO.bounds)){
+            
+            if (motionY < 0) motionY = 0;
+        }if(bottom.intersects(gO.bounds)){
+            
+            if(motionY > 0) motionY = 0;
+        } if (right.intersects(gO.bounds)){
+           
+            if(motionX > 0) motionX = 0;
+        }if(left.intersects(gO.bounds)){
+            
+            if(motionX < 0) motionX = 0;
+        }
     }
     
     

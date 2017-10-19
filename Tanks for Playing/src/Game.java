@@ -14,7 +14,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private static Renderer renderer;
     private boolean running = false;
     private Thread th;
-    private static Handler handler;
+    static Handler handler;
     private static Game game;
     private static JFrame frame;
     public static final int WIDTH = 1280;
@@ -178,8 +178,11 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         // inits tank at 100 100 and gives it the game instance
         turret = new Turret(tank.getX(), tank.getY(), 10,10,ID.Turret, tank);
         // creates a turret for the tank
-        walls.add(new Wall(10, 100, 20, 500, ID.Wall));
-        
+        walls.add(new Wall(10, 10, 30, HEIGHT - 70, ID.LeftWall));
+        walls.add(new Wall (10, HEIGHT - 90, WIDTH - 50, 30, ID.BottomWall));
+        walls.add(new Wall (WIDTH - 50, 10, 30, HEIGHT - 70, ID.RightWall));
+        walls.add(new Wall(10,10,WIDTH- 30,30, ID.TopWall));
+        walls.add(new Wall(200,200,100,100,ID.BreakableWall));  
         for (int i = 0; i < walls.size(); i++) {
             handler.addObject(walls.get(i));
         }
@@ -201,6 +204,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private final synchronized void stop() {
         if (!running) {
             return;
+        }
         running = false;
         try {
             th.join();
