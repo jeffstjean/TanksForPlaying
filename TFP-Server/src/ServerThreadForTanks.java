@@ -2,6 +2,9 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class ServerThreadForTanks extends Thread {
 
@@ -22,20 +25,41 @@ public class ServerThreadForTanks extends Thread {
 
     @Override
     public void run() {
+    	
+		Logger logger = Logger.getLogger("Server Log");
+		FileHandler fh;
+		
+	    try {  
+
+	        // This block configure the logger with handler and formatter  
+	        fh = new FileHandler("./logs/log.txt");  
+	        //fh = new FileHandler("/Users/jeff/Desktop/log.txt"); 
+	        logger.addHandler(fh);
+	        SimpleFormatter formatter = new SimpleFormatter();  
+	        fh.setFormatter(formatter);  
+	        logger.setUseParentHandlers(false);
+	        // the following statement is used to log any messages  
+	        logger.info("Server created.");  
+
+	    } catch (SecurityException e) {  
+	        e.printStackTrace();  
+	    } catch (IOException e) {  
+	        e.printStackTrace();  
+	    }  
 
         while (moreQuotes) {
             try {
                 byte[] buf = new byte[256];
                 byte[] buf2 = new byte[256];
                 // receive request
-                DatagramPacket packet1 = new DatagramPacket(buf, buf.length);
-                System.out.println("packet made");
-                
-                socket1.receive(packet1);
-                System.out.println("recieved1");
-                DatagramPacket packet2 = new DatagramPacket(buf2, buf2.length);
-                socket2.receive(packet2);
-                System.out.println("recieved2");
+				DatagramPacket packet1 = new DatagramPacket(buf, buf.length);
+				logger.info("Packet made.");
+
+				socket1.receive(packet1);
+				logger.info("Recieved 1.");
+				DatagramPacket packet2 = new DatagramPacket(buf2, buf2.length);
+				socket2.receive(packet2);
+				logger.info("Recieved 2.");
                 
                 
                 
@@ -57,10 +81,10 @@ public class ServerThreadForTanks extends Thread {
                 packet2.setPort(port1);
 
                 
-                socket1.send(packet2); 
-                System.out.println("sent1");
-                socket2.send(packet1);
-                System.out.println("sent 2");
+				socket1.send(packet2);
+				logger.info("Sent 1.");
+				socket2.send(packet1);
+				logger.info("Sent 2.");
            
 
 
