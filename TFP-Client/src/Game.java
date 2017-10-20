@@ -28,7 +28,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     private static Renderer renderer;
     private boolean running = false;
-    private Thread th;
+    private Thread th, cRT;
     static Handler handler;
     private static Game game;
     private static JFrame frame;
@@ -49,12 +49,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
    private EnemyTurret enemyTurret;
    private boolean enemyShooting;
    
-   private byte[] buf = new byte[256];
-   private String [] host = {"192.168.0.15"};//jeff 99.233.204.138 owen 192.168.0.10
-   private DatagramSocket socket;
-   private InetAddress address;
-   private DatagramPacket packet;
-   private final int PORT = 4447;
+   
    
    
     private LinkedList<Wall> walls;
@@ -64,7 +59,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public void run() {
         init();
         long lastTime = System.nanoTime();
-        final double numberOfTicks = 30.0;
+        final double numberOfTicks = 60.0;
         double ns = 1000000000 / numberOfTicks;
         double delta = 0;
         int updates = 0;
@@ -94,22 +89,15 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         stop();
     }
 
+    public byte[] getAllBytes() {
+        return allBytes;
+    }
+
     private void tick() {
         renderer.repaint(); // tells renderer to repaint if it hasn't already
         handler.tick(); // tells handler to tick all game objects
         createBytes();
-        packet = new DatagramPacket(allBytes, allBytes.length, address, PORT);
-        try {
-            
-            socket.send(packet);
-            
-            packet = new DatagramPacket(buf, buf.length);
-            socket.receive(packet);
-            System.out.println("recived");
-            decodeBytes(packet.getData());
-        } catch (IOException ex) {
-            System.out.println("servererrorspot1");
-        }
+       
         enemyTank.setVals(enemyX, enemyY, enemyPointing);
         enemyTurret.setVals(enemyShooting, enemyRotate);
        
@@ -200,7 +188,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public void mouseMoved(MouseEvent me) {
         mouseX = me.getX();
         mouseY = me.getY();
-//gets the x and y location of the mouse
+    //gets the x and y location of the mouse
     }
 
     public static enum STATE {
@@ -217,13 +205,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         bind(KeyEvent.VK_A, Key.left);
         bind(KeyEvent.VK_S, Key.down);
         bind(KeyEvent.VK_D, Key.right);
-        try{
-            socket = new DatagramSocket();
-            address = InetAddress.getByName(host[0]);
-            packet = new DatagramPacket(allBytes, allBytes.length, address, PORT);
-        }catch (Exception e){
-            System.out.println("shit server error");
-        }
+        
         
         
         
@@ -275,6 +257,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         running = false;
         try {
             th.join();
+            cRT.join();
         } catch (InterruptedException e) {
         }
         System.exit(1);
@@ -287,7 +270,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
             return;
         running = true;
         th = new Thread(this);
+        cRT = new ClientRecieveThread(game);
+        
         th.start();
+        cRT.start();
     }
 
     public static void render(Graphics2D g) {
@@ -369,7 +355,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         
     }
     
-    private void decodeBytes(byte[] bmain){
+    public void decodeBytes(byte[] bmain){
         
         byte[] temp = new byte[4]; 
         if (bmain[0] == 1){
