@@ -26,13 +26,14 @@ public class ServerThreadForTanks extends Thread {
     @Override
     public void run() {
     	
-		Logger logger = Logger.getLogger("Server Log");
+		Logger logger = Logger.getLogger("ServerLog");
 		FileHandler fh;
 		
 	    try {  
 
-	        // This block configure the logger with handler and formatter  
-	        fh = new FileHandler("logs/log.txt");  
+	        // This block configure the logger with handler and formatter 
+	    		File file = new File("./logs/log.txt");
+	        fh = new FileHandler("file");  
 	        //fh = new FileHandler("/Users/jeff/Desktop/log.txt"); 
 	        logger.addHandler(fh);
 	        SimpleFormatter formatter = new SimpleFormatter();  
