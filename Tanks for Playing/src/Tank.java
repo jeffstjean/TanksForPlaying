@@ -33,8 +33,8 @@ private Rectangle top, bottom, left, right;
     }
     
     
-    private enum moveDirection {
-        UP, DOWN, LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT, NONE,
+    public enum moveDirection {
+       NONE, UP, UP_RIGHT, RIGHT,  DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT,
     };
 
     private moveDirection moveDir = moveDirection.NONE;
@@ -133,7 +133,7 @@ private Rectangle top, bottom, left, right;
     @Override
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        g2d.draw(bounds);
+        //g2d.draw(bounds);
         // draws rectangle
         //g2d.drawImage(body, x, y, size, size, null);
         switch (moveDir){
@@ -170,14 +170,19 @@ private Rectangle top, bottom, left, right;
         g2d.rotate(rotate, x + size/2, y + size/2); // rotates graphics
         g2d.drawImage(body, x, y, size, size, null);//draws image with rotated graphics
         g2d.rotate(-rotate, x + size/2, y + size/2); //rotates graphics back
-        g2d.draw(top);
-        g2d.draw(bottom);
-        g2d.draw(left);
-        g2d.draw(right);
+     //   g2d.draw(top);
+       // g2d.draw(bottom);
+        //g2d.draw(left);
+        //g2d.draw(right);
+        
     }
 
     public int getSize() {
         return size;
+    }
+
+    public moveDirection getMoveDir() {
+        return moveDir;
     }
 
     @Override

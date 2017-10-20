@@ -3,290 +3,392 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+
 
 import javax.swing.JFrame;
 import javax.swing.event.MouseInputListener;
 
+
 public class Game implements Runnable, KeyListener, MouseInputListener {
 
-	private static Renderer renderer;
-	private boolean running = false;
-	private Thread th;
-	static Handler handler;
-	private static Game game;
-	private static JFrame frame;
-	public static final int WIDTH = 1280;
-	public static final int HEIGHT = 720;
-	public final String TITLE = "Tanks For Playing";
-	private Tank tank;
-	public HashMap<Integer, Key> keyBindings = new HashMap<Integer, Key>();
-	private Turret turret;
-	public static boolean other[] = new boolean[256];
-	private static int mouseX, mouseY;
-	private final int MOUSECLICKTYPE = 0; // 0 = pressed, 1 = released, 2 = clicked
-	
-	//Byte Array Test - see below
-	private String enemyType;
-	private int enemyX, enemyY;
-	private double enemyRotate;
-	private boolean enemyIsShooting;
 
-	private LinkedList<Wall> walls;
+    private static Renderer renderer;
+    private boolean running = false;
+    private Thread th;
+    static Handler handler;
+    private static Game game;
+    private static JFrame frame;
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = 720;
+    public final String TITLE = "Tanks For Playing";
+    private Tank tank;
+    public HashMap<Integer, Key> keyBindings = new HashMap<Integer, Key>();
+    private Turret turret;
+    public static boolean other[] = new boolean[256];
+    private static int mouseX, mouseY;
+    private final int MOUSECLICKTYPE = 0; // 0 = pressed, 1 = released, 2 = clicked
+    private ByteBuffer bb;
+    private byte[] allBytes = new byte[256];
+   private int enemyX, enemyY, enemyPointing;
+   private double enemyRotate;
+   private EnemyTank enemyTank;
+   private byte[] buf = new byte[256];
+   private String [] host = {"localhost"};
+   private DatagramSocket socket;
+   private InetAddress address;
+   private DatagramPacket packet;
+   private final int PORT = 4447;
+   
+   
+    private LinkedList<Wall> walls;
 
-	
-	//Send this method a byte array like this udpParseByteArray(byteInput);
-	//Where the byte array is formatted something like this "Object,12,15,34.2,true"
-	//First parameter: Some string (because I can)
-	//Second parameter: int (X-coordinate)
-	//Third parameter: int (Y-coordinate
-	//Fourth parameter: double (rotation)
-	//Fifth parameter: boolean (isShooting)
-	//Method will set global variables (enemyType, enemyX, enemyY, enemyRotate, enemyIsShooting)
-	@SuppressWarnings("unused")
-	private void udpParseByteArray(byte[] input) {
-		String stringResult = new String(input);
-	    String[] arrayResult = stringResult.split(",");
-	    
-	    enemyType = arrayResult[0];
-	    enemyX = Integer.parseInt(arrayResult[1]);
-	    enemyY = Integer.parseInt(arrayResult[2]);
-	    enemyRotate = Double.parseDouble(arrayResult[3]);
-	    enemyIsShooting = Boolean.parseBoolean(arrayResult[2]);
-	}
 
-	@Override
-	public void run() {
-		init();
-		long lastTime = System.nanoTime();
-		final double numberOfTicks = 60.0;
-		double ns = 1000000000 / numberOfTicks;
-		double delta = 0;
-		int updates = 0;
-		int frames = 0;
-		long timer = System.currentTimeMillis();
+    @Override
+    public void run() {
+        init();
+        long lastTime = System.nanoTime();
+        final double numberOfTicks = 60.0;
+        double ns = 1000000000 / numberOfTicks;
+        double delta = 0;
+        int updates = 0;
+        int frames = 0;
+        long timer = System.currentTimeMillis();
 
-		while (running) {
-			long now = System.nanoTime();
-			delta += (now - lastTime) / ns;
-			lastTime = now;
-			if (delta >= 1) {
-				tick();
-				delta--;
-				updates++;
-			}
-			// ();
-			frames++;
+        while (running) {
+            long now = System.nanoTime();
+            delta += (now - lastTime) / ns;
+            lastTime = now;
+            if (delta >= 1) {
+                tick();
+                delta--;
+                updates++;
+            }
+            // ();
+            frames++;
 
-			if (System.currentTimeMillis() - timer > 1000) {
-				timer += 1000;
-				System.out.println("Ticks: " + updates + "      Frames Per Second(FPS): " + frames);
-				updates = 0;
-				frames = 0;
-			}
-		}
-		stop();
-	}
+            if (System.currentTimeMillis() - timer > 1000) {
+                timer += 1000;
+                System.out.println("Ticks: " + updates
+                        + "      Frames Per Second(FPS): " + frames);
+                updates = 0;
+                frames = 0;
+            }
+        }
+        stop();
+    }
 
-	private void tick() {
-		renderer.repaint(); // tells renderer to repaint if it hasn't already
-		handler.tick(); // tells handler to tick all game objects
-	}
+    private void tick() {
+        renderer.repaint(); // tells renderer to repaint if it hasn't already
+        handler.tick(); // tells handler to tick all game objects
+        createBytes();
+        packet = new DatagramPacket(allBytes, allBytes.length, address, PORT);
+        try {
+            
+            socket.send(packet);
+            
+            packet = new DatagramPacket(buf, buf.length);
+            socket.receive(packet);
+            
+            decodeBytes(packet.getData());
+        } catch (IOException ex) {
+            System.out.println("servererrorspot1");
+        }
+        enemyTank.setVals(enemyX, enemyY, enemyPointing);
+        
+       
+    }
 
-	@Override
-	public void keyTyped(KeyEvent ke) {
+    @Override
+    public void keyTyped(KeyEvent ke) {
 
-	}
+    }
 
-	@Override
-	public void keyPressed(KeyEvent ke) {
-		other[ke.getExtendedKeyCode()] = true;
-		try {
-			keyBindings.get(ke.getKeyCode()).isDown = true;
-		} catch (Exception e) {
+    @Override
+    public void keyPressed(KeyEvent ke) {
+        other[ke.getExtendedKeyCode()] = true;
+        try {
+        keyBindings.get(ke.getKeyCode()).isDown = true;
+        } catch (Exception e) {
+            
+        }
+        //updates the key bindings
+    }
 
-		}
-		// updates the key bindings
-	}
+    @Override
+    public void keyReleased(KeyEvent ke) {
+        other[ke.getExtendedKeyCode()] = false;
+        try {
+            keyBindings.get(ke.getKeyCode()).isDown = false;
+        } catch (Exception e) {
 
-	@Override
-	public void keyReleased(KeyEvent ke) {
-		other[ke.getExtendedKeyCode()] = false;
-		try {
-			keyBindings.get(ke.getKeyCode()).isDown = false;
-		} catch (Exception e) {
+        }
+        //updates the key bindings
+    }
 
-		}
-		// updates the key bindings
-	}
+    @Override
+    public void mouseClicked(MouseEvent me) {
+        if (MOUSECLICKTYPE == 2) {
 
-	@Override
-	public void mouseClicked(MouseEvent me) {
-		if (MOUSECLICKTYPE == 2) {
+        }
+        
+        mouseX = me.getX();
+        mouseY = me.getY();
+        // gets the mouse's x and y location
+    }
 
-		}
+    @Override
+    public void mousePressed(MouseEvent me) {
+        //if(MOUSECLICKTYPE == 0) {
+        Key.shoot.isDown = true;
+        //sets the key shoot to be down when clicked
+        //}
+        mouseX = me.getX();
+        mouseY = me.getY();
+        //get the x and y location of the mouse for aiming
+    }
 
-		mouseX = me.getX();
-		mouseY = me.getY();
-		// gets the mouse's x and y location
-	}
+    @Override
+    public void mouseReleased(MouseEvent me) {
+        // if(MOUSECLICKTYPE == 1) {
+        Key.shoot.isDown = false;
+        //sets the key binding of shoot to up 
+        // }
+        mouseX = me.getX();
+        mouseY = me.getY();
+        //gets the x and y location of the mouse
+    }
 
-	@Override
-	public void mousePressed(MouseEvent me) {
-		// if(MOUSECLICKTYPE == 0) {
-		Key.shoot.isDown = true;
-		// sets the key shoot to be down when clicked
-		// }
-		mouseX = me.getX();
-		mouseY = me.getY();
-		// get the x and y location of the mouse for aiming
-	}
+    @Override
+    public void mouseEntered(MouseEvent me) {
+        mouseX = me.getX();
+        mouseY = me.getY();
+        //gets the x and y location of the mouse
+    }
 
-	@Override
-	public void mouseReleased(MouseEvent me) {
-		// if(MOUSECLICKTYPE == 1) {
-		Key.shoot.isDown = false;
-		// sets the key binding of shoot to up
-		// }
-		mouseX = me.getX();
-		mouseY = me.getY();
-		// gets the x and y location of the mouse
-	}
+    @Override
+    public void mouseExited(MouseEvent me) {
+        mouseX = me.getX();
+        mouseY = me.getY();
+        // gets the x and y location of the mouse
+    }
 
-	@Override
-	public void mouseEntered(MouseEvent me) {
-		mouseX = me.getX();
-		mouseY = me.getY();
-		// gets the x and y location of the mouse
-	}
+    @Override
+    public void mouseDragged(MouseEvent me) {
+        mouseX = me.getX();
+        mouseY = me.getY();
+        // gets the x and y location of the mouse
+    }
 
-	@Override
-	public void mouseExited(MouseEvent me) {
-		mouseX = me.getX();
-		mouseY = me.getY();
-		// gets the x and y location of the mouse
-	}
+    @Override
+    public void mouseMoved(MouseEvent me) {
+        mouseX = me.getX();
+        mouseY = me.getY();
+//gets the x and y location of the mouse
+    }
 
-	@Override
-	public void mouseDragged(MouseEvent me) {
-		mouseX = me.getX();
-		mouseY = me.getY();
-		// gets the x and y location of the mouse
-	}
+    public static enum STATE {
+        MENU, GAME, PAUSE, CONTROLS, WIN
+    };
 
-	@Override
-	public void mouseMoved(MouseEvent me) {
-		mouseX = me.getX();
-		mouseY = me.getY();
-		// gets the x and y location of the mouse
-	}
+    public Game() {
+        renderer = new Renderer();
+        // initiallizes the renderer
+    }
 
-	public static enum STATE {
-		MENU, GAME, PAUSE, CONTROLS, WIN
-	};
+    public void init() {
+        bind(KeyEvent.VK_W, Key.up);
+        bind(KeyEvent.VK_A, Key.left);
+        bind(KeyEvent.VK_S, Key.down);
+        bind(KeyEvent.VK_D, Key.right);
+        try{
+            socket = new DatagramSocket();
+            address = InetAddress.getByName(host[0]);
+            packet = new DatagramPacket(allBytes, allBytes.length, address, PORT);
+        }catch (Exception e){
+            System.out.println("shit server error");
+        }
+        
+        
+        
+        walls = new LinkedList<Wall>();
+        // sets the keybindings
+        handler = new Handler();
+        tank = new Tank(100, 100, 64, 64, ID.Tank, this);
+        enemyTank = new EnemyTank(400, 100, 64, 64, ID.Tank, this);
+        // inits tank at 100 100 and gives it the game instance
+        
+        turret = new Turret(tank.getX(), tank.getY(), 10,10,ID.Turret, tank);
+        // creates a turret for the tank
+        walls.add(new Wall(10, 10, 30, HEIGHT - 70, ID.LeftWall));
+        walls.add(new Wall (10, HEIGHT - 90, WIDTH - 50, 30, ID.BottomWall));
+        walls.add(new Wall (WIDTH - 50, 10, 30, HEIGHT - 70, ID.RightWall));
+        walls.add(new Wall(10,10,WIDTH- 30,30, ID.TopWall));
+        walls.add(new Wall(200,200,100,100,ID.BreakableWall));  
+        for (int i = 0; i < walls.size(); i++) {
+            handler.addObject(walls.get(i));
+        }
+        
+        handler.addObject(tank);
+        handler.addObject(enemyTank);
+        handler.addObject(turret);
+        
+        
+       
+        
+        
+        
+// adds the two objects to the handler
+    }
 
-	public Game() {
-		renderer = new Renderer();
-		// initiallizes the renderer
-	}
+    public static int getMouseX() {
+        return mouseX;
+    }
 
-	public void init() {
-		bind(KeyEvent.VK_W, Key.up);
-		bind(KeyEvent.VK_A, Key.left);
-		bind(KeyEvent.VK_S, Key.down);
-		bind(KeyEvent.VK_D, Key.right);
-		walls = new LinkedList<Wall>();
-		// sets the keybindings
-		handler = new Handler();
-		tank = new Tank(100, 100, 64, 64, ID.Tank, this);
-		// inits tank at 100 100 and gives it the game instance
-		turret = new Turret(tank.getX(), tank.getY(), 10, 10, ID.Turret, tank);
-		// creates a turret for the tank
-		walls.add(new Wall(10, 10, 30, HEIGHT - 70, ID.LeftWall));
-		walls.add(new Wall(10, HEIGHT - 90, WIDTH - 50, 30, ID.BottomWall));
-		walls.add(new Wall(WIDTH - 50, 10, 30, HEIGHT - 70, ID.RightWall));
-		walls.add(new Wall(10, 10, WIDTH - 30, 30, ID.TopWall));
-		walls.add(new Wall(200, 200, 100, 100, ID.BreakableWall));
-		for (int i = 0; i < walls.size(); i++) {
-			handler.addObject(walls.get(i));
-		}
+    public static int getMouseY() {
+        return mouseY;
+    }
 
-		handler.addObject(tank);
-		handler.addObject(turret);
-		// adds the two objects to the handler
-	}
 
-	public static int getMouseX() {
-		return mouseX;
-	}
+    private final synchronized void stop() {
+        if (!running) {
+            return;
+        }
+        running = false;
+        try {
+            th.join();
+        } catch (InterruptedException e) {
+        }
+        System.exit(1);
+    }
 
-	public static int getMouseY() {
-		return mouseY;
-	}
+    private final synchronized void start() {
+        // If the program is already running then do nothing but if not running,
+        // make it run and start the thread
+        if (running)
+            return;
+        running = true;
+        th = new Thread(this);
+        th.start();
+    }
 
-	private final synchronized void stop() {
-		if (!running) {
-			return;
-		}
-		running = false;
-		try {
-			th.join();
-		} catch (InterruptedException e) {
-		}
-		System.exit(1);
-	}
+    public static void render(Graphics2D g) {
+        handler.render(g);
+        // has handler render all gameObjects
+    }
 
-	private final synchronized void start() {
-		// If the program is already running then do nothing but if not running,
-		// make it run and start the thread
-		if (running)
-			return;
-		running = true;
-		th = new Thread(this);
-		th.start();
-	}
+    public static void main(String[] args) {
+        game = new Game();
 
-	public static void render(Graphics2D g) {
-		handler.render(g);
-		// has handler render all gameObjects
-	}
+        frame = new JFrame(game.TITLE);
+        // Ads the instance of the game to the JFrame
+        // frame.add(game);
+        // Causes the window to be at preferred size initially
+        frame.setSize(WIDTH, HEIGHT);
+        // frame.pack();
+        // Exits program on close
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // Sets the program so it cannot be re-sizable
+        frame.setResizable(false);
+        frame.add(renderer);
+        // adds the renderer to the jFrame
+        frame.setVisible(true);
 
-	public static void main(String[] args) {
-		game = new Game();
+        game.start();
+        frame.addKeyListener(game);
+        frame.addMouseMotionListener(game);
+        frame.addMouseListener(game);
+    }
 
-		frame = new JFrame(game.TITLE);
-		// Ads the instance of the game to the JFrame
-		// frame.add(game);
-		// Causes the window to be at preferred size initially
-		frame.setSize(WIDTH, HEIGHT);
-		// frame.pack();
-		// Exits program on close
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		// Sets the program so it cannot be re-sizable
-		frame.setResizable(false);
-		frame.add(renderer);
-		// adds the renderer to the jFrame
-		frame.setVisible(true);
+    public void bind(Integer keyCode, Key key) {
+        keyBindings.put(keyCode, key);
+    }
 
-		game.start();
-		frame.addKeyListener(game);
-		frame.addMouseMotionListener(game);
-		frame.addMouseListener(game);
-	}
+    public void releaseAll() {
+        for (Key key : keyBindings.values()) {
+            key.isDown = false;
+        }
+    }
 
-	public void bind(Integer keyCode, Key key) {
-		keyBindings.put(keyCode, key);
-	}
+    public static Handler getHandler() {
+        return handler;
+    }
 
-	public void releaseAll() {
-		for (Key key : keyBindings.values()) {
-			key.isDown = false;
-		}
-	}
-
-	public static Handler getHandler() {
-		return handler;
-	}
-
+    
+    private void createBytes(){
+        allBytes[0] = 1; // says its an in game byte
+        
+        //the x encoder start
+        bb = ByteBuffer.allocate(4);
+        bb.putInt(tank.getX());
+        byte[] temp = bb.array();
+        for (int i = 0; i < temp.length; i++) {
+            allBytes[i + 1] = temp[i];
+        }
+        // the x encoder end
+        // the y encoder start
+        bb = ByteBuffer.allocate(4);
+        bb.putInt(tank.getY());
+        temp = bb.array();
+        for (int i = 0; i < temp.length; i++) {
+            allBytes[i + 5] = temp[i];
+        }
+        // y encoder end
+        
+        // the rotation encoder start
+        bb = ByteBuffer.allocate(8);
+        bb.putDouble(turret.getRotate());
+        temp = bb.array();
+        for (int i = 0; i < temp.length; i++) {
+            allBytes[i + 10] = temp[i];
+        }
+        // rotation encoder end        
+        
+        allBytes[19] = (byte) tank.getMoveDir().ordinal();
+        
+    }
+    
+    private void decodeBytes(byte[] bmain){
+        
+        byte[] temp = new byte[4]; 
+        if (bmain[0] == 1){
+            for (int i = 0; i < 4; i++) {
+                temp[i] = bmain[i+1];
+            }
+            bb = ByteBuffer.wrap(temp);
+            enemyX = bb.getInt();
+            
+            
+            for (int i = 0; i < 4; i++) {
+                temp[i] = bmain[i+5];
+            }
+            bb = ByteBuffer.wrap(temp);
+            enemyY = bb.getInt();
+            
+            temp = new byte[8];
+            for (int i = 0; i < 8; i++) {
+                temp[i] = bmain[i+10];
+            }
+            bb = ByteBuffer.wrap(temp);
+            enemyRotate = bb.getDouble();
+            
+            enemyPointing = bmain[19];
+            
+        }
+        
+    }
+    
 }

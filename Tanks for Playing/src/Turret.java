@@ -13,7 +13,7 @@ public class Turret extends GameObject{
     private double mouseX, mouseY;
     private BufferedImage turret;
     private int turretShootCounter = 7;
-    
+    private boolean shooting = false;
     
     private int coolDown = 20, coolDownCounter = 20;
 
@@ -27,6 +27,7 @@ public class Turret extends GameObject{
 
     @Override
     public void tick() {
+        shooting = false;
         if(turretShootCounter == 0)
             turret = ImageLoader.imageLoader("./graphics/TurretGreen.png");
         turretShootCounter --;
@@ -61,10 +62,20 @@ public class Turret extends GameObject{
        g2d.rotate(-(rotate + Math.toRadians(90)), xd ,yd );//rotates grpahics back
         
     }
+
+    public double getRotate() {
+        return rotate;
+    }
+
+    public boolean isShooting() {
+        return shooting;
+    }
+    
+    
     
     private void shoot(){
 
-
+        shooting = true;
         turretShootCounter = 10;
         double subX = -(tank.getSize() / 2 * Math.sin(rotate));
         double subY = (tank.getSize() / 2 * Math.cos(rotate));
