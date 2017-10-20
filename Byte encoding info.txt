@@ -1,0 +1,39 @@
+allBytes[0] 1 == game time info, 0 == game start info
+
+
+if during runtime
+allBytes[1 to 4] are x location
+allBytes[5 to 9] are y loc
+allBytes[10 - 18] are turret location
+allBytes[19] are pointing value for tank movement direction enum moveDirection Clockwise from top (UP = 1, DOWN = 5, LEFT = 7, RIGHT =3, UP_LEFT = ,8 UP_RIGHT = 2, DOWN_LEFT = 6, DOWN_RIGHT = 4, NONE = 0)
+
+       allBytes[0] = 1; // says its an in game byte
+        
+        //the x encoder start
+        bb = ByteBuffer.allocate(4);
+        bb.putInt(tank.getX());
+        byte[] temp = bb.array();
+        for (int i = 0; i < temp.length; i++) {
+            allBytes[i + 1] = temp[i];
+        }
+        // the x encoder end
+        // the y encoder start
+        bb = ByteBuffer.allocate(4);
+        bb.putInt(tank.getY());
+        temp = bb.array();
+        for (int i = 0; i < temp.length; i++) {
+            allBytes[i + 5] = temp[i];
+        }
+        // y encoder end
+        
+        // the rotation encoder start
+        bb = ByteBuffer.allocate(8);
+        bb.putDouble(turret.getRotate());
+        temp = bb.array();
+        for (int i = 0; i < temp.length; i++) {
+            allBytes[i + 10] = temp[i];
+        }
+        // rotation encoder end        
+        
+        allBytes[19] = (byte) tank.getMoveDir().ordinal();
+        
