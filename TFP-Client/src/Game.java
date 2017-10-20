@@ -46,12 +46,15 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
    private int enemyX, enemyY, enemyPointing;
    private double enemyRotate;
    private EnemyTank enemyTank;
+   private EnemyTurret enemyTurret;
+   private boolean enemyShooting;
+   
    private byte[] buf = new byte[256];
-   private String [] host = {"localhost"};
+   private String [] host = {"192.168.0.15"};//jeff 99.233.204.138 owen 192.168.0.10
    private DatagramSocket socket;
    private InetAddress address;
    private DatagramPacket packet;
-   private final int PORT = 4448;
+   private final int PORT = 4447;
    
    
     private LinkedList<Wall> walls;
@@ -61,7 +64,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public void run() {
         init();
         long lastTime = System.nanoTime();
-        final double numberOfTicks = 60.0;
+        final double numberOfTicks = 30.0;
         double ns = 1000000000 / numberOfTicks;
         double delta = 0;
         int updates = 0;
@@ -102,13 +105,13 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
             
             packet = new DatagramPacket(buf, buf.length);
             socket.receive(packet);
-            
+            System.out.println("recived");
             decodeBytes(packet.getData());
         } catch (IOException ex) {
             System.out.println("servererrorspot1");
         }
         enemyTank.setVals(enemyX, enemyY, enemyPointing);
-        
+        enemyTurret.setVals(enemyShooting, enemyRotate);
        
     }
 
@@ -229,6 +232,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         handler = new Handler();
         tank = new Tank(100, 100, 64, 64, ID.Tank, this);
         enemyTank = new EnemyTank(400, 100, 64, 64, ID.Tank, this);
+        enemyTurret = new EnemyTurret(enemyTank.getX(), enemyTank.getY(), 10, 10, ID.Turret, enemyTank);
         // inits tank at 100 100 and gives it the game instance
         
         turret = new Turret(tank.getX(), tank.getY(), 10,10,ID.Turret, tank);
@@ -245,6 +249,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         handler.addObject(tank);
         handler.addObject(enemyTank);
         handler.addObject(turret);
+        handler.addObject(enemyTurret);
         
         
        
@@ -359,6 +364,9 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         
         allBytes[19] = (byte) tank.getMoveDir().ordinal();
         
+        if(turret.isShooting()) allBytes[20] = 0;
+        else allBytes[20] = 1;
+        
     }
     
     private void decodeBytes(byte[] bmain){
@@ -387,6 +395,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
             
             enemyPointing = bmain[19];
             
+            if(bmain[20] == 0) enemyShooting = true;
+            else enemyShooting = false;
         }
         
     }
