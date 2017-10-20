@@ -1,7 +1,7 @@
 
+
 import java.io.*;
 import java.net.*;
-import java.util.*;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -32,7 +32,7 @@ public class ServerThreadForTanks extends Thread {
 	    try {  
 
 	        // This block configure the logger with handler and formatter  
-	        fh = new FileHandler("./logs/log.txt");  
+	        fh = new FileHandler("logs/log.txt");  
 	        //fh = new FileHandler("/Users/jeff/Desktop/log.txt"); 
 	        logger.addHandler(fh);
 	        SimpleFormatter formatter = new SimpleFormatter();  
@@ -99,5 +99,3 @@ public class ServerThreadForTanks extends Thread {
     socket2.close ();
 }
 }
-
-
