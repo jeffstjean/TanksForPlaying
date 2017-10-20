@@ -33,7 +33,8 @@ public class ServerThreadForTanks extends Thread {
 
 	        // This block configure the logger with handler and formatter 
 	    		File file = new File("./logs/log.txt");
-	        fh = new FileHandler("file");  
+	    		//file.getPath()
+	        fh = new FileHandler(file.getPath());  
 	        //fh = new FileHandler("/Users/jeff/Desktop/log.txt"); 
 	        logger.addHandler(fh);
 	        SimpleFormatter formatter = new SimpleFormatter();  
