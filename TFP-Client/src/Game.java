@@ -51,7 +51,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
    private DatagramSocket socket;
    private InetAddress address;
    private DatagramPacket packet;
-   private final int PORT = 4447;
+   private final int PORT = 4448;
    
    
     private LinkedList<Wall> walls;

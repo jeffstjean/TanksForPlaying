@@ -1,0 +1,4 @@
+Oct 20, 2017 12:39:05 PM ServerThreadForTanks run
+INFO: Server started.
+Oct 20, 2017 12:39:05 PM ServerThreadForTanks run
+INFO: Packet made.
