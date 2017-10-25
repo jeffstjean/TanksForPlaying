@@ -115,11 +115,15 @@ public class Game implements Runnable {
         walls = new LinkedList<Wall>();
         // sets the keybindings
         handler = new Handler();
-        tank[0] = new Tank(100, 100, 64, 64, ID.Tank, this, 0);
+        for (int i = 0; i < Game.NUMBER_OF_PLAYERS; i++) {
+             tank[i] = new Tank(100, 100, 64, 64, ID.Tank, this, 0);
+             turret[i] = new Turret(tank[0].getX(), tank[0].getY(), 10,10,ID.Turret, tank[0]);
+        }
+        
         
         // inits tank at 100 100 and gives it the game instance
         
-        turret[0] = new Turret(tank[0].getX(), tank[0].getY(), 10,10,ID.Turret, tank[0]);
+        
         // creates a turret for the tank
         walls.add(new Wall(10, 10, 30, HEIGHT - 70, ID.LeftWall));
         walls.add(new Wall (10, HEIGHT - 90, WIDTH - 50, 30, ID.BottomWall));
