@@ -12,7 +12,7 @@ public class Server {
     }
 }
 
-public class ServerThreadForTanks extends Thread {
+private class ServerThreadForTanks extends Thread {
 
 	protected DatagramSocket socket1 = null, socket2 = null;
 	protected BufferedReader in = null;
