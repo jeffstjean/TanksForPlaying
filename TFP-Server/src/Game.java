@@ -30,8 +30,8 @@ public class Game implements Runnable {
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
     public final String TITLE = "Tanks For Playing";
-    private Tank[] tank = new Tank[2];
-    private Turret[] turret = new Turret[2];
+    private Tank[] tank = new Tank[NUMBER_OF_PLAYERS];
+    private Turret[] turret = new Turret[NUMBER_OF_PLAYERS];
     private ByteBuffer bb;
     private LinkedList<Wall> walls;
     private byte[] allBytes;
@@ -82,20 +82,6 @@ public class Game implements Runnable {
        
     }
 
-   
-
-   
-
-
-   
-
-   
-
-   
-   
-   
-   
-    
 
     public static enum STATE {
         MENU, GAME, PAUSE, CONTROLS, WIN
@@ -118,6 +104,7 @@ public class Game implements Runnable {
         for (int i = 0; i < Game.NUMBER_OF_PLAYERS; i++) {
              tank[i] = new Tank(100, 100, 64, 64, ID.Tank, this, 0);
              turret[i] = new Turret(tank[0].getX(), tank[0].getY(), 10,10,ID.Turret, tank[0]);
+             key[i] = new Key();
         }
         
         
@@ -220,15 +207,15 @@ public class Game implements Runnable {
             
             tank[index].setPointing(bmain[19]); 
             
-            key[index].shoot.isDown = bmain[20] == 0;
+            key[index].shoot = bmain[20] == 0;
             
-            key[index].up.isDown = bmain[21] == 0;
+            key[index].up = bmain[21] == 0;
             
-            key[index].down.isDown = bmain[22] == 0;
+            key[index].down = bmain[22] == 0;
             
-            key[index].left.isDown = bmain[23] == 0;
+            key[index].left = bmain[23] == 0;
             
-            key[index].right.isDown = bmain[24] == 0;
+            key[index].right = bmain[24] == 0;
             
         }
         
