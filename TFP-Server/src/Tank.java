@@ -48,16 +48,16 @@ private int index;
 
     @Override
     public void tick() {
-        if (Server.game.key[index].up.isDown) {
+        if (Server.game.key[index].up) {
             motionY = -speed;
-        } else if (Server.game.key[index].down.isDown) {
+        } else if (Server.game.key[index].down) {
             motionY = speed;
         } else {
             motionY = 0;
         }
-        if (Server.game.key[index].left.isDown) {
+        if (Server.game.key[index].left) {
             motionX = -speed;
-        } else if (Server.game.key[index].right.isDown) {
+        } else if (Server.game.key[index].right) {
             motionX = speed;
         } else {
             motionX = 0;
