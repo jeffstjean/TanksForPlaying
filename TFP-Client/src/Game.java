@@ -4,16 +4,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -353,6 +346,17 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         if(turret.isShooting()) allBytes[20] = 0;
         else allBytes[20] = 1;
         
+        if(Key.up.isDown) allBytes[21] = 0;
+        else allBytes[21] = 1;
+        
+        if(Key.down.isDown) allBytes[22] = 0;
+        else allBytes[22] = 1;
+         
+        if(Key.left.isDown) allBytes[23] = 0;
+        else allBytes[23] = 1;
+          
+        if(Key.right.isDown) allBytes[24] = 0;
+        else allBytes[24] = 1;
     }
     
     public void decodeBytes(byte[] bmain){
