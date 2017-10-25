@@ -31,7 +31,7 @@ class ServerThreadForTanks extends Thread {
 
 	@Override
 	public void run() {
-
+/*
 		Logger logger = Logger.getLogger("ServerLog");
 		FileHandler fh;
 
@@ -53,20 +53,20 @@ class ServerThreadForTanks extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+*/
 		while (moreQuotes) {
 			try {
 				byte[] buf = new byte[256];
 				byte[] buf2 = new byte[256];
 				// receive request
 				DatagramPacket packet1 = new DatagramPacket(buf, buf.length);
-				logger.info("Packet made.");
+			//	logger.info("Packet made.");
 
 				socket1.receive(packet1);
-				logger.info("Recieved 1.");
+			//	logger.info("Recieved 1.");
 				DatagramPacket packet2 = new DatagramPacket(buf2, buf2.length);
 				socket2.receive(packet2);
-				logger.info("Recieved 2.");
+			//	logger.info("Recieved 2.");
 
 				InetAddress address1, address2;
 				int port1, port2;
@@ -84,9 +84,9 @@ class ServerThreadForTanks extends Thread {
 				packet2.setPort(port1);
 
 				socket1.send(packet2);
-				logger.info("Sent 1.");
+			//	logger.info("Sent 1.");
 				socket2.send(packet1);
-				logger.info("Sent 2.");
+			//	logger.info("Sent 2.");
 
 			} catch (IOException e) {
 				e.printStackTrace();
