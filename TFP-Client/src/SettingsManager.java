@@ -43,58 +43,56 @@ public class SettingsManager {
 			System.err.println("Settings aren't configured properly");
 			return;
 		}
-
-		for (int i = 0; i < settings.size(); i++) {
-		}
+		
 	}
 
 	public static int getIntSetting(Setting set) {
 		switch (set) {
 		case NUM_PLAYERS:
 			try {
-				return Integer.parseInt(settings.get(0));
+				return Integer.parseInt(settings.get(0).trim());
 			} catch (Exception e) {
 				return -1;
 			}
 		case PORT:
 			try {
-				return Integer.parseInt(settings.get(1));
+				return Integer.parseInt(settings.get(1).trim());
 			} catch (Exception e) {
 				return -1;
 			}
 		case FPS:
 			try {
-				return Integer.parseInt(settings.get(2));
+				return Integer.parseInt(settings.get(2).trim());
 			} catch (Exception e) {
 				return -1;
 			}
 		case TANK_SIZE:
 			try {
-				return Integer.parseInt(settings.get(4));
+				return Integer.parseInt(settings.get(4).trim());
 			} catch (Exception e) {
 				return -1;
 			}
 		case TANK_SPEED:
 			try {
-				return Integer.parseInt(settings.get(5));
+				return Integer.parseInt(settings.get(5).trim());
 			} catch (Exception e) {
 				return -1;
 			}
 		case BULLET_SIZE:
 			try {
-				return Integer.parseInt(settings.get(6));
+				return Integer.parseInt(settings.get(6).trim());
 			} catch (Exception e) {
 				return -1;
 			}
 		case BULLET_SPEED:
 			try {
-				return Integer.parseInt(settings.get(7));
+				return Integer.parseInt(settings.get(7).trim());
 			} catch (Exception e) {
 				return -1;
 			}
 		case MAP_LAYOUT:
 			try {
-				return Integer.parseInt(settings.get(8));
+				return Integer.parseInt(settings.get(8).trim());
 			} catch (Exception e) {
 				return -1;
 			}
@@ -107,7 +105,7 @@ public class SettingsManager {
 		switch (set) {
 		case IP:
 			try {
-				return settings.get(3);
+				return settings.get(3).trim();
 			} catch (Exception e) {
 				
 			}

@@ -1,9 +1,0 @@
-Number of Players: 2
-Port: 4448
-FPS: 60
-IP Address: 123.45.67.890
-Tank size: 64
-Tank speed: 5
-Bullet size: 5
-Bullet speed: 5 
-Map layout: 2
