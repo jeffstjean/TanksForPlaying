@@ -181,6 +181,9 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     }
 
     public void init() {
+        SettingsManager.init();
+        System.out.println(SettingsManager.getSetting(Setting.PORT));
+        
         bind(KeyEvent.VK_W, Key.up);
         bind(KeyEvent.VK_A, Key.left);
         bind(KeyEvent.VK_S, Key.down);
