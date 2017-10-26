@@ -21,5 +21,7 @@ allBytes[13] are pointing value for tank movement direction enum moveDirection C
 
 allBytes[14] == shooting 
 
+allBytes[15-22] == long of current system time
+
 
 
