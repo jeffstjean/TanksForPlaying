@@ -4,24 +4,22 @@ allBytes[0] 1 == game time info, 0 == game start info
 
 if during runtime
 
-allBytes[1 to 4] are x location
+allBytes[1] == up
 
-allBytes[5 to 9] are y loc
+allBytes[2] == down
 
-allBytes[10 - 18] are turret location
+allBytes[3] == left
 
-allBytes[19] are pointing value for tank movement direction enum moveDirection Clockwise from top (UP = 1, DOWN = 5, LEFT = 7, RIGHT =3, UP_LEFT = ,8 UP_RIGHT = 2, DOWN_LEFT = 6, DOWN_RIGHT = 4, NONE = 0)
+allBytes[4] == right
+
+allBytes[5 - 12] are turret location
+
+allBytes[13] are pointing value for tank movement direction enum moveDirection Clockwise from top (UP = 1, DOWN = 5, LEFT = 7, RIGHT =3, UP_LEFT = ,8 UP_RIGHT = 2, DOWN_LEFT = 6, DOWN_RIGHT = 4, NONE = 0)
 
 
 0 = true, 1 == false
 
-allBytes[20] == shooting 
+allBytes[14] == shooting 
 
 
-allBytes[21] == up
 
-allBytes[22] == down
-
-allBytes[23] == left
-
-allBytes[24] == right
