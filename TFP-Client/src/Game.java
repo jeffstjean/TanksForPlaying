@@ -3,13 +3,23 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.event.MouseInputListener;
 
 public class Game implements Runnable, KeyListener, MouseInputListener {
+
     private static Renderer renderer;
     private boolean running = false;
     private Thread th, cRT;
@@ -32,10 +42,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private EnemyTank enemyTank;
     private EnemyTurret enemyTurret;
     private boolean enemyShooting;
-    
+
     //config vars
-    private static int NUM_PLAYERS, PORT, FPS, TANK_SIZE, TANK_SPEED, BULLET_SPEED, BULLET_SIZE, MAP_LAYOUT;
-    private static String IP;
+    private final Properties userSettings = new Properties(), defaultSettings = new Properties();
+    private final File userSettingsLocation = new File("src/resources/config/config.properties"), defaultSettingsLocation = new File("src/resources/default_config/default_config.properties");
 
     private LinkedList<Wall> walls;
 
@@ -183,10 +193,38 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         // initiallizes the renderer
     }
 
-    public void init() {
-        SettingsManager.init();
-        fillConstants();
+    private void initConfigs() {
+        if(!userSettingsLocation.exists()) {
+            try{
+                Files.copy(defaultSettingsLocation.toPath(), userSettingsLocation.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch(IOException e) {
+                System.out.println("Couldn't copy default config file. Defaults will be used for all params.");
+            }
+        }
         
+        FileInputStream in;
+        try {
+            in = new FileInputStream(defaultSettingsLocation);
+            defaultSettings.load(in);
+            in.close();
+        } catch (IOException e) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, e);
+        }
+        try {
+            in = new FileInputStream(userSettingsLocation);
+            userSettings.load(in);
+            in.close();
+        } catch (IOException e) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        System.out.println("Num Players: " + userSettings.getProperty("numPlayers", defaultSettings.getProperty("numPlayers")));
+    }
+
+    public void init() {
+        //SettingsManager.init();
+        //fillConstants();
+        initConfigs();
         bind(KeyEvent.VK_W, Key.up);
         bind(KeyEvent.VK_A, Key.left);
         bind(KeyEvent.VK_S, Key.down);
@@ -228,8 +266,9 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     }
 
     private final synchronized void stop() {
-        if (!running)
+        if (!running) {
             return;
+        }
         running = false;
         try {
             th.join();
@@ -242,8 +281,9 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private final synchronized void start() {
         // If the program is already running then do nothing but if not running,
         // make it run and start the thread
-        if (running)
+        if (running) {
             return;
+        }
         running = true;
         th = new Thread(this);
         cRT = new ClientRecieveThread(game);
@@ -325,56 +365,40 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
         allBytes[19] = (byte) tank.getMoveDir().ordinal();
 
-        if (turret.isShooting())
+        if (turret.isShooting()) {
             allBytes[20] = 0;
-        else
+        } else {
             allBytes[20] = 1;
+        }
 
-        if (Key.up.isDown)
+        if (Key.up.isDown) {
             allBytes[21] = 0;
-        else
+        } else {
             allBytes[21] = 1;
+        }
 
-        if (Key.down.isDown)
+        if (Key.down.isDown) {
             allBytes[22] = 0;
-        else
+        } else {
             allBytes[22] = 1;
+        }
 
-        if (Key.left.isDown)
+        if (Key.left.isDown) {
             allBytes[23] = 0;
-        else
+        } else {
             allBytes[23] = 1;
+        }
 
-        if (Key.right.isDown)
+        if (Key.right.isDown) {
             allBytes[24] = 0;
-        else
+        } else {
             allBytes[24] = 1;
+        }
     }
-    
+
     //private static int NUM_PLAYERS, PORT, FPS, TANK_SIZE, TANK_SPEED, BULLET_SPEED, BULLET_SIZE, MAP_LAYOUT;
     //private static String IP;
-    
-    public void fillConstants() {
-    		NUM_PLAYERS = SettingsManager.getIntSetting(Setting.NUM_PLAYERS);
-    		PORT = SettingsManager.getIntSetting(Setting.PORT);
-    		FPS = SettingsManager.getIntSetting(Setting.FPS);
-    		TANK_SIZE = SettingsManager.getIntSetting(Setting.TANK_SIZE);
-    		TANK_SPEED = SettingsManager.getIntSetting(Setting.TANK_SPEED);
-    		BULLET_SIZE = SettingsManager.getIntSetting(Setting.BULLET_SIZE);
-    		BULLET_SPEED = SettingsManager.getIntSetting(Setting.BULLET_SPEED);
-    		MAP_LAYOUT = SettingsManager.getIntSetting(Setting.MAP_LAYOUT);
-    		IP = SettingsManager.getStringSetting(Setting.IP); 
-    		
-    		if(NUM_PLAYERS == -1) System.err.println("Error loading number of players from config");
-    		if(PORT == -1) System.err.println("Error loading port number from config");
-    		if(FPS == -1) System.err.println("Error loading FPS from config");
-    		if(TANK_SIZE == -1) System.err.println("Error loading tank size from config");
-    		if(TANK_SPEED == -1) System.err.println("Error loading tank speed from config");
-    		if(BULLET_SIZE == -1) System.err.println("Error loading bullet size from config");
-    		if(BULLET_SPEED == -1) System.err.println("Error loading bullet speed from config");
-    		if(MAP_LAYOUT == -1) System.err.println("Error loading map layout from config");
-    		if(IP == null) System.err.println("Error loading IP Address from config");
-    }
+  
 
     public void decodeBytes(byte[] bmain) {
 
@@ -401,10 +425,11 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
             enemyPointing = bmain[19];
 
-            if (bmain[20] == 0)
+            if (bmain[20] == 0) {
                 enemyShooting = true;
-            else
+            } else {
                 enemyShooting = false;
+            }
         }
 
     }
