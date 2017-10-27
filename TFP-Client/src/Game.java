@@ -194,14 +194,14 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     }
 
     private void initConfigs() {
-        if(!userSettingsLocation.exists()) {
-            try{
+        if (!userSettingsLocation.exists()) {
+            try {
                 Files.copy(defaultSettingsLocation.toPath(), userSettingsLocation.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            } catch(IOException e) {
+            } catch (IOException e) {
                 System.out.println("Couldn't copy default config file. Defaults will be used for all params.");
             }
         }
-        
+
         FileInputStream in;
         try {
             in = new FileInputStream(defaultSettingsLocation);
@@ -217,13 +217,27 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         } catch (IOException e) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, e);
         }
-        
+
         System.out.println("Num Players: " + userSettings.getProperty("numPlayers", defaultSettings.getProperty("numPlayers")));
     }
 
+    public String getStringUserPropertyThenDefault(String setting) {
+        return (userSettings.getProperty(setting, defaultSettings.getProperty(setting)));
+    }
+
+    public int getIntUserPropertyThenDefault(String setting, int defaultIfError) {
+        try {
+            return Integer.parseInt(userSettings.getProperty(setting));
+        } catch (NumberFormatException e) {
+            try {
+                return Integer.parseInt(defaultSettings.getProperty(setting));
+            } catch (NumberFormatException ex) {
+                return defaultIfError;
+            }
+        }
+    }
+
     public void init() {
-        //SettingsManager.init();
-        //fillConstants();
         initConfigs();
         bind(KeyEvent.VK_W, Key.up);
         bind(KeyEvent.VK_A, Key.left);
@@ -398,8 +412,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     //private static int NUM_PLAYERS, PORT, FPS, TANK_SIZE, TANK_SPEED, BULLET_SPEED, BULLET_SIZE, MAP_LAYOUT;
     //private static String IP;
-  
-
     public void decodeBytes(byte[] bmain) {
 
         byte[] temp = new byte[4];
