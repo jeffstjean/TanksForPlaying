@@ -28,12 +28,41 @@ public class ClientRecieveThread extends Thread{
     
     @Override
     public void run(){
+        long lastTime = System.nanoTime();
+        double numberOfTicks = 60.0;
+        double ns = 1000000000 / numberOfTicks;
+        double delta = 0;
+        int updates = 0;
+        int frames = 0;
+        long timer = System.currentTimeMillis();
         while(true){
-        packet = new DatagramPacket(game.getAllBytes(), game.getAllBytes().length, address, PORT);
+                    
+
+            ns = 1000000000 / numberOfTicks;
+            long now = System.nanoTime();
+            delta += (now - lastTime) / ns;
+            lastTime = now;
+            if (delta >= 1) {
+                send();
+                delta--;
+                updates++;
+            }
+            frames++;
+
+            if (System.currentTimeMillis() - timer > 1000) {
+                timer += 1000;
+                System.out.println("Ticks: " + updates
+                        + "      Frames Per Second(FPS): " + frames);
+                updates = 0;
+                frames = 0;
+            }
+        
+            
+            
+       
         try {
             
-            socket.send(packet);
-            System.out.println("sent");
+            
             packet = new DatagramPacket(buf, buf.length);
             socket.receive(packet);
             System.out.println("recived");
@@ -41,7 +70,27 @@ public class ClientRecieveThread extends Thread{
         } catch (IOException ex) {
             System.out.println("servererrorspot1");
         }
+        
+        if(game.maxMillis - System.currentTimeMillis() > 500){
+            numberOfTicks = 30.0;
+        }else{
+            numberOfTicks = 60.0;
+        }
     }
 }
 
+    private void send(){
+        packet = new DatagramPacket(game.getAllBytes(), game.getAllBytes().length, address, PORT);
+        try {
+            
+            socket.send(packet);
+            System.out.println("sent");
+        } catch (IOException ex) {
+            System.out.println("servererrorspot2 could not send");
+        }
+        
+        
+    }
+    
+    
 }

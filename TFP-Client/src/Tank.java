@@ -88,39 +88,7 @@ private Rectangle top, bottom, left, right;
             
             
             
-//            switch (moveDir){
-//               case NONE:
-//               
-//               break;
-//            case LEFT:
-//               x+= 10;
-//               break;
-//            case RIGHT:
-//                x -= 10;
-//               break;
-//            case UP:
-//                y += 10;
-//               break;
-//            case DOWN:
-//               y -= 10;
-//               break;
-//            case UP_LEFT:
-//                y +=10;
-//                x += 10;
-//               break;
-//            case DOWN_LEFT:
-//               y -= 10;
-//               x += 10;
-//               break;
-//            case UP_RIGHT:
-//                y +=10;
-//                x -= 10;
-//               break;
-//            case DOWN_RIGHT:
-//                y -=10;
-//                x-= 10;
-//               break;
-//            }
+
         }
         // moves tank and rectangle
         bounds.setLocation(x, y);
@@ -130,6 +98,49 @@ private Rectangle top, bottom, left, right;
         right.setBounds(x + size , y + 10, 10, size - 20);
     }
 
+    
+    public void setPointing(int i){
+                switch (i) {
+            case 0:
+                moveDir = moveDirection.NONE;
+                break;
+            case 1:
+                moveDir = moveDirection.UP;
+                break;
+            case 2:
+                moveDir = moveDirection.UP_RIGHT;
+                break;
+
+            case 3:
+                moveDir = moveDirection.RIGHT;
+                break;
+
+            case 4:
+                moveDir = moveDirection.DOWN_RIGHT;
+                break;
+
+            case 5:
+                moveDir = moveDirection.DOWN;
+                break;
+
+            case 6:
+                moveDir = moveDirection.DOWN_LEFT;
+                break;
+
+            case 7:
+                moveDir = moveDirection.LEFT;
+                break;
+
+            case 8:
+                moveDir = moveDirection.UP_LEFT;
+                break;
+            
+            default:
+               moveDir = moveDirection.NONE;
+               break;     
+        }
+    }
+    
     @Override
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
