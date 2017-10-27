@@ -12,7 +12,9 @@ allBytes[3] == left
 
 allBytes[4] == right
 
-allBytes[5 - 12] are turret location
+allBytes[5 - 8] are mouse x
+
+allBytes[9-12] mouse y
 
 allBytes[13] are pointing value for tank movement direction enum moveDirection Clockwise from top (UP = 1, DOWN = 5, LEFT = 7, RIGHT =3, UP_LEFT = ,8 UP_RIGHT = 2, DOWN_LEFT = 6, DOWN_RIGHT = 4, NONE = 0)
 
