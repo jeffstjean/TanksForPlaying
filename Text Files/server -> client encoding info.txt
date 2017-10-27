@@ -33,3 +33,10 @@ byte[50 - 58] == rotate turret p3
 byte[59] == shooting p3
 
 byte[60] == pointing p3
+
+
+
+
+
+
+byte[248 - 255] time original packet was sent to server
