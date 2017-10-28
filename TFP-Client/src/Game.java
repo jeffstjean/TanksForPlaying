@@ -209,7 +209,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, e);
         }
 
-        System.out.println("Num Players: " + userSettings.getProperty("numPlayers", defaultSettings.getProperty("numPlayers")));
         NUM_PLAYERS = getIntUserPropertyThenDefault("numPlayers", 2);
         cRT.setPORT(getIntUserPropertyThenDefault("port", 4448));
         cRT.setHost(getStringUserPropertyThenDefault("ipAddress"));
