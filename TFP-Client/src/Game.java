@@ -44,6 +44,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     //config vars
     private final Properties userSettings = new Properties(), defaultSettings = new Properties();
     private final File userSettingsLocation = new File("src/resources/config/config.properties"), defaultSettingsLocation = new File("src/resources/default_config/default_config.properties");
+    private int playerNumber;
 
     private LinkedList<Wall> walls;
 
@@ -213,6 +214,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         cRT.setPORT(getIntUserPropertyThenDefault("port", 4448));
         cRT.setHost(getStringUserPropertyThenDefault("ipAddress"));
         TANK_SIZE = getIntUserPropertyThenDefault("tankSize", 64);
+        playerNumber = getIntUserPropertyThenDefault("playerNumber", 0);
     }
 
     public String getStringUserPropertyThenDefault(String setting) {
