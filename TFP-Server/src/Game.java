@@ -1,27 +1,14 @@
 
-import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 
-
 import java.nio.ByteBuffer;
-
 
 import java.util.HashMap;
 import java.util.LinkedList;
 
-
-import javax.swing.JFrame;
-import javax.swing.event.MouseInputListener;
-
-
 public class Game implements Runnable {
 
-
-   
     private boolean running = false;
     private Thread th;
     static Handler handler;
@@ -34,8 +21,10 @@ public class Game implements Runnable {
     private Turret[] turret = new Turret[NUMBER_OF_PLAYERS];
     private ByteBuffer bb;
     private LinkedList<Wall> walls;
-    private byte[] allBytes;
-    public HashMap<InetAddress,Integer> portMap;
+
+    private long[] mostRecent = new long[NUMBER_OF_PLAYERS];
+    
+    public HashMap<InetAddress, Integer> portMap;
 
     @Override
     public void run() {
@@ -62,7 +51,7 @@ public class Game implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                System.out.println("Ticks: " + updates
+                Server.logger.info("Ticks: " + updates
                         + "      Frames Per Second(FPS): " + frames);
                 updates = 0;
                 frames = 0;
@@ -71,17 +60,12 @@ public class Game implements Runnable {
         stop();
     }
 
-    
-
     private void tick() {
-       
-        handler.tick(); // tells handler to tick all game objects
-        createBytes();
-       
-      
-       
-    }
 
+        handler.tick(); // tells handler to tick all game objects
+      
+
+    }
 
     public static enum STATE {
         MENU, GAME, PAUSE, CONTROLS, WIN
@@ -89,55 +73,38 @@ public class Game implements Runnable {
 
     public Game() {
         this.portMap = new HashMap<>();
-        
+
     }
 
+    
+    
     public void init() {
-        
-        
-        
-        
-        
+
         walls = new LinkedList<Wall>();
         // sets the keybindings
         handler = new Handler();
         for (int i = 0; i < Game.NUMBER_OF_PLAYERS; i++) {
-             tank[i] = new Tank(100, 100, 64, 64, ID.Tank, this, 0);
-             turret[i] = new Turret(tank[0].getX(), tank[0].getY(), 10,10,ID.Turret, tank[0]);
-             key[i] = new Key();
+            tank[i] = new Tank(100, 100, 64, 64, ID.Tank, this, 0);
+            turret[i] = new Turret(tank[0].getX(), tank[0].getY(), 10, 10, ID.Turret, tank[0]);
+            key[i] = new Key();
+            handler.addObject(tank[i]);
+
+            handler.addObject(turret[i]);
         }
-        
-        
+
         // inits tank at 100 100 and gives it the game instance
-        
-        
         // creates a turret for the tank
         walls.add(new Wall(10, 10, 30, HEIGHT - 70, ID.LeftWall));
-        walls.add(new Wall (10, HEIGHT - 90, WIDTH - 50, 30, ID.BottomWall));
-        walls.add(new Wall (WIDTH - 50, 10, 30, HEIGHT - 70, ID.RightWall));
-        walls.add(new Wall(10,10,WIDTH- 30,30, ID.TopWall));
-        walls.add(new Wall(200,200,100,100,ID.BreakableWall));  
+        walls.add(new Wall(10, HEIGHT - 90, WIDTH - 50, 30, ID.BottomWall));
+        walls.add(new Wall(WIDTH - 50, 10, 30, HEIGHT - 70, ID.RightWall));
+        walls.add(new Wall(10, 10, WIDTH - 30, 30, ID.TopWall));
+        walls.add(new Wall(200, 200, 100, 100, ID.BreakableWall));
         for (int i = 0; i < walls.size(); i++) {
             handler.addObject(walls.get(i));
         }
-        
-        handler.addObject(tank[0]);
-        
-        handler.addObject(turret[0]);
-        
-        
-        
-       
-        
-        
-        
+
 // adds the two objects to the handler
     }
-
-    
-
-    
-
 
     private final synchronized void stop() {
         if (!running) {
@@ -146,7 +113,7 @@ public class Game implements Runnable {
         running = false;
         try {
             th.join();
-            
+
         } catch (InterruptedException e) {
         }
         System.exit(1);
@@ -155,70 +122,110 @@ public class Game implements Runnable {
     final synchronized void start() {
         // If the program is already running then do nothing but if not running,
         // make it run and start the thread
-        if (running)
+        if (running) {
             return;
+        }
         running = true;
         th = new Thread(this);
-       
-        
+
         th.start();
-        
+
     }
-
-    
-
-    
-
-    
 
     public static Handler getHandler() {
         return handler;
     }
 
-    
-    private void createBytes(){
-
-    }
-    
-    public void decodeBytes(DatagramPacket p){
-         byte[] bmain = p.getData();
-         int index = portMap.get(p.getAddress());
-        byte[] temp = new byte[4]; 
-        if (bmain[0] == 1){
-            for (int i = 0; i < 4; i++) {
-                temp[i] = bmain[i+1];
+    public byte[] createBytes(int n) {
+        byte[] allBytes = new byte[256];
+        byte[] temp;
+        for (int j = 0; j < NUMBER_OF_PLAYERS; j++) {
+            bb = ByteBuffer.allocate(4);
+            bb.putInt(tank[j].getX());
+            temp = bb.array();
+            for (int i = 0; i < temp.length; i++) {
+            allBytes[i + 1 +(j * 20)] = temp[i];
+            
             }
-            bb = ByteBuffer.wrap(temp);
-            tank[index].setX(bb.getInt());
             
             
-            for (int i = 0; i < 4; i++) {
-                temp[i] = bmain[i+5];
+            bb = ByteBuffer.allocate(4);
+            bb.putInt(tank[j].getY());
+            temp = bb.array();
+            for (int i = 0; i < temp.length; i++) {
+            allBytes[i + 5 +(j * 20)] = temp[i];
             }
-            bb = ByteBuffer.wrap(temp);
-            tank[index].setX(bb.getInt());
             
-            temp = new byte[8];
-            for (int i = 0; i < 8; i++) {
-                temp[i] = bmain[i+10];
+            
+            allBytes[9] = (byte)tank[j].getIndex();
+            
+            
+            
+            bb = ByteBuffer.allocate(8);
+            bb.putDouble(turret[j].getRotate());
+            temp = bb.array();
+            for (int i = 0; i < temp.length; i++) {
+            allBytes[i + 10 +(j * 20)] = temp[i];
             }
-            bb = ByteBuffer.wrap(temp);
-            turret[index].setRotate(bb.getDouble());
+            if(turret[j].isShooting())
+            allBytes[19 + (20 * j)] = 0;
+            else
+                allBytes[19 + (20*j)] = 1;
             
-            tank[index].setPointing(bmain[19]); 
-            
-            key[index].shoot = bmain[20] == 0;
-            
-            key[index].up = bmain[21] == 0;
-            
-            key[index].down = bmain[22] == 0;
-            
-            key[index].left = bmain[23] == 0;
-            
-            key[index].right = bmain[24] == 0;
+            allBytes[20 + (j*20)] = (byte)tank[j].getMoveDir().ordinal();
             
         }
         
+        bb = ByteBuffer.allocate(8);
+        bb.putLong(mostRecent[n]);
+        temp = bb.array();
+        for (int i = 0; i < temp.length; i++) {
+            allBytes[i + 14] = temp[i];
+        }
+        return allBytes;
     }
-    
-}
+
+    public void decodeBytes(DatagramPacket p) {
+        byte[] bmain = p.getData();
+        int index = portMap.get(p.getAddress());
+        byte[] temp = new byte[8];
+        for (int i = 0; i < 8; i++) {
+                temp[i] = bmain[i + 14];
+            }
+            bb = ByteBuffer.wrap(temp);
+        long tempL = bb.getLong();
+        if(mostRecent[index] > tempL){
+        Server.logger.info("got old data");
+        }else{
+        mostRecent[index] = tempL;
+        key[index].up = bmain[1] == 0;
+
+            key[index].down = bmain[2] == 0;
+
+            key[index].left = bmain[3] == 0;
+
+            key[index].right = bmain[4] == 0;
+        
+        for (int i = 0; i < 4; i++) {
+                temp[i] = bmain[i + 5];
+            }
+            bb = ByteBuffer.wrap(temp);
+            turret[index].setMouseX(bb.getInt());
+            
+            for (int i = 0; i < 4; i++) {
+                temp[i] = bmain[i + 9];
+            }
+            bb = ByteBuffer.wrap(temp);
+            turret[index].setMouseY(bb.getInt());
+            
+        
+
+            key[index].shoot = bmain[13] == 0;
+
+            
+        }
+        }
+
+    }
+
+

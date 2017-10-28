@@ -9,10 +9,9 @@ import java.util.logging.SimpleFormatter;
 public class ServerRecieveThread extends Thread {
 
     protected DatagramSocket socket1 = null;
-    protected BufferedReader in = null;
     protected boolean moreQuotes = true;
-    private InetAddress[] address;
-    private int[] port;
+    public InetAddress[] address;
+    public int[] port;
     private DatagramPacket packet1;
     
     byte[] buf = new byte[256];
@@ -32,35 +31,15 @@ public class ServerRecieveThread extends Thread {
     @Override
     public void run() {
 
-        Logger logger = Logger.getLogger("ServerLog");
-        FileHandler fh;
-
-        try {
-
-            // This block configure the logger with handler and formatter
-            File file = new File("./logs/log.txt");
-            fh = new FileHandler(file.getPath());
-            // fh = new FileHandler("/Users/jeff/Desktop/log.txt");
-            logger.addHandler(fh);
-            SimpleFormatter formatter = new SimpleFormatter();
-            fh.setFormatter(formatter);
-            logger.setUseParentHandlers(false);
-            // the following statement is used to log any messages
-            logger.info("Server started.");
-
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
 
         for (int i = 0; i < Game.NUMBER_OF_PLAYERS; i++) {
             try{
             packet1 = new DatagramPacket(buf, buf.length);
-            logger.info("Packet made.");
+            Server.logger.info("Packet made original.");
 
             socket1.receive(packet1);
-            logger.info("Recieved 1.");
+            Server.logger.info("Recieved 1 original.");
             buf = null;
             buf = new byte[256];
             Server.game.portMap.put(packet1.getAddress(), i);
@@ -71,7 +50,13 @@ public class ServerRecieveThread extends Thread {
                 e.printStackTrace();
             }
         }
-
+        try {
+            ServerSendThread sST = new ServerSendThread(socket1, address, port);
+            sST.start();
+        } catch (IOException ex) {
+            Server.logger.info("could not initialize server send thread");
+        }
+        
         while (moreQuotes) {
             try {
                 buf = null;
@@ -79,11 +64,11 @@ public class ServerRecieveThread extends Thread {
 
                 // receive request
                 packet1 = new DatagramPacket(buf, buf.length);
-                logger.info("Packet made.");
+                Server.logger.info("Packet made.");
 
                 socket1.receive(packet1);
                 Server.game.decodeBytes(packet1);
-                logger.info("Recieved 1.");
+                Server.logger.info("Recieved 1.");
 
             } catch (IOException e) {
                 e.printStackTrace();
