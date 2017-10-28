@@ -4,7 +4,7 @@ byte[1 - 4] == x loc p1
 
 byte[5 - 8] == y loc p1
 
-spare byte
+byte[9] index p1
 
 byte[10 - 18] == rotate turret p1
 
@@ -18,7 +18,7 @@ byte[21 - 24] == x loc p2
 
 byte[25 - 28] == y loc p2
 
-spare byte
+byte[29] index p2
 
 byte[30 - 38] == rotate turret p2
 
@@ -32,7 +32,7 @@ byte[41 - 44] == x loc p3
 
 byte[45 - 48] == y loc p3
 
-spare byte
+byte[49] index p3
 
 byte[50 - 58] == rotate turret p3
 
