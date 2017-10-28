@@ -22,7 +22,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     private static Renderer renderer;
     private boolean running = false;
-    private Thread th, cRT;
+    private Thread th;
+    ClientRecieveThread cRT;
     static Handler handler;
     private static Game game;
     private static JFrame frame;
@@ -70,8 +71,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                System.out.println("Ticks: " + updates
-                        + "      Frames Per Second(FPS): " + frames);
+                System.out.println("Main Thread Ticks: " + updates + "      Frames Per Second(FPS): " + frames);
                 updates = 0;
                 frames = 0;
             }
@@ -210,7 +210,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         }
 
         System.out.println("Num Players: " + userSettings.getProperty("numPlayers", defaultSettings.getProperty("numPlayers")));
-        NUM_PLAYERS = Integer.parseInt(userSettings.getProperty("numPlayers", defaultSettings.getProperty("numPlayers")));
+        NUM_PLAYERS = getIntUserPropertyThenDefault("numPlayers", 2);
+        cRT.setPORT(getIntUserPropertyThenDefault("port", 4448));
+        cRT.setHost(getStringUserPropertyThenDefault("ipAddress"));
+        TANK_SIZE = getIntUserPropertyThenDefault("tankSize", 64);
     }
 
     public String getStringUserPropertyThenDefault(String setting) {
@@ -294,7 +297,9 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         cRT = new ClientRecieveThread(game);
 
         th.start();
+        System.out.println("started th");
         cRT.start();
+        System.out.println("started crt");
     }
 
     public static void render(Graphics2D g) {
@@ -384,7 +389,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         // y encoder end
 
         if (Key.shoot.isDown) {
-            allBytes[5] = 0;
+            allBytes[13] = 0;
         } else {
             allBytes[13] = 1;
         }
@@ -420,7 +425,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
                     }
                 bb = ByteBuffer.wrap(temp);
                 tank[j].setX( bb.getInt());
-                    
+                        
                 temp = new byte[4];
                     for (int i = 0; i < 4; i++) {
                     temp[i] = bmain[i + 5 + (20*j)];
@@ -438,7 +443,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
                  if (bmain[19 + (20*j)] == 0)
                      turret[j].shoot();
                  tank[j].setPointing(bmain[20 + (20 *j)]);
-                    
+                    System.out.println(tank[j].getX() + "    Y:" + tank[j].getY() + "    R:" + turret[j].getRotate());
                     
                 }
             

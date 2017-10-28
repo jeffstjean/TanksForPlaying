@@ -3,9 +3,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+
 
 public class Tank extends GameObject {
 
@@ -20,6 +18,7 @@ private Rectangle top, bottom, left, right;
         super(x, y, width, height, id);
         game = g;
         rotate = 0;
+        size = width;
         top = new Rectangle(x + 10,y - 10, size - 20, 10);
         bottom = new Rectangle (x + 10, y+size, size - 20, 10);
         left = new Rectangle (x - 10, y+10, 10, size -20);

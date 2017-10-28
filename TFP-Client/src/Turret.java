@@ -44,12 +44,7 @@ public class Turret extends GameObject{
         bounds.setLocation(x, y);
         rotate = Math.atan2((mouseY - yd), (mouseX - xd)) - Math.PI / 2;
         // sets the amount the turret needs to rotate based on the mouse location
-        if(Key.shoot.isDown && coolDownCounter > coolDown) {
-            shoot();
-            turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
-            coolDownCounter = 0;
-            // shoots and sets timer back to 0 if conditions are met
-        }
+        
         
      
     }
@@ -78,6 +73,7 @@ public class Turret extends GameObject{
         double subX = -(tank.getSize() / 2 * Math.sin(rotate));
         double subY = (tank.getSize() / 2 * Math.cos(rotate));
         Game.getHandler().addObject(new Bullet(x + (int)subX, y + (int)subY, 15, 15, ID.Bullet, 5, rotate));
+        turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
 
     }
 
