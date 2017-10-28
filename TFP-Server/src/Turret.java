@@ -25,6 +25,14 @@ public class Turret extends GameObject{
        
     }
 
+    public void setMouseX(double mouseX) {
+        this.mouseX = mouseX;
+    }
+
+    public void setMouseY(double mouseY) {
+        this.mouseY = mouseY;
+    }
+
     @Override
     public void tick() {
         shooting = false;
@@ -38,7 +46,7 @@ public class Turret extends GameObject{
         // sets x and y based on x and y of the tank it is attached to
         xd = (double) x;
         yd = (double ) y;
-        
+        rotate = Math.atan2((mouseY - yd), (mouseX - xd)) - Math.PI / 2;
         bounds.setLocation(x, y);
         
         // sets the amount the turret needs to rotate based on the mouse location

@@ -22,27 +22,25 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     private static Renderer renderer;
     private boolean running = false;
-    private Thread th, cRT;
+    private Thread th;
+    ClientRecieveThread cRT;
     static Handler handler;
     private static Game game;
     private static JFrame frame;
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
     public final String TITLE = "Tanks For Playing";
-    private Tank tank;
+    private int TANK_SIZE = 64;
     public HashMap<Integer, Key> keyBindings = new HashMap<Integer, Key>();
-    private Turret turret;
+
     public static boolean other[] = new boolean[256];
     private static int mouseX, mouseY;
-    private final int MOUSECLICKTYPE = 0; // 0 = pressed, 1 = released, 2 = clicked
+    private int NUM_PLAYERS;
     private ByteBuffer bb;
     private byte[] allBytes = new byte[256];
-    private int enemyX, enemyY, enemyPointing;
-    private double enemyRotate;
-    private EnemyTank enemyTank;
-    private EnemyTurret enemyTurret;
-    private boolean enemyShooting;
-
+    private Tank[] tank;
+    private Turret[] turret;
+    public long maxMillis = 0;
     //config vars
     private final Properties userSettings = new Properties(), defaultSettings = new Properties();
     private final File userSettingsLocation = new File("src/resources/config/config.properties"), defaultSettingsLocation = new File("src/resources/default_config/default_config.properties");
@@ -73,8 +71,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                System.out.println("Ticks: " + updates
-                        + "      Frames Per Second(FPS): " + frames);
+                System.out.println("Main Thread Ticks: " + updates + "      Frames Per Second(FPS): " + frames);
                 updates = 0;
                 frames = 0;
             }
@@ -90,9 +87,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         renderer.repaint(); // tells renderer to repaint if it hasn't already
         handler.tick(); // tells handler to tick all game objects
         createBytes();
-
-        enemyTank.setVals(enemyX, enemyY, enemyPointing);
-        enemyTurret.setVals(enemyShooting, enemyRotate);
 
     }
 
@@ -125,9 +119,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     @Override
     public void mouseClicked(MouseEvent me) {
-        if (MOUSECLICKTYPE == 2) {
-
-        }
 
         mouseX = me.getX();
         mouseY = me.getY();
@@ -147,10 +138,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        // if(MOUSECLICKTYPE == 1) {
+
         Key.shoot.isDown = false;
         //sets the key binding of shoot to up 
-        // }
+
         mouseX = me.getX();
         mouseY = me.getY();
         //gets the x and y location of the mouse
@@ -219,6 +210,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         }
 
         System.out.println("Num Players: " + userSettings.getProperty("numPlayers", defaultSettings.getProperty("numPlayers")));
+        NUM_PLAYERS = getIntUserPropertyThenDefault("numPlayers", 2);
+        cRT.setPORT(getIntUserPropertyThenDefault("port", 4448));
+        cRT.setHost(getStringUserPropertyThenDefault("ipAddress"));
+        TANK_SIZE = getIntUserPropertyThenDefault("tankSize", 64);
     }
 
     public String getStringUserPropertyThenDefault(String setting) {
@@ -247,12 +242,16 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         walls = new LinkedList<Wall>();
         // sets the keybindings
         handler = new Handler();
-        tank = new Tank(100, 100, 64, 64, ID.Tank, this);
-        enemyTank = new EnemyTank(400, 100, 64, 64, ID.Tank, this);
-        enemyTurret = new EnemyTurret(enemyTank.getX(), enemyTank.getY(), 10, 10, ID.Turret, enemyTank);
+        tank = new Tank[NUM_PLAYERS];
+        turret = new Turret[NUM_PLAYERS];
         // inits tank at 100 100 and gives it the game instance
+        for (int i = 0; i < NUM_PLAYERS; i++) {
+            tank[i] = new Tank(100, 100, TANK_SIZE, TANK_SIZE, ID.Tank, game);
+            turret[i] = new Turret(tank[i].getX(), tank[i].getY(), 10, 10, ID.Turret, tank[i]);
+            handler.addObject(tank[i]);
+            handler.addObject(turret[i]);
+        }
 
-        turret = new Turret(tank.getX(), tank.getY(), 10, 10, ID.Turret, tank);
         // creates a turret for the tank
         walls.add(new Wall(10, 10, 30, HEIGHT - 70, ID.LeftWall));
         walls.add(new Wall(10, HEIGHT - 90, WIDTH - 50, 30, ID.BottomWall));
@@ -262,11 +261,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         for (int i = 0; i < walls.size(); i++) {
             handler.addObject(walls.get(i));
         }
-
-        handler.addObject(tank);
-        handler.addObject(enemyTank);
-        handler.addObject(turret);
-        handler.addObject(enemyTurret);
 
 // adds the two objects to the handler
     }
@@ -303,7 +297,9 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         cRT = new ClientRecieveThread(game);
 
         th.start();
+        System.out.println("started th");
         cRT.start();
+        System.out.println("started crt");
     }
 
     public static void render(Graphics2D g) {
@@ -351,98 +347,109 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private void createBytes() {
         allBytes[0] = 1; // says its an in game byte
 
+        if (Key.up.isDown) {
+            allBytes[1] = 0;
+        } else {
+            allBytes[1] = 1;
+        }
+
+        if (Key.down.isDown) {
+            allBytes[2] = 0;
+        } else {
+            allBytes[2] = 1;
+        }
+
+        if (Key.left.isDown) {
+            allBytes[3] = 0;
+        } else {
+            allBytes[3] = 1;
+        }
+
+        if (Key.right.isDown) {
+            allBytes[4] = 0;
+        } else {
+            allBytes[4] = 1;
+        }
+
         //the x encoder start
         bb = ByteBuffer.allocate(4);
-        bb.putInt(tank.getX());
+        bb.putInt(mouseX);
         byte[] temp = bb.array();
         for (int i = 0; i < temp.length; i++) {
-            allBytes[i + 1] = temp[i];
+            allBytes[i + 5] = temp[i];
         }
         // the x encoder end
         // the y encoder start
         bb = ByteBuffer.allocate(4);
-        bb.putInt(tank.getY());
+        bb.putInt(mouseY);
         temp = bb.array();
         for (int i = 0; i < temp.length; i++) {
-            allBytes[i + 5] = temp[i];
+            allBytes[i + 9] = temp[i];
         }
         // y encoder end
 
-        // the rotation encoder start
+        if (Key.shoot.isDown) {
+            allBytes[13] = 0;
+        } else {
+            allBytes[13] = 1;
+        }
+
         bb = ByteBuffer.allocate(8);
-        bb.putDouble(turret.getRotate());
+        bb.putLong(System.currentTimeMillis());
         temp = bb.array();
         for (int i = 0; i < temp.length; i++) {
-            allBytes[i + 10] = temp[i];
-        }
-        // rotation encoder end        
-
-        allBytes[19] = (byte) tank.getMoveDir().ordinal();
-
-        if (turret.isShooting()) {
-            allBytes[20] = 0;
-        } else {
-            allBytes[20] = 1;
+            allBytes[i + 14] = temp[i];
         }
 
-        if (Key.up.isDown) {
-            allBytes[21] = 0;
-        } else {
-            allBytes[21] = 1;
-        }
-
-        if (Key.down.isDown) {
-            allBytes[22] = 0;
-        } else {
-            allBytes[22] = 1;
-        }
-
-        if (Key.left.isDown) {
-            allBytes[23] = 0;
-        } else {
-            allBytes[23] = 1;
-        }
-
-        if (Key.right.isDown) {
-            allBytes[24] = 0;
-        } else {
-            allBytes[24] = 1;
-        }
     }
 
     //private static int NUM_PLAYERS, PORT, FPS, TANK_SIZE, TANK_SPEED, BULLET_SPEED, BULLET_SIZE, MAP_LAYOUT;
     //private static String IP;
     public void decodeBytes(byte[] bmain) {
 
-        byte[] temp = new byte[4];
+        byte[] temp = new byte[8];
         if (bmain[0] == 1) {
-            for (int i = 0; i < 4; i++) {
-                temp[i] = bmain[i + 1];
-            }
-            bb = ByteBuffer.wrap(temp);
-            enemyX = bb.getInt();
-
-            for (int i = 0; i < 4; i++) {
-                temp[i] = bmain[i + 5];
-            }
-            bb = ByteBuffer.wrap(temp);
-            enemyY = bb.getInt();
-
-            temp = new byte[8];
             for (int i = 0; i < 8; i++) {
-                temp[i] = bmain[i + 10];
+                temp[i] = bmain[i + 14];
             }
-            bb = ByteBuffer.wrap(temp);
-            enemyRotate = bb.getDouble();
-
-            enemyPointing = bmain[19];
-
-            if (bmain[20] == 0) {
-                enemyShooting = true;
-            } else {
-                enemyShooting = false;
-            }
+            
+             bb = ByteBuffer.wrap(temp);
+            if(maxMillis <bb.getLong()){
+            maxMillis = bb.getLong();
+            
+                for (int j = 0; j < NUM_PLAYERS; j++) {
+                    
+                temp = new byte[4];
+                    for (int i = 0; i < 4; i++) {
+                    temp[i] = bmain[i + 1 + (20*j)];
+                    }
+                bb = ByteBuffer.wrap(temp);
+                tank[j].setX( bb.getInt());
+                        
+                temp = new byte[4];
+                    for (int i = 0; i < 4; i++) {
+                    temp[i] = bmain[i + 5 + (20*j)];
+                    }
+                bb = ByteBuffer.wrap(temp);
+                tank[j].setY( bb.getInt());
+                    
+                
+                temp = new byte[8];
+                    for (int i = 0; i < 8; i++) {
+                    temp[i] = bmain[i + 10 + (20*j)];
+                    }
+                bb = ByteBuffer.wrap(temp);
+                turret[j].setRotate(bb.getDouble());
+                 if (bmain[19 + (20*j)] == 0)
+                     turret[j].shoot();
+                 tank[j].setPointing(bmain[20 + (20 *j)]);
+                    System.out.println(tank[j].getX() + "    Y:" + tank[j].getY() + "    R:" + turret[j].getRotate());
+                    
+                }
+            
+         
         }
+           }
 
     }
 
