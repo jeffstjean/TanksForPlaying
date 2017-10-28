@@ -2,7 +2,9 @@ byte[0] 1 == during game time 2 == game info stuff
 
 byte[1 - 4] == x loc p1
 
-byte[5 - 9] == y loc p1
+byte[5 - 8] == y loc p1
+
+spare byte
 
 byte[10 - 18] == rotate turret p1
 
@@ -14,7 +16,9 @@ byte[20] == pointing p1
 
 byte[21 - 24] == x loc p2
 
-byte[25 - 29] == y loc p2
+byte[25 - 28] == y loc p2
+
+spare byte
 
 byte[30 - 38] == rotate turret p2
 
@@ -26,7 +30,9 @@ byte[40] == pointing p2
 
 byte[41 - 44] == x loc p3
 
-byte[45 - 49] == y loc p3
+byte[45 - 48] == y loc p3
+
+spare byte
 
 byte[50 - 58] == rotate turret p3
 
