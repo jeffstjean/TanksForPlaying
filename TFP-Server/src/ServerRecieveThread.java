@@ -53,8 +53,8 @@ public class ServerRecieveThread extends Thread {
 
                // }
             } catch (Exception e) {
-                Server.logger.info("something went wrong");
-                e.printStackTrace();
+                Server.logger.log(Level.SEVERE, "something went wrong{0}", e.getLocalizedMessage());
+                
             }
         } 
         try {
@@ -78,7 +78,8 @@ public class ServerRecieveThread extends Thread {
                 
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Server.logger.log(Level.SEVERE, "something went wrong{0}", e.getLocalizedMessage());
+                
                 
             }
         }

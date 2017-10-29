@@ -59,7 +59,9 @@ public class Bullet extends GameObject {
     }
 
     public void shoot() {
-        System.out.println("Shoot");
+        
+        Server.logger.info("we havent added shoot yet");
+        
     }
 
 }

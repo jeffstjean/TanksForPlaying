@@ -43,7 +43,7 @@ public class ServerSendThread extends Thread{
                     
                 }catch(BufferOverflowException e){
                     Server.logger.info("had a buffer error");
-                    System.out.println("buffer error");
+                    
                 }
             }
             

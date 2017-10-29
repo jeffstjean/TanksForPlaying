@@ -207,8 +207,7 @@ public class Game implements Runnable {
         Server.logger.info("got old data");
         }else{
         mostRecent[index] = tempL;
-       // System.out.println("Up" + key[index].up + bmain[1] + "   down " + key[index].down + bmain[2] + "    left" + key[index].left + bmain[3] + "    Right " + key[index].right + bmain[4]);
- 
+       
         key[index].up = bmain[1] == 0;
 
             key[index].down = bmain[2] == 0;
@@ -237,7 +236,7 @@ public class Game implements Runnable {
             
         }
         }else{
-            System.out.println("got a bad one");
+            Server.logger.info("got an old packet");
         }
         }
 
