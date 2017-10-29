@@ -203,7 +203,7 @@ public class Game implements Runnable {
             }
             bb = ByteBuffer.wrap(temp);
         long tempL = bb.getLong();
-        if(mostRecent[index] > tempL){
+        if(/*mostRecent[index] > tempL*/false){ //for debug purposes
         Server.logger.info("got old data");
         }else{
         mostRecent[index] = tempL;
@@ -236,7 +236,7 @@ public class Game implements Runnable {
             
         }
         }else{
-            Server.logger.info("got an old packet");
+            Server.logger.info("got a bad packet");
         }
         }
 
