@@ -213,8 +213,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         NUM_PLAYERS = getIntUserPropertyThenDefault("numPlayers", 2);
         cRT.setPORT(getIntUserPropertyThenDefault("port", 4448));
         cRT.setHost(getStringUserPropertyThenDefault("ipAddress"));
+       
         TANK_SIZE = getIntUserPropertyThenDefault("tankSize", 64);
         playerNumber = getIntUserPropertyThenDefault("playerNumber", 0);
+        
     }
 
     public String getStringUserPropertyThenDefault(String setting) {
@@ -247,7 +249,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         turret = new Turret[NUM_PLAYERS];
         // inits tank at 100 100 and gives it the game instance
         for (int i = 0; i < NUM_PLAYERS; i++) {
-            tank[i] = new Tank(100, 100, TANK_SIZE, TANK_SIZE, ID.Tank, game);
+            tank[i] = new Tank(100 + 100*i, 100, TANK_SIZE, TANK_SIZE, ID.Tank, game);
             turret[i] = new Turret(tank[i].getX(), tank[i].getY(), 10, 10, ID.Turret, tank[i]);
             handler.addObject(tank[i]);
             handler.addObject(turret[i]);
@@ -401,7 +403,11 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         for (int i = 0; i < temp.length; i++) {
             allBytes[i + 14] = temp[i];
         }
-
+        allBytes[24] = (byte)playerNumber;
+        for (int i = 0; i < allBytes.length; i++) {
+            System.out.print(allBytes[i]);
+        }
+        System.out.println("next");
     }
 
     //private static int NUM_PLAYERS, PORT, FPS, TANK_SIZE, TANK_SPEED, BULLET_SPEED, BULLET_SIZE, MAP_LAYOUT;

@@ -101,6 +101,7 @@ public class ClientRecieveThread extends Thread{
             packet = new DatagramPacket(game.getAllBytes(), game.getAllBytes().length, address, PORT);
             socket.send(packet);
             
+            
         } catch (IOException ex) {
             System.out.println("servererrorspot2 could not send");
         }
