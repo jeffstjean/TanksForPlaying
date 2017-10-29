@@ -13,8 +13,9 @@ public class Game implements Runnable {
     private boolean running = false;
     private Thread th;
     static Handler handler;
-    public Key[] key = new Key[2];
+    
     public static final int NUMBER_OF_PLAYERS = 2;
+    public Key[] key = new Key[NUMBER_OF_PLAYERS];
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
     public final String TITLE = "Tanks For Playing";
@@ -67,8 +68,8 @@ public class Game implements Runnable {
 
         handler.tick(); // tells handler to tick all game objects
        // Server.logger.info("p1x " + tank[0].getX() + "  p1y " + tank[0].getY() + "   p2X " + tank[1].getX() + "    p2y " + tank[1].getY());
-        System.out.println(tank[0]);
-        System.out.println(tank[1]);
+        
+        
     }
 
     public static enum STATE {
@@ -191,6 +192,7 @@ public class Game implements Runnable {
 
     public void decodeBytes(DatagramPacket p) {
         byte[] bmain = p.getData();
+        if(bmain[0] == 1){
         int index = /*portMap.get(p.getAddress());*/ bmain[24];
         byte[] temp = new byte[8];
         for (int i = 0; i < 8; i++) {
@@ -211,7 +213,11 @@ public class Game implements Runnable {
             key[index].left = bmain[3] == 0;
 
             key[index].right = bmain[4] == 0;
-            
+            for (int i = 0; i < bmain.length; i++) {
+            System.out.print(bmain[i]);
+        }
+        System.out.println("next");
+            System.out.println(tank[index]);
                    temp=new byte[4];
         for (int i = 0; i < 4; i++) {
                 temp[i] = bmain[i + 5];
@@ -230,6 +236,9 @@ public class Game implements Runnable {
             key[index].shoot = bmain[13] == 0;
             
             
+        }
+        }else{
+            System.out.println("got a bad one");
         }
         }
 

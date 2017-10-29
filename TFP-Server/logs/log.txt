@@ -1,18 +1,18 @@
-Oct 28, 2017 10:58:03 PM Server main
+Oct 29, 2017 11:00:06 AM Server main
 INFO: logger started.
-Oct 28, 2017 10:58:03 PM ServerRecieveThread run
+Oct 29, 2017 11:00:06 AM ServerRecieveThread run
 INFO: Packet made original.
-Oct 28, 2017 10:58:10 PM ServerRecieveThread run
+Oct 29, 2017 11:00:10 AM ServerRecieveThread run
 INFO: recieved a packet
-Oct 28, 2017 10:58:10 PM ServerRecieveThread run
+Oct 29, 2017 11:00:10 AM ServerRecieveThread run
 INFO: Recieved 1 original.
-Oct 28, 2017 10:58:10 PM ServerRecieveThread run
+Oct 29, 2017 11:00:10 AM ServerRecieveThread run
 INFO: Inet Address 0is /127.0.0.1
-Oct 28, 2017 10:58:10 PM ServerRecieveThread run
+Oct 29, 2017 11:00:10 AM ServerRecieveThread run
 INFO: Packet made original.
-Oct 28, 2017 10:58:17 PM ServerRecieveThread run
+Oct 29, 2017 11:00:18 AM ServerRecieveThread run
 INFO: recieved a packet
-Oct 28, 2017 10:58:17 PM ServerRecieveThread run
+Oct 29, 2017 11:00:18 AM ServerRecieveThread run
 INFO: Recieved 1 original.
-Oct 28, 2017 10:58:17 PM ServerRecieveThread run
+Oct 29, 2017 11:00:18 AM ServerRecieveThread run
 INFO: Inet Address 1is /127.0.0.1

@@ -8,7 +8,11 @@ public class Key {
     public boolean shoot;
 
     public Key() {
-        
+        up=false;
+        down=false;
+        right=false;
+        left=false;
+        shoot=false;
     }
 
     /* toggles the keys current state*/
