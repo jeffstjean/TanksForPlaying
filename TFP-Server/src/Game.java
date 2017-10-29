@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.logging.Level;
 
 public class Game implements Runnable {
 
@@ -51,9 +52,11 @@ public class Game implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                Server.logger.info("Ticks: " + updates
-                        + "      Frames Per Second(FPS): " + frames);
-                updates = 0;
+                //Server.logger.info("Ticks: " + updates
+                  //      + "      Frames Per Second(FPS): " + frames);
+                  
+                
+                  updates = 0;
                 frames = 0;
             }
         }
@@ -63,8 +66,9 @@ public class Game implements Runnable {
     private void tick() {
 
         handler.tick(); // tells handler to tick all game objects
-      
-
+       // Server.logger.info("p1x " + tank[0].getX() + "  p1y " + tank[0].getY() + "   p2X " + tank[1].getX() + "    p2y " + tank[1].getY());
+        System.out.println(tank[0]);
+        System.out.println(tank[1]);
     }
 
     public static enum STATE {
@@ -84,7 +88,7 @@ public class Game implements Runnable {
         // sets the keybindings
         handler = new Handler();
         for (int i = 0; i < Game.NUMBER_OF_PLAYERS; i++) {
-            tank[i] = new Tank(100, 100, 64, 64, ID.Tank, this, 0);
+            tank[i] = new Tank(100 + 100*i, 100, 64, 64, ID.Tank, this, i);
             turret[i] = new Turret(tank[0].getX(), tank[0].getY(), 10, 10, ID.Turret, tank[0]);
             key[i] = new Key();
             handler.addObject(tank[i]);
@@ -187,7 +191,7 @@ public class Game implements Runnable {
 
     public void decodeBytes(DatagramPacket p) {
         byte[] bmain = p.getData();
-        int index = portMap.get(p.getAddress());
+        int index = /*portMap.get(p.getAddress());*/ bmain[24];
         byte[] temp = new byte[8];
         for (int i = 0; i < 8; i++) {
                 temp[i] = bmain[i + 14];
@@ -198,20 +202,23 @@ public class Game implements Runnable {
         Server.logger.info("got old data");
         }else{
         mostRecent[index] = tempL;
+       // System.out.println("Up" + key[index].up + bmain[1] + "   down " + key[index].down + bmain[2] + "    left" + key[index].left + bmain[3] + "    Right " + key[index].right + bmain[4]);
+ 
         key[index].up = bmain[1] == 0;
 
             key[index].down = bmain[2] == 0;
-
+            
             key[index].left = bmain[3] == 0;
 
             key[index].right = bmain[4] == 0;
-        
+            
+                   temp=new byte[4];
         for (int i = 0; i < 4; i++) {
                 temp[i] = bmain[i + 5];
             }
             bb = ByteBuffer.wrap(temp);
             turret[index].setMouseX(bb.getInt());
-            
+            temp = new byte[4];
             for (int i = 0; i < 4; i++) {
                 temp[i] = bmain[i + 9];
             }
@@ -221,7 +228,7 @@ public class Game implements Runnable {
         
 
             key[index].shoot = bmain[13] == 0;
-
+            
             
         }
         }
