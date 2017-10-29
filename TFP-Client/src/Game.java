@@ -5,7 +5,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -47,7 +46,69 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private int playerNumber;
 
     private LinkedList<Wall> walls;
+    
+    //<editor-fold defaultstate="collapsed" desc=" Getters, setters, constructs and listeners">
+    
+    public void bind(Integer keyCode, Key key) {
+        keyBindings.put(keyCode, key);
+    }
 
+    public void releaseAll() {
+        for (Key key : keyBindings.values()) {
+            key.isDown = false;
+        }
+    }
+
+    public static Handler getHandler() {
+        return handler;
+    }
+    
+    
+        public static int getMouseX() {
+        return mouseX;
+    }
+
+    public static int getMouseY() {
+        return mouseY;
+    }
+
+    private final synchronized void stop() {
+        if (!running) {
+            return;
+        }
+        running = false;
+        try {
+            th.join();
+            cRT.join();
+        } catch (InterruptedException e) {
+        }
+        System.exit(1);
+    }
+
+    private final synchronized void start() {
+        // If the program is already running then do nothing but if not running,
+        // make it run and start the thread
+        if (running) {
+            return;
+        }
+        running = true;
+        th = new Thread(this);
+        cRT = new ClientRecieveThread(game);
+
+        th.start();
+        System.out.println("started th");
+        cRT.start();
+        System.out.println("started crt");
+    }
+
+    public static void render(Graphics2D g) {
+        handler.render(g);
+        // has handler render all gameObjects
+    }
+    
+    
+    
+    
     @Override
     public void run() {
         init();
@@ -184,7 +245,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         renderer = new Renderer();
         // initiallizes the renderer
     }
-
+//</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc=" Config Stuff ">
+    
     private void initConfigs() {
         if (!userSettingsLocation.exists()) {
             try {
@@ -234,7 +298,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
             }
         }
     }
-
+//</editor-fold>
+    
     public void init() {
         initConfigs();
         bind(KeyEvent.VK_W, Key.up);
@@ -268,47 +333,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 // adds the two objects to the handler
     }
 
-    public static int getMouseX() {
-        return mouseX;
-    }
 
-    public static int getMouseY() {
-        return mouseY;
-    }
-
-    private final synchronized void stop() {
-        if (!running) {
-            return;
-        }
-        running = false;
-        try {
-            th.join();
-            cRT.join();
-        } catch (InterruptedException e) {
-        }
-        System.exit(1);
-    }
-
-    private final synchronized void start() {
-        // If the program is already running then do nothing but if not running,
-        // make it run and start the thread
-        if (running) {
-            return;
-        }
-        running = true;
-        th = new Thread(this);
-        cRT = new ClientRecieveThread(game);
-
-        th.start();
-        System.out.println("started th");
-        cRT.start();
-        System.out.println("started crt");
-    }
-
-    public static void render(Graphics2D g) {
-        handler.render(g);
-        // has handler render all gameObjects
-    }
 
     public static void main(String[] args) {
         game = new Game();
@@ -333,19 +358,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         frame.addMouseListener(game);
     }
 
-    public void bind(Integer keyCode, Key key) {
-        keyBindings.put(keyCode, key);
-    }
-
-    public void releaseAll() {
-        for (Key key : keyBindings.values()) {
-            key.isDown = false;
-        }
-    }
-
-    public static Handler getHandler() {
-        return handler;
-    }
+    
 
     private void createBytes() {
         allBytes[0] = 1; // says its an in game byte
@@ -449,7 +462,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
                     }
                     tank[j].setPointing(bmain[20 + (20 * j)]);
 
-                    System.out.println("decoded" + tank[j].getX() + "    Y:" + tank[j].getY() + "    R:" + turret[j].getRotate());
+                    System.out.println("decoded  X:" + tank[j].getX() + "    Y:" + tank[j].getY() + "    R:" + turret[j].getRotate());
                 }
 
             } else {
