@@ -52,7 +52,7 @@ public class Turret extends GameObject{
         // sets the amount the turret needs to rotate based on the mouse location
         if(Server.game.key[tank.getIndex()].shoot && coolDownCounter > coolDown) {
             shoot();
-            
+            shooting = true;
             coolDownCounter = 0;
             // shoots and sets timer back to 0 if conditions are met
         }
