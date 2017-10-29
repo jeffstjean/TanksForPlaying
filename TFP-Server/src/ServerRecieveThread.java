@@ -77,9 +77,9 @@ public class ServerRecieveThread extends Thread {
                 Server.game.decodeBytes(packet1);
                 
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-                moreQuotes = false;
+                
             }
         }
 

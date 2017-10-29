@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.nio.BufferOverflowException;
 import java.util.logging.Level;
 
 
@@ -40,6 +41,9 @@ public class ServerSendThread extends Thread{
                 } catch (IOException ex) {
                     Server.logger.log(Level.INFO, "Could not send package to player{0}", i);
                     
+                }catch(BufferOverflowException e){
+                    Server.logger.info("had a buffer error");
+                    System.out.println("buffer error");
                 }
             }
             

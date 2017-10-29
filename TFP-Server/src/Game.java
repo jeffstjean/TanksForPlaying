@@ -144,6 +144,7 @@ public class Game implements Runnable {
     public byte[] createBytes(int n) {
         byte[] allBytes = new byte[256];
         byte[] temp;
+        allBytes[0] = 1;
         for (int j = 0; j < NUMBER_OF_PLAYERS; j++) {
             bb = ByteBuffer.allocate(4);
             bb.putInt(tank[j].getX());
@@ -185,8 +186,10 @@ public class Game implements Runnable {
         bb.putLong(mostRecent[n]);
         temp = bb.array();
         for (int i = 0; i < temp.length; i++) {
-            allBytes[i + 14] = temp[i];
+            allBytes[i + 248] = temp[i];
         }
+        
+        
         return allBytes;
     }
 
@@ -213,11 +216,7 @@ public class Game implements Runnable {
             key[index].left = bmain[3] == 0;
 
             key[index].right = bmain[4] == 0;
-            for (int i = 0; i < bmain.length; i++) {
-            System.out.print(bmain[i]);
-        }
-        System.out.println("next");
-            System.out.println(tank[index]);
+            
                    temp=new byte[4];
         for (int i = 0; i < 4; i++) {
                 temp[i] = bmain[i + 5];
