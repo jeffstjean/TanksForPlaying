@@ -44,6 +44,12 @@ private Rectangle top, bottom, left, right;
         return game;
     }
 
+     @Override
+    public String toString() {
+        return " x: " + x + " Y: " + y ;
+     }
+    
+    
     @Override
     public void tick() {
        

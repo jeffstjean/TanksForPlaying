@@ -42,7 +42,7 @@ public class Turret extends GameObject{
         yd = (double ) y;
         
         bounds.setLocation(x, y);
-        rotate = Math.atan2((mouseY - yd), (mouseX - xd)) - Math.PI / 2;
+        //rotate = Math.atan2((mouseY - yd), (mouseX - xd)) - Math.PI / 2;
         // sets the amount the turret needs to rotate based on the mouse location
         
         

@@ -84,6 +84,7 @@ public class ClientRecieveThread extends Thread{
             game.decodeBytes(packet.getData());
         } catch (Exception ex) {
             System.out.println("servererrorspot1");
+            ex.printStackTrace();
         }
         
         if(game.maxMillis - System.currentTimeMillis() > 500){
