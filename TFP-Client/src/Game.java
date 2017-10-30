@@ -312,10 +312,11 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public static void main(String[] args) {
         logger = Logger.getLogger("ClientLog");
         FileHandler fh;
+        File file = new File("src/resources/logs/log.txt");
         
         try {
             // This block configure the logger with handler and formatter
-            File file = new File("./resources/logs/log.lck");
+            file.createNewFile();
             fh = new FileHandler(file.getPath());
             logger.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
@@ -324,8 +325,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
             // the following statement is used to log any messages
             logger.info("Logger started.");
 
-        } catch (SecurityException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
