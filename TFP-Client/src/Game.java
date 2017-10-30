@@ -5,7 +5,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -13,8 +12,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Properties;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import javax.swing.JFrame;
 import javax.swing.event.MouseInputListener;
 
@@ -45,7 +46,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private final Properties userSettings = new Properties(), defaultSettings = new Properties();
     private final File userSettingsLocation = new File("src/resources/config/config.properties"), defaultSettingsLocation = new File("src/resources/default_config/default_config.properties");
     private int playerNumber;
-
+    private static Logger logger;
     private LinkedList<Wall> walls;
 
     @Override
@@ -309,6 +310,26 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     }
 
     public static void main(String[] args) {
+        logger = Logger.getLogger("ClientLog");
+        FileHandler fh;
+        
+        try {
+            // This block configure the logger with handler and formatter
+            File file = new File("./resources/logs/log.lck");
+            fh = new FileHandler(file.getPath());
+            logger.addHandler(fh);
+            SimpleFormatter formatter = new SimpleFormatter();
+            fh.setFormatter(formatter);
+            logger.setUseParentHandlers(false);
+            // the following statement is used to log any messages
+            logger.info("Logger started.");
+
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
         game = new Game();
 
         frame = new JFrame(game.TITLE);
@@ -329,6 +350,9 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         frame.addKeyListener(game);
         frame.addMouseMotionListener(game);
         frame.addMouseListener(game);
+        
+       
+        
     }
 
     public void bind(Integer keyCode, Key key) {
@@ -402,6 +426,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
             allBytes[i + 14] = temp[i];
         }
 
+    }
+    
+    public static void log (String log) {
+        logger.info(log);
     }
 
     //private static int NUM_PLAYERS, PORT, FPS, TANK_SIZE, TANK_SPEED, BULLET_SPEED, BULLET_SIZE, MAP_LAYOUT;
