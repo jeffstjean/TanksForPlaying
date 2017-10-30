@@ -44,52 +44,16 @@ private Rectangle top, bottom, left, right;
         return game;
     }
 
+     @Override
+    public String toString() {
+        return " x: " + x + " Y: " + y ;
+     }
+    
+    
     @Override
     public void tick() {
-        if (Key.up.isDown) {
-            motionY = -speed;
-        } else if (Key.down.isDown) {
-            motionY = speed;
-        } else {
-            motionY = 0;
-        }
-        if (Key.left.isDown) {
-            motionX = -speed;
-        } else if (Key.right.isDown) {
-            motionX = speed;
-        } else {
-            motionX = 0;
-        }
-        // sets movement based on keys pressed
-        if (motionX == 0 && motionY == 0) {
-            moveDir = moveDirection.NONE;
-        } else if (motionX < 0 && motionY == 0) {
-            moveDir = moveDirection.LEFT;
-        } else if (motionX > 0 && motionY == 0) {
-            moveDir = moveDirection.RIGHT;
-        } else if (motionX == 0 && motionY < 0) {
-            moveDir = moveDirection.UP;
-        } else if (motionX == 0 && motionY > 0) {
-            moveDir = moveDirection.DOWN;
-        } else if (motionX < 0 && motionY < 0) {
-            moveDir = moveDirection.UP_LEFT;
-        } else if (motionX < 0 && motionY > 0) {
-            moveDir = moveDirection.DOWN_LEFT;
-        } else if (motionX > 0 && motionY < 0) {
-            moveDir = moveDirection.UP_RIGHT;
-        } else if (motionX > 0 && motionY > 0) {
-            moveDir = moveDirection.DOWN_RIGHT;
-        }
-        // sets enum to be the correct directional value
-        if (intersecting){
-            
-            
-            
-            
-            
-
-        }
-        // moves tank and rectangle
+       
+       
         bounds.setLocation(x, y);
         top.setBounds(x + 10,y - 10, size - 20, 10);
         bottom.setBounds(x + 10, y+size , size - 20, 10);

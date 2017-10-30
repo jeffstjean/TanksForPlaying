@@ -1,21 +1,15 @@
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 
 public class Tank extends GameObject {
 
     private int size = 64;
     private int speed = 2;
-    private Game game;
-    private BufferedImage body;
-private double rotate;
-private Rectangle top, bottom, left, right;
-private int index;
+    private final Game game;
+   
+private final double rotate;
+private final Rectangle top, bottom, left, right;
+private final int index;
 
     public Tank(int x, int y, int width, int height, ID id, Game g, int index) {
         super(x, y, width, height, id);
@@ -48,21 +42,22 @@ private int index;
 
     @Override
     public void tick() {
+        motionX = 0;
+        motionY = 0;
         if (Server.game.key[index].up) {
             motionY = -speed;
-        } else if (Server.game.key[index].down) {
+        } 
+        if (Server.game.key[index].down) {
             motionY = speed;
-        } else {
-            motionY = 0;
-        }
+        } 
+       
         if (Server.game.key[index].left) {
             motionX = -speed;
-        } else if (Server.game.key[index].right) {
+        } 
+        if (Server.game.key[index].right) {
             motionX = speed;
-        } else {
-            motionX = 0;
-        }
-        // sets movement based on keys pressed
+        } 
+                // sets movement based on keys pressed
         if (motionX == 0 && motionY == 0) {
             moveDir = moveDirection.NONE;
         } else if (motionX < 0 && motionY == 0) {
@@ -83,46 +78,7 @@ private int index;
             moveDir = moveDirection.DOWN_RIGHT;
         }
         // sets enum to be the correct directional value
-        if (intersecting){
-            
-            
-            
-            
-            
-//            switch (moveDir){
-//               case NONE:
-//               
-//               break;
-//            case LEFT:
-//               x+= 10;
-//               break;
-//            case RIGHT:
-//                x -= 10;
-//               break;
-//            case UP:
-//                y += 10;
-//               break;
-//            case DOWN:
-//               y -= 10;
-//               break;
-//            case UP_LEFT:
-//                y +=10;
-//                x += 10;
-//               break;
-//            case DOWN_LEFT:
-//               y -= 10;
-//               x += 10;
-//               break;
-//            case UP_RIGHT:
-//                y +=10;
-//                x -= 10;
-//               break;
-//            case DOWN_RIGHT:
-//                y -=10;
-//                x-= 10;
-//               break;
-//            }
-        }
+
         // moves tank and rectangle
         bounds.setLocation(x, y);
         top.setBounds(x + 10,y - 10, size - 20, 10);
@@ -141,6 +97,15 @@ private int index;
         return moveDir;
     }
 
+    
+    @Override
+    public String toString() {
+        return "index " + index +" x: " + x + " Y: " + y +"\n keys up " +Server.game.key[index].up + " down " + Server.game.key[index].down + " left " + Server.game.key[index].left + " right " + Server.game.key[index].right;
+    }
+
+    
+    
+    
     public void setPointing(int pointing){
         switch (pointing) {
             case 0:

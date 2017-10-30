@@ -6,14 +6,16 @@ import java.nio.ByteBuffer;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.logging.Level;
 
 public class Game implements Runnable {
 
     private boolean running = false;
     private Thread th;
     static Handler handler;
-    public Key[] key = new Key[2];
+    
     public static final int NUMBER_OF_PLAYERS = 2;
+    public Key[] key = new Key[NUMBER_OF_PLAYERS];
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
     public final String TITLE = "Tanks For Playing";
@@ -51,9 +53,11 @@ public class Game implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                Server.logger.info("Ticks: " + updates
-                        + "      Frames Per Second(FPS): " + frames);
-                updates = 0;
+                //Server.logger.info("Ticks: " + updates
+                  //      + "      Frames Per Second(FPS): " + frames);
+                  
+                
+                  updates = 0;
                 frames = 0;
             }
         }
@@ -63,8 +67,9 @@ public class Game implements Runnable {
     private void tick() {
 
         handler.tick(); // tells handler to tick all game objects
-      
-
+       // Server.logger.info("p1x " + tank[0].getX() + "  p1y " + tank[0].getY() + "   p2X " + tank[1].getX() + "    p2y " + tank[1].getY());
+        
+        
     }
 
     public static enum STATE {
@@ -84,7 +89,7 @@ public class Game implements Runnable {
         // sets the keybindings
         handler = new Handler();
         for (int i = 0; i < Game.NUMBER_OF_PLAYERS; i++) {
-            tank[i] = new Tank(100, 100, 64, 64, ID.Tank, this, 0);
+            tank[i] = new Tank(100 + 100*i, 100, 64, 64, ID.Tank, this, i);
             turret[i] = new Turret(tank[0].getX(), tank[0].getY(), 10, 10, ID.Turret, tank[0]);
             key[i] = new Key();
             handler.addObject(tank[i]);
@@ -139,6 +144,7 @@ public class Game implements Runnable {
     public byte[] createBytes(int n) {
         byte[] allBytes = new byte[256];
         byte[] temp;
+        allBytes[0] = 1;
         for (int j = 0; j < NUMBER_OF_PLAYERS; j++) {
             bb = ByteBuffer.allocate(4);
             bb.putInt(tank[j].getX());
@@ -180,38 +186,43 @@ public class Game implements Runnable {
         bb.putLong(mostRecent[n]);
         temp = bb.array();
         for (int i = 0; i < temp.length; i++) {
-            allBytes[i + 14] = temp[i];
+            allBytes[i + 248] = temp[i];
         }
+        
+        
         return allBytes;
     }
 
     public void decodeBytes(DatagramPacket p) {
         byte[] bmain = p.getData();
-        int index = portMap.get(p.getAddress());
+        if(bmain[0] == 1){
+        int index = /*portMap.get(p.getAddress());*/ bmain[24];
         byte[] temp = new byte[8];
         for (int i = 0; i < 8; i++) {
                 temp[i] = bmain[i + 14];
             }
             bb = ByteBuffer.wrap(temp);
         long tempL = bb.getLong();
-        if(mostRecent[index] > tempL){
+        if(/*mostRecent[index] > tempL*/false){ //for debug purposes
         Server.logger.info("got old data");
         }else{
         mostRecent[index] = tempL;
+       
         key[index].up = bmain[1] == 0;
 
             key[index].down = bmain[2] == 0;
-
+            
             key[index].left = bmain[3] == 0;
 
             key[index].right = bmain[4] == 0;
-        
+            
+                   temp=new byte[4];
         for (int i = 0; i < 4; i++) {
                 temp[i] = bmain[i + 5];
             }
             bb = ByteBuffer.wrap(temp);
             turret[index].setMouseX(bb.getInt());
-            
+            temp = new byte[4];
             for (int i = 0; i < 4; i++) {
                 temp[i] = bmain[i + 9];
             }
@@ -221,8 +232,11 @@ public class Game implements Runnable {
         
 
             key[index].shoot = bmain[13] == 0;
-
             
+            
+        }
+        }else{
+            Server.logger.info("got a bad packet");
         }
         }
 

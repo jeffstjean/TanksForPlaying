@@ -3,8 +3,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.nio.BufferOverflowException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class ServerSendThread extends Thread{
@@ -17,13 +17,13 @@ public class ServerSendThread extends Thread{
     private DatagramPacket packet1;
     public ServerSendThread(DatagramSocket socket, InetAddress[] address, int[] port) throws IOException{
         super("ServerSendThread");
-        Server.logger.info("in serverSendThread");
+        
         this.address = address;
         
         this.port = port;
-        Server.logger.info("made duplicates");
+        
         socket1 = socket;
-        Server.logger.info("Made new DatagramSocket");
+        
         
         
     }
@@ -35,12 +35,15 @@ public class ServerSendThread extends Thread{
                 try { 
                byte[] temp = Server.game.createBytes(i);
                packet1 = new DatagramPacket(temp, temp.length, address[i], port[i]);
-                Server.logger.info("made packet");
+                
                     socket1.send(packet1);
                     
-                } catch (Exception ex) {
-                    Server.logger.info("Could not send package to player" + i);
-                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    Server.logger.log(Level.INFO, "Could not send package to player{0}", i);
+                    
+                }catch(BufferOverflowException e){
+                    Server.logger.info("had a buffer error");
+                    
                 }
             }
             

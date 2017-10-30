@@ -3,8 +3,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+
 
 
 public class ClientRecieveThread extends Thread{
@@ -84,6 +83,7 @@ public class ClientRecieveThread extends Thread{
             game.decodeBytes(packet.getData());
         } catch (Exception ex) {
             System.out.println("servererrorspot1");
+            ex.printStackTrace();
         }
         
         if(game.maxMillis - System.currentTimeMillis() > 500){
@@ -100,6 +100,7 @@ public class ClientRecieveThread extends Thread{
         try {
             packet = new DatagramPacket(game.getAllBytes(), game.getAllBytes().length, address, PORT);
             socket.send(packet);
+            
             
         } catch (IOException ex) {
             System.out.println("servererrorspot2 could not send");

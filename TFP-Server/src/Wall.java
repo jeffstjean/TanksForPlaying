@@ -31,7 +31,7 @@ public class Wall extends GameObject{
     public void collision(GameObject gO) {
         if(id == ID.BreakableWall){
             hits++;
-            System.out.println("Hit");
+            Server.logger.info("hit");
         }
     }
     
