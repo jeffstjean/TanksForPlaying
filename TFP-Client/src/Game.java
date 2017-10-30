@@ -181,7 +181,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     @Override
     public void mouseClicked(MouseEvent me) {
-
+        Mine mine = new Mine(300, 100, 32, 32, ID.Mine);
+        handler.addObject(mine);
         mouseX = me.getX();
         mouseY = me.getY();
         // gets the mouse's x and y location
@@ -420,8 +421,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     }
 
-    //private static int NUM_PLAYERS, PORT, FPS, TANK_SIZE, TANK_SPEED, BULLET_SPEED, BULLET_SIZE, MAP_LAYOUT;
-    //private static String IP;
     public void decodeBytes(byte[] bmain) {
         System.out.println("recieved");
         byte[] temp = new byte[8];
