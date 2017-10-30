@@ -337,9 +337,11 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
 
     public static void main(String[] args) {
+        
         game = new Game();
 
         frame = new JFrame(game.TITLE);
+        frame.setIconImage(ImageLoader.imageLoader("./graphics/bomb.png"));
         // Ads the instance of the game to the JFrame
         // frame.add(game);
         // Causes the window to be at preferred size initially
