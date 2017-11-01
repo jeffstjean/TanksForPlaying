@@ -6,23 +6,22 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
 public class Animation {
 
     private final int speed, timesRun;
-    private int count;
+    private int count, index;
     private boolean running;
     private BufferedImage currentImg;
-    private LinkedList<BufferedImage> imgs;
+    private final BufferedImage imgs[];
     private Timer timer;
     BufferedImage test = ImageLoader.imageLoader("./graphics/bomb.png");
 
     public Animation(BufferedImage[] imgs, int speed, int timesRun) {
-        this.imgs = new LinkedList<>();
-        this.imgs.addAll(Arrays.asList(imgs));
+        this.imgs = imgs;
         running = true;
         this.speed = speed;
-        this.timesRun = timesRun / speed;
+        this.timesRun = timesRun;
+        index = 0;
     }
 
     public void animate() {
@@ -32,20 +31,22 @@ public class Animation {
             @Override
             public void run() {
                 if (count < timesRun && running) {
-                    //currentImg = imgs.get(count % imgs.size());
-                    currentImg = imgs.get(0);
+                    index = count % imgs.length;
                     count++;
+                }
+                else {
+                    running = false;
                 }
             }
         }, 0, speed);
     }
-    
-    public void drawAnimation(Graphics g, double x, double y, int size){
-		g.drawImage(test, (int)x, (int)y, size, size, null);
-                //g.drawImage(ImageLoader.imageLoader("./graphics/bomb.png"), (int)x, (int)y, size, size, null);
-                
-	}
-    
+
+    public void drawAnimation(Graphics g, double x, double y, int size) {
+        currentImg = imgs[index];
+        g.drawImage(currentImg, (int) x, (int) y, size, size, null);
+
+    }
+
     public void stopAnimation() {
         running = false;
     }
@@ -53,6 +54,11 @@ public class Animation {
     public BufferedImage getCurrentImg() {
         return currentImg;
     }
+
+    public boolean isRunning() {
+        return running;
+    }
     
     
+
 }

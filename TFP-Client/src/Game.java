@@ -50,6 +50,9 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private static Logger logger;
     private LinkedList<Wall> walls;
     
+    //Test for mine explosion
+    private boolean firstClick = true;
+    
     //<editor-fold defaultstate="collapsed" desc=" Getters, setters, constructs and listeners">
     
     public void bind(Integer keyCode, Key key) {
@@ -185,6 +188,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     @Override
     public void mouseClicked(MouseEvent me) {
         Mine mine = new Mine(300, 100, 32, 32, ID.Mine);
+        if(!firstClick) mine.startExplosionSequence();
+        firstClick = !firstClick;
         handler.addObject(mine);
         mouseX = me.getX();
         mouseY = me.getY();

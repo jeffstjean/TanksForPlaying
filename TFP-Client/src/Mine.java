@@ -16,34 +16,61 @@ import java.io.File;
 public class Mine extends GameObject {
 
     private final File bomb = new File("./graphics/bomb.png"), bombFlash = new File("./graphics/bombFlash.png");
-    private int size = 32;
-    private BufferedImage[] imgs;
-    private final int maxTime = 240;
-    private int counter = 0, tens = 0;
-    private Animation a;
+    private final int size;
+    private final BufferedImage[] imgs;
+    private Animation flash;
+    private boolean explosionSequence, exploded, render;
 
     public Mine(int x, int y, int width, int height, ID id) {
         super(x, y, width, height, id);
-        imgs = new BufferedImage[2];
         motionX = 0;
         motionY = 0;
         size = width;
+        imgs = new BufferedImage[2];
         imgs[0] = ImageLoader.imageLoader(bomb.getPath());
         imgs[1] = ImageLoader.imageLoader(bombFlash.getPath());
-        a = new Animation(imgs, 500, 20);
-        a.animate();
+        explosionSequence = false;
+        exploded = false;
+        render = true;
     }
 
     @Override
     public void tick() {
-        
     }
 
     @Override
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.draw(bounds);
-        a.drawAnimation(g, x, y, size);
+        if (render) {
+            if (explosionSequence) {
+                flash.drawAnimation(g, x, y, size);
+            } else {
+                g.drawImage(ImageLoader.imageLoader(bomb.getPath()), (int) x, (int) y, size, size, null);
+            }
+            if (flash != null) {
+                if (!flash.isRunning() && explosionSequence) {
+                    explode(g);
+                }
+            }
+        }
+        else {
+            g.drawImage(ImageLoader.imageLoader("./graphics/TankGreen.png"), (int) x, (int) y, size, size, null);
+        }
+    }
+
+    public void startExplosionSequence() {
+        explosionSequence = true;
+        flash = new Animation(imgs, 200, 20);
+        flash.animate();
+    }
+
+    private void explode(Graphics g) {
+        if (!exploded) {
+            exploded = true;
+            render = false;
+            System.out.println("BOOM");
+        }
     }
 
 }
