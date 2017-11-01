@@ -440,7 +440,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         bb.putLong(System.currentTimeMillis());
         temp = bb.array();
         for (int i = 0; i < temp.length; i++) {
-            allBytes[i + 14] = temp[i];
+            allBytes[i + 15] = temp[i];
         }
         allBytes[24] = (byte) playerNumber;
 
@@ -455,12 +455,12 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         byte[] temp = new byte[8];
         if (bmain[0] == 1) {
             for (int i = 0; i < 8; i++) {
-                temp[i] = bmain[i + 248];
+                temp[i] = bmain[i + 240];
             }
 
             bb = ByteBuffer.wrap(temp);
             long tempL = bb.getLong();
-            if (/*maxMillis < tempL*/ true) { //this is commented out for debug purposes
+            if (/*maxMillis < tempL*/ true ) { //this is commented out for debug purposes
                 maxMillis = tempL;
 
                 for (int j = 0; j < NUM_PLAYERS; j++) {
