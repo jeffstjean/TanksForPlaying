@@ -3,6 +3,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public final String TITLE = "Tanks For Playing";
     private int TANK_SIZE = 64;
     public HashMap<Integer, Key> keyBindings = new HashMap<Integer, Key>();
-
+    
     public static boolean other[] = new boolean[256];
     private static int mouseX, mouseY;
     private int NUM_PLAYERS;

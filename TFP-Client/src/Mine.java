@@ -17,36 +17,32 @@ public class Mine extends GameObject {
 
     private final File bomb = new File("./graphics/bomb.png"), bombFlash = new File("./graphics/bombFlash.png");
     private int size = 32;
-    private BufferedImage img;
+    private BufferedImage[] imgs;
     private final int maxTime = 240;
     private int counter = 0, tens = 0;
     private Animation a;
 
     public Mine(int x, int y, int width, int height, ID id) {
         super(x, y, width, height, id);
+        imgs = new BufferedImage[2];
         motionX = 0;
         motionY = 0;
         size = width;
-        img = ImageLoader.imageLoader(bomb.getPath());
-        a = new Animation(2, ImageLoader.imageLoader(bomb.getPath()), ImageLoader.imageLoader(bombFlash.getPath()));
+        imgs[0] = ImageLoader.imageLoader(bomb.getPath());
+        imgs[1] = ImageLoader.imageLoader(bombFlash.getPath());
+        a = new Animation(imgs, 500, 20);
+        a.animate();
     }
 
     @Override
     public void tick() {
-        counter++;
-        if (counter > (maxTime / 100) * 30)
-            a.runAnimation();
-        if (counter > maxTime) {
-            System.out.println("BOOM");
-            Game.handler.removeObject(this);
-        }
+        
     }
 
     @Override
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.draw(bounds);
-        g2d.drawImage(img, x, y, size, size, null);
         a.drawAnimation(g, x, y, size);
     }
 
