@@ -49,6 +49,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private int playerNumber;
     private static Logger logger;
     private LinkedList<Wall> walls;
+    private LinkedList<Mine> mines;
     
     //Test for mine explosion
     private boolean firstClick = true;
@@ -155,6 +156,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         renderer.repaint(); // tells renderer to repaint if it hasn't already
         handler.tick(); // tells handler to tick all game objects
         createBytes();
+        
 
     }
 
@@ -187,10 +189,9 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     @Override
     public void mouseClicked(MouseEvent me) {
-        Mine mine = new Mine(300, 100, 32, 32, ID.Mine);
-        if(!firstClick) mine.startExplosionSequence();
-        firstClick = !firstClick;
-        handler.addObject(mine);
+        mines.add(new Mine(me.getX(), me.getY(), 32, 32, ID.Mine));
+        mines.get(mines.size() - 1).startExplosionSequence();
+        handler.addObject(mines.get(mines.size() - 1));
         mouseX = me.getX();
         mouseY = me.getY();
         // gets the mouse's x and y location
@@ -316,7 +317,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         bind(KeyEvent.VK_S, Key.down);
         bind(KeyEvent.VK_D, Key.right);
 
-        walls = new LinkedList<Wall>();
+        walls = new LinkedList<>();
+        mines = new LinkedList<>();
         // sets the keybindings
         handler = new Handler();
         tank = new Tank[NUM_PLAYERS];
