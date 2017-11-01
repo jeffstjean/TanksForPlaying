@@ -3,7 +3,6 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -156,8 +155,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         renderer.repaint(); // tells renderer to repaint if it hasn't already
         handler.tick(); // tells handler to tick all game objects
         createBytes();
-        
-
+        for (int i = 0; i < mines.size(); i++) {
+            if(mines.get(i).isAllAnimationsComplete()) // Delete any old mines
+                mines.remove(i);
+        }
     }
 
     @Override
@@ -189,9 +190,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     @Override
     public void mouseClicked(MouseEvent me) {
-        mines.add(new Mine(me.getX() - 16, me.getY() - 39, 32, 32, ID.Mine));
-        mines.get(mines.size() - 1).startExplosionSequence();
+        //Only for testing mines - will be deleted
+        mines.add(new Mine(me.getX() - 16, me.getY() - 39, 32, 32, ID.Mine, handler, 4));
         handler.addObject(mines.get(mines.size() - 1));
+        
         mouseX = me.getX();
         mouseY = me.getY();
         // gets the mouse's x and y location
@@ -457,6 +459,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public static void log (String log) {
         logger.info(log);
     }
+    
 
     public void decodeBytes(byte[] bmain) {
         System.out.println("recieved");

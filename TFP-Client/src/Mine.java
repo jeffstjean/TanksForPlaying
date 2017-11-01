@@ -13,35 +13,62 @@ import java.io.File;
  *
  * @author jeff4821
  */
-public class Mine extends GameObject {
+public final class Mine extends GameObject {
 
-    private final File bomb = new File("./graphics/bomb.png"), bombFlash = new File("./graphics/bombFlash.png"), explosion = new File("./graphics/explosion.png"), explosionSheet = new File("./graphics/explosionSheet.png");
+    private final File bomb = new File("./graphics/bomb.png"), bombFlash = new File("./graphics/bombFlash.png");
     private final BufferedImage[] imgs;
     private Animation a;
+    private Explosion explosion;
+    private boolean animationComplete, allAnimationsComplete;
+    private final double EXPLOSION_SIZE_FACTOR;
+    private Handler h;
 
-    public Mine(int x, int y, int width, int height, ID id) {
+    public Mine(int x, int y, int width, int height, ID id, Handler h, double explosionSizeRelativeToMine) {
         super(x, y, width, height, id);
+        this.h = h;
         motionX = 0;
         motionY = 0;
         imgs = new BufferedImage[2];
         imgs[0] = ImageLoader.imageLoader(bomb.getPath());
         imgs[1] = ImageLoader.imageLoader(bombFlash.getPath());
+        animationComplete = false;
+        startCountdown();
+        this.EXPLOSION_SIZE_FACTOR = explosionSizeRelativeToMine;
     }
 
     @Override
     public void tick() {
-        if(a!=null) System.out.println(a.isDone());
+        if (a != null) {
+            a.tick();
+            if (a.isComplete() && !animationComplete) {
+                animationComplete = true;
+                startExplosion();
+                a = null;
+                allAnimationsComplete = true;
+            }
+        }
     }
 
     @Override
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        if(a!=null) a.drawAnimation(g, x, y, width);
-        
+        if (a != null) {
+            a.render(g, x, y, width);
+        }
+
+    }
+
+    public void startCountdown() {
+        a = new Animation(imgs, 10, 5);
+    }
+
+    public void startExplosion() {
+        explosion = new Explosion(x - (int)(((width*EXPLOSION_SIZE_FACTOR)-width)/2), y - (int)(int)(((height*EXPLOSION_SIZE_FACTOR)-height)/2), (int)(width * EXPLOSION_SIZE_FACTOR), (int)(height * EXPLOSION_SIZE_FACTOR), id, h);
+    }
+
+    public boolean isAllAnimationsComplete() {
+        return allAnimationsComplete;
     }
     
-    public void startExplosionSequence() {
-        a = new Animation(imgs, 200, 10);
-        a.animate();
-    }
+    
 }
