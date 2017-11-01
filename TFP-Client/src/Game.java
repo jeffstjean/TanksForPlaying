@@ -189,7 +189,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     @Override
     public void mouseClicked(MouseEvent me) {
-        mines.add(new Mine(me.getX(), me.getY(), 32, 32, ID.Mine));
+        mines.add(new Mine(me.getX() - 16, me.getY() - 39, 32, 32, ID.Mine));
         mines.get(mines.size() - 1).startExplosionSequence();
         handler.addObject(mines.get(mines.size() - 1));
         mouseX = me.getX();

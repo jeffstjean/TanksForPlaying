@@ -1,8 +1,6 @@
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -10,7 +8,7 @@ public class Animation {
 
     private final int speed, timesRun;
     private int count, index;
-    private boolean running;
+    private boolean running, done;
     private BufferedImage currentImg;
     private final BufferedImage imgs[];
     private Timer timer;
@@ -19,6 +17,7 @@ public class Animation {
     public Animation(BufferedImage[] imgs, int speed, int timesRun) {
         this.imgs = imgs;
         running = true;
+        done = false;
         this.speed = speed;
         this.timesRun = timesRun;
         index = 0;
@@ -37,8 +36,9 @@ public class Animation {
                 else {
                     running = false;
                 }
-            }
+            }  
         }, 0, speed);
+        done = true;
     }
 
     public void drawAnimation(Graphics g, double x, double y, int size) {
@@ -57,6 +57,10 @@ public class Animation {
 
     public boolean isRunning() {
         return running;
+    }
+    
+    public boolean isDone() {
+        return done;
     }
     
     
