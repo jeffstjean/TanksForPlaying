@@ -43,7 +43,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private Turret[] turret;
     public long maxMillis = 0;
     //config vars
-    private final Properties userSettings = new Properties(), defaultSettings = new Properties();
+    private static final Properties USER_SETTINGS = new Properties(), DEFAULT_SETTINGS = new Properties();
     private final File userSettingsLocation = new File("src/resources/config/config.properties"), defaultSettingsLocation = new File("src/resources/default_config/default_config.properties");
     private int playerNumber;
     private static Logger logger;
@@ -191,9 +191,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     @Override
     public void mouseClicked(MouseEvent me) {
         //Only for testing mines - will be deleted
-        mines.add(new Mine(me.getX() - 16, me.getY() - 39, 32, 32, ID.Mine, handler, 4));
+        //mines.add(new Mine(me.getX() - 16, me.getY() - 39, 32, 32, ID.Mine, handler));
+        mines.add(new Mine(tank[0].getX() + (tank[0].getSize()/4), tank[0].getX() + (tank[0].getSize()/4), 32, 32, ID.Mine, handler));
         handler.addObject(mines.get(mines.size() - 1));
-        
+        Powerup pu = new Powerup(400, 400, 32, 32, ID.PowerUp, handler, 0);
         mouseX = me.getX();
         mouseY = me.getY();
         // gets the mouse's x and y location
@@ -273,14 +274,14 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         FileInputStream in;
         try {
             in = new FileInputStream(defaultSettingsLocation);
-            defaultSettings.load(in);
+            DEFAULT_SETTINGS.load(in);
             in.close();
         } catch (IOException e) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, e);
         }
         try {
             in = new FileInputStream(userSettingsLocation);
-            userSettings.load(in);
+            USER_SETTINGS.load(in);
             in.close();
         } catch (IOException e) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, e);
@@ -295,16 +296,16 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     }
 
-    public String getStringUserPropertyThenDefault(String setting) {
-        return (userSettings.getProperty(setting, defaultSettings.getProperty(setting)));
+    public static String getStringUserPropertyThenDefault(String setting) {
+        return (USER_SETTINGS.getProperty(setting, DEFAULT_SETTINGS.getProperty(setting)));
     }
 
-    public int getIntUserPropertyThenDefault(String setting, int defaultIfError) {
+    public static int getIntUserPropertyThenDefault(String setting, int defaultIfError) {
         try {
-            return Integer.parseInt(userSettings.getProperty(setting));
+            return Integer.parseInt(USER_SETTINGS.getProperty(setting));
         } catch (NumberFormatException e) {
             try {
-                return Integer.parseInt(defaultSettings.getProperty(setting));
+                return Integer.parseInt(DEFAULT_SETTINGS.getProperty(setting));
             } catch (NumberFormatException ex) {
                 return defaultIfError;
             }

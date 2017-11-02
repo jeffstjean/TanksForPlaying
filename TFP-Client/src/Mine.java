@@ -23,7 +23,7 @@ public final class Mine extends GameObject {
     private Explosion explosion;
     private boolean animationComplete, allAnimationsComplete;
 
-    public Mine(int x, int y, int width, int height, ID id, Handler h, double explosionSizeRelativeToMine) {
+    public Mine(int x, int y, int width, int height, ID id, Handler h) {
         super(x, y, width, height, id);
         this.h = h; // Need the handler to add Explosion from within Mine
         motionX = 0; // No motion is needed
@@ -33,7 +33,7 @@ public final class Mine extends GameObject {
         imgs[1] = ImageLoader.imageLoader(BOMB_FLASH_FILE_LOCATION.getPath()); // The flashing bomb
         animationComplete = false; // Animation isn't yet complete
         startCountdown(); // Eventually move this to the trigger for initiating the countdown (ie. mouse click)
-        this.EXPLOSION_SIZE_FACTOR = explosionSizeRelativeToMine; // Allows for resizing of explosion
+        this.EXPLOSION_SIZE_FACTOR = Game.getIntUserPropertyThenDefault("explosionRealtiveSizeToMine", 4); // Allows for resizing of explosion
     }
 
     @Override

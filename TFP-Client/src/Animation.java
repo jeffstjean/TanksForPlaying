@@ -9,12 +9,31 @@ public class Animation {
     private final int speed, timesToRun;
     private int index, tickCounter, timesRun;
     private BufferedImage currentImage;
-    private boolean complete;
+    private boolean complete, runForever;
 
     public Animation(BufferedImage imgs[], int speed, int timesToRun) {
         this.imgs = imgs;
         this.speed = speed;
         this.timesToRun = timesToRun;
+        this.runForever = false;
+        tickCounter = 0;
+        timesRun = 0;
+        complete = false;
+        if (imgs.length == 0) { // Incase the array is empty
+            currentImage = ImageLoader.imageLoader("");
+            index = -1;
+        } else {
+            currentImage = imgs[0];
+            index = 0;
+        }
+    }
+    
+    
+    public Animation(BufferedImage imgs[], int speed, boolean runForever) {
+        this.imgs = imgs;
+        this.speed = speed;
+        this.timesToRun = 1;
+        this.runForever = runForever;
         tickCounter = 0;
         timesRun = 0;
         complete = false;
@@ -31,7 +50,7 @@ public class Animation {
         if (imgs.length < 0) {
             return; // No images were passed in
         }
-        if (tickCounter % speed == 0 && timesRun < timesToRun) { // Check if tick delay && times run has been reached
+        if (tickCounter % speed == 0 && (timesRun < timesToRun || runForever)) { // Check if tick delay && times run has been reached
             if (index == imgs.length - 1) { // If at last image..
                 index = 0; // loop to 0
                 timesRun++; // The animation has been run once
