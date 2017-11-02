@@ -107,8 +107,9 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     }
 
     public static void render(Graphics2D g) {
-        handler.render(g);
-        // has handler render all gameObjects
+        if(handler!=null )handler.render(g);
+        // Has handler render all gameObjects
+        // Checks to see if null to avoid NPE
     }
     
     
@@ -371,7 +372,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         game = new Game();
 
         frame = new JFrame(game.TITLE);
-        frame.setIconImage(ImageLoader.imageLoader("./graphics/bomb.png"));
+        frame.setIconImage(ImageLoader.imageLoader("./graphics/icon.png"));
         // Ads the instance of the game to the JFrame
         // frame.add(game);
         // Causes the window to be at preferred size initially
