@@ -50,8 +50,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private LinkedList<Wall> walls;
     private LinkedList<Mine> mines;
     
-    //Test for mine explosion
-    private boolean firstClick = true;
+
     
     //<editor-fold defaultstate="collapsed" desc=" Getters, setters, constructs and listeners">
     
@@ -78,7 +77,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         return mouseY;
     }
 
-    private final synchronized void stop() {
+    private synchronized void stop() {
         if (!running) {
             return;
         }
@@ -91,7 +90,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         System.exit(1);
     }
 
-    private final synchronized void start() {
+    private synchronized void start() {
         // If the program is already running then do nothing but if not running,
         // make it run and start the thread
         if (running) {
@@ -318,6 +317,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         bind(KeyEvent.VK_A, Key.left);
         bind(KeyEvent.VK_S, Key.down);
         bind(KeyEvent.VK_D, Key.right);
+        bind(KeyEvent.VK_SPACE, Key.mine);
 
         walls = new LinkedList<>();
         mines = new LinkedList<>();
