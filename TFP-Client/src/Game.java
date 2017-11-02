@@ -194,7 +194,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         //mines.add(new Mine(me.getX() - 16, me.getY() - 39, 32, 32, ID.Mine, handler));
         mines.add(new Mine(tank[0].getX() + (tank[0].getSize()/4), tank[0].getX() + (tank[0].getSize()/4), 32, 32, ID.Mine, handler));
         handler.addObject(mines.get(mines.size() - 1));
-        Powerup pu = new Powerup(400, 400, 32, 32, ID.PowerUp, handler, 0);
+        Powerup pu = new Powerup(300, 300, 32, 32, ID.PowerUp, handler, 0);
+        handler.addObject(pu);
         mouseX = me.getX();
         mouseY = me.getY();
         // gets the mouse's x and y location
