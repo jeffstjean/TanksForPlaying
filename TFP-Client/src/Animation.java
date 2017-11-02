@@ -59,7 +59,7 @@ public class Animation {
             }
             currentImage = imgs[index]; // Update the currentImage
         }
-        if(timesRun >= timesToRun) complete = true; // This boolean has public access so other classes know when the animation has completed
+        if(timesRun >= timesToRun && !runForever) complete = true; // This boolean has public access so other classes know when the animation has completed
     }
 
     public void tick() {
@@ -73,6 +73,10 @@ public class Animation {
 
     public boolean isComplete() { // Boolean is set to true to let other classes know the animation is complete
         return complete;
+    }
+    
+    public void stop() {
+        complete = true;
     }
     
     

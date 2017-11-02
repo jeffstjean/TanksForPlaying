@@ -49,6 +49,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private static Logger logger;
     private LinkedList<Wall> walls;
     private LinkedList<Mine> mines;
+    private LinkedList<Powerup> powerups;
+    
+    //POC var for Powerups
+    private int clickCounter = 0;
     
 
     
@@ -159,6 +163,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
             if(mines.get(i).isAllAnimationsComplete()) // Delete any old mines
                 mines.remove(i);
         }
+        for (int i = 0; i < powerups.size(); i++) {
+            if(powerups.get(i).isAnimationComplete()) // Delete any old mines
+                powerups.remove(i);
+        }
     }
 
     @Override
@@ -191,11 +199,33 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     @Override
     public void mouseClicked(MouseEvent me) {
         //Only for testing mines - will be deleted
-        //mines.add(new Mine(me.getX() - 16, me.getY() - 39, 32, 32, ID.Mine, handler));
+        
         mines.add(new Mine(tank[0].getX() + (tank[0].getSize()/4), tank[0].getX() + (tank[0].getSize()/4), 32, 32, ID.Mine, handler));
         handler.addObject(mines.get(mines.size() - 1));
-        Powerup pu = new Powerup(300, 300, 32, 32, ID.PowerUp, handler, 0);
-        handler.addObject(pu);
+        
+        //Proof of Concept code can be deleted
+        clickCounter++;
+        clickCounter = clickCounter%4;
+        PowerupColor clr;
+        switch (clickCounter) {
+            case 0:
+                clr = PowerupColor.Red;
+                break;
+            case 1:
+                clr = PowerupColor.Green;
+                break;
+            case 2:
+                clr = PowerupColor.Yellow;
+                break;
+            default:
+                clr = PowerupColor.Blue;
+                break;
+        }
+        powerups.add(new Powerup(me.getX() - 16, me.getY() - 39, 32, 32, ID.PowerUp, handler, clr));
+        handler.addObject(powerups.get(powerups.size() - 1));
+        //End of POC
+        
+        
         mouseX = me.getX();
         mouseY = me.getY();
         // gets the mouse's x and y location
@@ -324,6 +354,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
         walls = new LinkedList<>();
         mines = new LinkedList<>();
+        powerups = new LinkedList<>();
         // sets the keybindings
         handler = new Handler();
         tank = new Tank[NUM_PLAYERS];
