@@ -25,7 +25,8 @@ public class ServerRecieveThread extends Thread {
         socket1 = new DatagramSocket(4447);
         address = new InetAddress[Game.NUMBER_OF_PLAYERS];
         port = new int[Game.NUMBER_OF_PLAYERS];
-
+        socket1.setReceiveBufferSize(256);
+        socket1.setSendBufferSize(256);
     }
 
     @Override

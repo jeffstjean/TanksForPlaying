@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.logging.Level;
+
 
 public class Game implements Runnable {
 
@@ -186,7 +186,7 @@ public class Game implements Runnable {
         bb.putLong(mostRecent[n]);
         temp = bb.array();
         for (int i = 0; i < temp.length; i++) {
-            allBytes[i + 248] = temp[i];
+            allBytes[i + 240] = temp[i];
         }
         
         
@@ -199,11 +199,11 @@ public class Game implements Runnable {
         int index = /*portMap.get(p.getAddress());*/ bmain[24];
         byte[] temp = new byte[8];
         for (int i = 0; i < 8; i++) {
-                temp[i] = bmain[i + 14];
+                temp[i] = bmain[i + 15];
             }
             bb = ByteBuffer.wrap(temp);
         long tempL = bb.getLong();
-        if(/*mostRecent[index] > tempL*/false){ //for debug purposes
+        if(mostRecent[index] > tempL){ //for debug purposes
         Server.logger.info("got old data");
         }else{
         mostRecent[index] = tempL;
