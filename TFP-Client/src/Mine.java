@@ -4,15 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author jeff4821
- */
+
 public final class Mine extends GameObject {
 
     private final File BOMB_FILE_LOCATION = new File("./graphics/bomb.png"), BOMB_FLASH_FILE_LOCATION = new File("./graphics/bombFlash.png");

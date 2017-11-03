@@ -3,15 +3,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author jeff4821
- */
+
 public class Powerup extends GameObject {
 
     private final Handler h;
@@ -27,10 +19,10 @@ public class Powerup extends GameObject {
         this.type = type;
         motionX = 0; // No motion is needed
         motionY = 0;
-        tickCounter = 0;
-        imgs = new BufferedImage[6];
+        tickCounter = 0; // Counbt the ticks to determine when to disappear
+        imgs = new BufferedImage[6]; // Array to hold the images
         String fileLocation = "./graphics/powerup/";
-        switch (type) {
+        switch (type) { // Allows the constructor to dictate which file to load
             case Blue:
                 fileLocation += "blue";
                 break;
@@ -49,15 +41,15 @@ public class Powerup extends GameObject {
         }
         fileLocation += "/frame";
         for (int i = 0; i < imgs.length; i++) {
-            imgs[i] = ImageLoader.imageLoader(fileLocation + (i + 1) + ".png");
+            imgs[i] = ImageLoader.imageLoader(fileLocation + (i + 1) + ".png"); // Load the six images
         }
-        animationComplete = false;
-        animation = new Animation(imgs, 7, true);
+        animationComplete = false; // Animation is not complete
+        animation = new Animation(imgs, 7, true); // Create a new antimation with the images, every 7 ticks, until the object is destroyed
     }
 
     @Override
     public void tick() {
-        tickCounter++;
+        tickCounter++; // Keep track of ticks
         if (animation != null) { // Animation may not have been instatiated, don't do anything until it has been 
             if(tickCounter > 400) animation.stop();
             animation.tick(); // Tick the animation
@@ -77,9 +69,9 @@ public class Powerup extends GameObject {
     }
 
     public void destroy() {
-        animation.stop();
-        animation = null;
-        animationComplete = true;
+        animation.stop(); // Stop the Animation
+        animation = null; // Delete reference to the Animation
+        animationComplete = true; // Animation is now complete
     }
 
     public boolean isAnimationComplete() {
