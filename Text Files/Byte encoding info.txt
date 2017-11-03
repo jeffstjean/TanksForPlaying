@@ -25,5 +25,6 @@ allBytes[14] == shooting
 
 allBytes[15-22] == long of current system time
 
+allBytes[23] == mine
 
 
