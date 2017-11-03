@@ -1,8 +1,4 @@
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 
 public class Bullet extends GameObject {
 
@@ -11,7 +7,7 @@ public class Bullet extends GameObject {
     private int speed = 2;
     
     
-    private double rotate;
+    private final double rotate;
 
     public Bullet(int x, int y, int width, int height, ID id, int s, double r) {
         super(x, y, width, height, id);
