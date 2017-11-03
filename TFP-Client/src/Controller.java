@@ -16,6 +16,7 @@ public Controller(Game g){
     bind(KeyEvent.VK_A, Key.left);
     bind(KeyEvent.VK_S, Key.down);
     bind(KeyEvent.VK_D, Key.right);
+    bind(KeyEvent.VK_SPACE, Key.mine);
     
     game = g;
 }

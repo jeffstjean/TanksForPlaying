@@ -33,7 +33,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public final String TITLE = "Tanks For Playing";
     private int TANK_SIZE = 64;
     public HashMap<Integer, Key> keyBindings = new HashMap<Integer, Key>();
-
+    
     public static boolean other[] = new boolean[256];
     private static int mouseX, mouseY;
     private int NUM_PLAYERS;
@@ -43,11 +43,18 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private Turret[] turret;
     public long maxMillis = 0;
     //config vars
-    private final Properties userSettings = new Properties(), defaultSettings = new Properties();
+    private static final Properties USER_SETTINGS = new Properties(), DEFAULT_SETTINGS = new Properties();
     private final File userSettingsLocation = new File("src/resources/config/config.properties"), defaultSettingsLocation = new File("src/resources/default_config/default_config.properties");
     private int playerNumber;
     private static Logger logger;
     private LinkedList<Wall> walls;
+    private LinkedList<Mine> mines;
+    private LinkedList<Powerup> powerups;
+    
+    //POC var for Powerups
+    private int clickCounter = 0;
+    
+
     
     //<editor-fold defaultstate="collapsed" desc=" Getters, setters, constructs and listeners">
     
@@ -74,7 +81,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         return mouseY;
     }
 
-    private final synchronized void stop() {
+    private synchronized void stop() {
         if (!running) {
             return;
         }
@@ -87,7 +94,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         System.exit(1);
     }
 
-    private final synchronized void start() {
+    private synchronized void start() {
         // If the program is already running then do nothing but if not running,
         // make it run and start the thread
         if (running) {
@@ -104,8 +111,9 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     }
 
     public static void render(Graphics2D g) {
-        handler.render(g);
-        // has handler render all gameObjects
+        if(handler!=null )handler.render(g);
+        // Has handler render all gameObjects
+        // Checks to see if null to avoid NPE
     }
     
     
@@ -151,7 +159,14 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         renderer.repaint(); // tells renderer to repaint if it hasn't already
         handler.tick(); // tells handler to tick all game objects
         createBytes();
-
+        for (int i = 0; i < mines.size(); i++) {
+            if(mines.get(i).isAllAnimationsComplete()) // Delete any old mines
+                mines.remove(i);
+        }
+        for (int i = 0; i < powerups.size(); i++) {
+            if(powerups.get(i).isAnimationComplete()) // Delete any old mines
+                powerups.remove(i);
+        }
     }
 
     @Override
@@ -183,8 +198,34 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     @Override
     public void mouseClicked(MouseEvent me) {
-        Mine mine = new Mine(300, 100, 32, 32, ID.Mine);
-        handler.addObject(mine);
+        //Only for testing mines - will be deleted
+        
+        mines.add(new Mine(tank[0].getX() + (tank[0].getSize()/4), tank[0].getX() + (tank[0].getSize()/4), 32, 32, ID.Mine, handler));
+        handler.addObject(mines.get(mines.size() - 1));
+        
+        //Proof of Concept code can be deleted
+        clickCounter++;
+        clickCounter = clickCounter%4;
+        PowerupColor clr;
+        switch (clickCounter) {
+            case 0:
+                clr = PowerupColor.Red;
+                break;
+            case 1:
+                clr = PowerupColor.Green;
+                break;
+            case 2:
+                clr = PowerupColor.Yellow;
+                break;
+            default:
+                clr = PowerupColor.Blue;
+                break;
+        }
+        powerups.add(new Powerup(me.getX() - 16, me.getY() - 39, 32, 32, ID.PowerUp, handler, clr));
+        handler.addObject(powerups.get(powerups.size() - 1));
+        //End of POC
+        
+        
         mouseX = me.getX();
         mouseY = me.getY();
         // gets the mouse's x and y location
@@ -264,14 +305,14 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         FileInputStream in;
         try {
             in = new FileInputStream(defaultSettingsLocation);
-            defaultSettings.load(in);
+            DEFAULT_SETTINGS.load(in);
             in.close();
         } catch (IOException e) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, e);
         }
         try {
             in = new FileInputStream(userSettingsLocation);
-            userSettings.load(in);
+            USER_SETTINGS.load(in);
             in.close();
         } catch (IOException e) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, e);
@@ -286,16 +327,16 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     }
 
-    public String getStringUserPropertyThenDefault(String setting) {
-        return (userSettings.getProperty(setting, defaultSettings.getProperty(setting)));
+    public static String getStringUserPropertyThenDefault(String setting) {
+        return (USER_SETTINGS.getProperty(setting, DEFAULT_SETTINGS.getProperty(setting)));
     }
 
-    public int getIntUserPropertyThenDefault(String setting, int defaultIfError) {
+    public static int getIntUserPropertyThenDefault(String setting, int defaultIfError) {
         try {
-            return Integer.parseInt(userSettings.getProperty(setting));
+            return Integer.parseInt(USER_SETTINGS.getProperty(setting));
         } catch (NumberFormatException e) {
             try {
-                return Integer.parseInt(defaultSettings.getProperty(setting));
+                return Integer.parseInt(DEFAULT_SETTINGS.getProperty(setting));
             } catch (NumberFormatException ex) {
                 return defaultIfError;
             }
@@ -309,8 +350,11 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         bind(KeyEvent.VK_A, Key.left);
         bind(KeyEvent.VK_S, Key.down);
         bind(KeyEvent.VK_D, Key.right);
+        bind(KeyEvent.VK_SPACE, Key.mine);
 
-        walls = new LinkedList<Wall>();
+        walls = new LinkedList<>();
+        mines = new LinkedList<>();
+        powerups = new LinkedList<>();
         // sets the keybindings
         handler = new Handler();
         tank = new Tank[NUM_PLAYERS];
@@ -361,7 +405,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         game = new Game();
 
         frame = new JFrame(game.TITLE);
-        frame.setIconImage(ImageLoader.imageLoader("./graphics/bomb.png"));
+        frame.setIconImage(ImageLoader.imageLoader("./graphics/icon.png"));
         // Ads the instance of the game to the JFrame
         // frame.add(game);
         // Causes the window to be at preferred size initially
@@ -449,6 +493,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public static void log (String log) {
         logger.info(log);
     }
+    
 
     public void decodeBytes(byte[] bmain) {
         System.out.println("recieved");
