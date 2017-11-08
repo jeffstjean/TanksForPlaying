@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Properties;
@@ -32,24 +33,26 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public static final int HEIGHT = 720;
     public final String TITLE = "Tanks For Playing";
     private int TANK_SIZE = 64;
-    public HashMap<Integer, Key> keyBindings = new HashMap<Integer, Key>();
+    public HashMap<Integer, Key> keyBindings = new HashMap<>();
     
     public static boolean other[] = new boolean[256];
     private static int mouseX, mouseY;
     private int NUM_PLAYERS;
     private ByteBuffer bb;
-    private byte[] allBytes = new byte[256];
+    private final byte[] allBytes = new byte[256];
     private Tank[] tank;
     private Turret[] turret;
     public long maxMillis = 0;
+    private static final Logger LOGGER = Logger.getLogger("ClientLog");
+    private LinkedList<Wall> walls;
+    private LinkedList<Mine> mines;
+    private LinkedList<Powerup> powerups;
+    private ArrayList<Boolean> queuedShots;
+    private ArrayList<Boolean> serverQueue;
     //config vars
     private static final Properties USER_SETTINGS = new Properties(), DEFAULT_SETTINGS = new Properties();
     private final File userSettingsLocation = new File("src/resources/config/config.properties"), defaultSettingsLocation = new File("src/resources/default_config/default_config.properties");
     private int playerNumber;
-    private static Logger logger;
-    private LinkedList<Wall> walls;
-    private LinkedList<Mine> mines;
-    private LinkedList<Powerup> powerups;
     
     //POC var for Powerups
     private int clickCounter = 0;
@@ -355,6 +358,9 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         walls = new LinkedList<>();
         mines = new LinkedList<>();
         powerups = new LinkedList<>();
+        queuedShots = new ArrayList<>();
+        serverQueue = new ArrayList<>();
+        
         // sets the keybindings
         handler = new Handler();
         tank = new Tank[NUM_PLAYERS];
@@ -383,7 +389,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
 
     public static void main(String[] args) {
-        logger = Logger.getLogger("ClientLog");
         FileHandler fh;
         File file = new File("src/resources/logs/log.txt");
         
@@ -391,12 +396,12 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
             // This block configure the logger with handler and formatter
             file.createNewFile();
             fh = new FileHandler(file.getPath());
-            logger.addHandler(fh);
+            LOGGER.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);
-            logger.setUseParentHandlers(false);
+            LOGGER.setUseParentHandlers(false);
             // the following statement is used to log any messages
-            logger.info("Logger started.");
+            LOGGER.info("Logger started.");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -505,7 +510,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     }
     
     public static void log (String log) {
-        logger.info(log);
+        LOGGER.info(log);
     }
     
 
