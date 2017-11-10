@@ -80,7 +80,7 @@ public class ClientRecieveThread extends Thread{
             packet = new DatagramPacket(buf, buf.length);
             socket.receive(packet);
             
-            game.decodeBytes(packet.getData());
+            Encoder.decodeBytes(packet.getData(), game.getTank(), game.getTurret());
         } catch (Exception ex) {
             System.out.println("servererrorspot1");
             ex.printStackTrace();
