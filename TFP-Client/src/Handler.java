@@ -16,7 +16,7 @@ public class Handler {
                 GameObject temp2 = object.get(j);
                
                 
-                if(!(temp2 == temp1) && (temp2.id != ID.Turret) ){
+                if(!(temp2 == temp1) && (temp2.id != ID.Turret) && (temp2.id != ID.PowerUp) ){
                     if (temp2.bounds.intersects(temp1.bounds)){
                         temp1.collision(temp2);
                         temp1.intersecting = true;

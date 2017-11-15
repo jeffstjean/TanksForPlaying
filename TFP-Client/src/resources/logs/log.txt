@@ -1,2 +1,2 @@
-Nov 14, 2017 7:44:54 PM Game main
+Nov 15, 2017 10:26:06 AM Game main
 INFO: Logger started.

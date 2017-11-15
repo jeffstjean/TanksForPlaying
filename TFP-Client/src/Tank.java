@@ -13,7 +13,7 @@ public class Tank extends GameObject {
     private BufferedImage body;
 private double rotate;
 private Rectangle top, bottom, left, right;
-private int coolDown = 20, coolDownCounter = 20;
+private int coolDown = 20, coolDownCounter = 20; // should boh be 20
 
     public Tank(int x, int y, int width, int height, ID id, Game g) {
         super(x, y, width, height, id);

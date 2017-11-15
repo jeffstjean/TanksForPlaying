@@ -13,8 +13,7 @@ public final class Mine extends GameObject {
     private Animation animation;
     private Explosion explosion;
     private boolean animationComplete, allAnimationsComplete;
-    private int ticksAlive = 0;
-    private final int MAXTICKS = 30;
+    
 
     public Mine(int x, int y, int width, int height, ID id, Handler h) {
         super(x, y, width, height, id);
@@ -31,10 +30,7 @@ public final class Mine extends GameObject {
 
     @Override
     public void tick() {
-        ticksAlive++;
-        if (ticksAlive >= MAXTICKS) {
-            startCountdown();
-        }
+        
 
         if (animation != null) { // Animation may not have been instatiated, don't do anything until it has been 
             animation.tick(); // Tick the animation
@@ -51,7 +47,7 @@ public final class Mine extends GameObject {
 
     @Override
     public void collision(GameObject gO) {
-        if (gO.getID() != ID.Wall && aliveForTicks >= 10) {
+        if (gO.getID() != ID.Wall && aliveForTicks >= 20) {
             startExplosion();
             
         }

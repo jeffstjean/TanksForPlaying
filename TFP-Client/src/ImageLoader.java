@@ -12,7 +12,9 @@ public class ImageLoader {
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Cannot find image");
-		}
+		} catch (Exception e){
+                    System.out.println("Image loader had proplem, probably heap space error");
+                }
 		return temp;
 		
 	}
