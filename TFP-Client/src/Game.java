@@ -23,9 +23,10 @@ import javax.swing.event.MouseInputListener;
 public class Game implements Runnable, KeyListener, MouseInputListener {
 
     private static Renderer renderer;
+    private static MainMenu mainMenu;
     private boolean running = false;
     private Thread th;
-    ClientRecieveThread cRT;
+   
     static Handler handler;
     private static Game game;
     private static JFrame frame;
@@ -39,25 +40,21 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private static int mouseX, mouseY;
     public static int NUM_PLAYERS;
     private ByteBuffer bb;
-    private final byte[] allBytes = new byte[256];
+    private byte[] allBytes = new byte[256];
     private Tank[] tank;
     private Turret[] turret;
     public long maxMillis = 0;
     private static final Logger LOGGER = Logger.getLogger("ClientLog");
     private LinkedList<Wall> walls;
-    private LinkedList<Mine> mines;
     private LinkedList<Powerup> powerups;
-    private ArrayList<Boolean> queuedShots;
-    private ArrayList<Boolean> serverQueue;
+    
     //config vars
     private static final Properties USER_SETTINGS = new Properties(), DEFAULT_SETTINGS = new Properties();
     private final File userSettingsLocation = new File("src/resources/config/config.properties"), defaultSettingsLocation = new File("src/resources/default_config/default_config.properties");
 
     public static int PLAYERNUMBER;
     private static Logger logger;
-    private LinkedList<Wall> walls;
-    private LinkedList<Mine> mines;
-    private LinkedList<Powerup> powerups;
+    
 
     
     //POC var for Powerups
@@ -97,7 +94,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         running = false;
         try {
             th.join();
-            cRT.join();
+            
         } catch (InterruptedException e) {
         }
         System.exit(1);
@@ -111,12 +108,11 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         }
         running = true;
         th = new Thread(this);
-        cRT = new ClientRecieveThread(game);
+        
 
         th.start();
         System.out.println("started th");
-        cRT.start();
-        System.out.println("started crt");
+               
     }
 
     public static void render(Graphics2D g) {
@@ -129,7 +125,19 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     
     
     @Override
+    
     public void run() {
+    frame.remove(mainMenu);
+    
+    frame.addKeyListener(this);
+        frame.add(renderer);
+        frame.setVisible(true);
+        frame.addMouseMotionListener(this);
+        frame.addMouseListener(this);
+        frame.addKeyListener(this);
+        renderer.requestFocus();
+        renderer.addKeyListener(this);
+        
         init();
         long lastTime = System.nanoTime();
         final double numberOfTicks = 60.0;
@@ -164,17 +172,20 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         return allBytes;
     }
 
+    public void startGame(){
+        start();
+    }
+    
     private void tick() {
         renderer.repaint(); // tells renderer to repaint if it hasn't already
         handler.tick(); // tells handler to tick all game objects
-        allBytes = Encoder.createBytes();
-        for (int i = 0; i < mines.size(); i++) {
-            if(mines.get(i).isAllAnimationsComplete()) // Delete any old mines
-                mines.remove(i);
-        }
+       
         for (int i = 0; i < powerups.size(); i++) {
-            if(powerups.get(i).isAnimationComplete()) // Delete any old mines
+            if(powerups.get(i).isAnimationComplete()){
+                // Delete any old powerups
+                handler.removeObject(powerups.get(i));
                 powerups.remove(i);
+        }
         }
     }
 
@@ -185,6 +196,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     @Override
     public void keyPressed(KeyEvent ke) {
+        
         other[ke.getExtendedKeyCode()] = true;
         try {
             keyBindings.get(ke.getKeyCode()).isDown = true;
@@ -206,6 +218,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     @Override
     public void keyReleased(KeyEvent ke) {
         other[ke.getExtendedKeyCode()] = false;
+       
         try {
             keyBindings.get(ke.getKeyCode()).isDown = false;
         } catch (Exception e) {
@@ -218,8 +231,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public void mouseClicked(MouseEvent me) {
         //Only for testing mines - will be deleted
         
-        mines.add(new Mine(tank[0].getX() + (tank[0].getSize()/4), tank[0].getX() + (tank[0].getSize()/4), 32, 32, ID.Mine, handler));
-        handler.addObject(mines.get(mines.size() - 1));
+        
         
         //Proof of Concept code can be deleted
         clickCounter++;
@@ -306,6 +318,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public Game() {
         renderer = new Renderer();
         // initiallizes the renderer
+        mainMenu = new MainMenu(this);
     }
 //</editor-fold>
     
@@ -337,8 +350,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         }
 
         NUM_PLAYERS = getIntUserPropertyThenDefault("numPlayers", 2);
-        cRT.setPORT(getIntUserPropertyThenDefault("port", 4448));
-        cRT.setHost(getStringUserPropertyThenDefault("ipAddress"));
+        
 
         TANK_SIZE = getIntUserPropertyThenDefault("tankSize", 64);
         PLAYERNUMBER = getIntUserPropertyThenDefault("playerNumber", 0);
@@ -371,10 +383,9 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         bind(KeyEvent.VK_SPACE, Key.mine);
 
         walls = new LinkedList<>();
-        mines = new LinkedList<>();
+        
         powerups = new LinkedList<>();
-        queuedShots = new ArrayList<>();
-        serverQueue = new ArrayList<>();
+        
         
         // sets the keybindings
         handler = new Handler();
@@ -397,7 +408,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         for (int i = 0; i < walls.size(); i++) {
             handler.addObject(walls.get(i));
         }
-
+        frame.addKeyListener(this);
 // adds the two objects to the handler
     }
 
@@ -435,11 +446,11 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // Sets the program so it cannot be re-sizable
         frame.setResizable(false);
-        frame.add(renderer);
+        frame.add(mainMenu);
         // adds the renderer to the jFrame
         frame.setVisible(true);
 
-        game.start();
+      
         frame.addKeyListener(game);
         frame.addMouseMotionListener(game);
         frame.addMouseListener(game);

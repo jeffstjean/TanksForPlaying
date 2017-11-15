@@ -11,18 +11,12 @@ public class Handler {
             GameObject temp1 = object.get(i);
             temp1.tick();
             temp1.aliveForTicks ++;
-            if(temp1.id == ID.Tank || temp1.id == ID.Bullet || temp1.id == ID.BreakableWall){
+            if(temp1.id == ID.Tank || temp1.id == ID.Bullet || temp1.id == ID.Mine){
             for (int j = 0; j < object.size(); j++) {
                 GameObject temp2 = object.get(j);
-                if((temp1 != temp2) && (temp2.id != ID.Turret) && (temp2.id != ID.Tank) && (temp1.id == ID.Bullet)){
-                  
-                    if (temp2.bounds.intersects(temp1.bounds)){
-                        temp1.collision(temp2);
+               
                 
-                }
-                }
-                
-                if(!(temp2 == temp1) && (temp2.id != ID.Turret) && (temp2.id != ID.Bullet) && (temp1.id == ID.Tank)){
+                if(!(temp2 == temp1) && (temp2.id != ID.Turret) ){
                     if (temp2.bounds.intersects(temp1.bounds)){
                         temp1.collision(temp2);
                         temp1.intersecting = true;

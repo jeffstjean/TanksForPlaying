@@ -42,10 +42,14 @@ public class Turret extends GameObject{
         yd = (double ) y;
         
         bounds.setLocation(x, y);
-        //rotate = Math.atan2((mouseY - yd), (mouseX - xd)) - Math.PI / 2;
+        rotate = Math.atan2((mouseY - yd), (mouseX - xd)) - Math.PI / 2;
         // sets the amount the turret needs to rotate based on the mouse location
         
-        
+        if(Key.shoot.isDown && coolDownCounter > coolDown) {
+            shoot();
+            turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
+            coolDownCounter = 0;
+        }
      
     }
 
@@ -53,7 +57,7 @@ public class Turret extends GameObject{
     public void render(Graphics g) {
         g2d = (Graphics2D) g;
         g2d.rotate(rotate + Math.toRadians(90), xd ,yd );//rotates graphics
-        g2d.drawImage(turret, x - 16, y - 16, 64,32, null);//renders image
+        g2d.drawImage(turret, x - tank.getSize() / 4, y - tank.getSize()/4, tank.getSize(),tank.getSize()/2, null);//renders image
        g2d.rotate(-(rotate + Math.toRadians(90)), xd ,yd );//rotates grpahics back
         
     }
