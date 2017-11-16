@@ -33,7 +33,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
     public final String TITLE = "Tanks For Playing";
-    private int TANK_SIZE = 64;
+    private double TANK_SIZE = 64;
     public HashMap<Integer, Key> keyBindings = new HashMap<>();
     
     public static boolean other[] = new boolean[256];
@@ -251,7 +251,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
                 clr = PowerupColor.Blue;
                 break;
         }
-        powerups.add(new Powerup(me.getX() - 16, me.getY() - 39, 32, 32, ID.PowerUp, handler, clr));
+        powerups.add(new Powerup((double)me.getX() - 16, (double)me.getY() - 39, 32, 32, ID.PowerUp, handler, clr));
         handler.addObject(powerups.get(powerups.size() - 1));
         //End of POC
         
@@ -352,7 +352,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         NUM_PLAYERS = getIntUserPropertyThenDefault("numPlayers", 2);
         
 
-        TANK_SIZE = getIntUserPropertyThenDefault("tankSize", 64);
+        TANK_SIZE = getDoubleUserPropertyThenDefault("tankSize", 64);
         PLAYERNUMBER = getIntUserPropertyThenDefault("playerNumber", 0);
 
     }
@@ -367,6 +367,18 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         } catch (NumberFormatException e) {
             try {
                 return Integer.parseInt(DEFAULT_SETTINGS.getProperty(setting));
+            } catch (NumberFormatException ex) {
+                return defaultIfError;
+            }
+        }
+    }
+    
+     public static double getDoubleUserPropertyThenDefault(String setting, double defaultIfError) {
+        try {
+            return Double.parseDouble(USER_SETTINGS.getProperty(setting));
+        } catch (NumberFormatException e) {
+            try {
+                return Double.parseDouble(DEFAULT_SETTINGS.getProperty(setting));
             } catch (NumberFormatException ex) {
                 return defaultIfError;
             }
@@ -400,10 +412,10 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         }
 
         // creates a turret for the tank
-        walls.add(new Wall(10, 10, 30, HEIGHT - 70, ID.LeftWall));
-        walls.add(new Wall(10, HEIGHT - 90, WIDTH - 50, 30, ID.BottomWall));
-        walls.add(new Wall(WIDTH - 50, 10, 30, HEIGHT - 70, ID.RightWall));
-        walls.add(new Wall(10, 10, WIDTH - 30, 30, ID.TopWall));
+        walls.add(new Wall(10, 10, 30,(double) HEIGHT - 70, ID.LeftWall));
+        walls.add(new Wall(10, (double)HEIGHT - 90,(double) WIDTH - 50, 30, ID.BottomWall));
+        walls.add(new Wall((double)WIDTH - 50, 10, 30,(double) HEIGHT - 70, ID.RightWall));
+        walls.add(new Wall(10, 10,(double) WIDTH - 30, 30, ID.TopWall));
         walls.add(new Wall(200, 200, 100, 100, ID.BreakableWall));
         for (int i = 0; i < walls.size(); i++) {
             handler.addObject(walls.get(i));

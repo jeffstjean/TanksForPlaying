@@ -2,12 +2,13 @@
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 public class Turret extends GameObject{
 
     private Tank tank;
-    private Rectangle bounds;
+    
     private Graphics2D g2d;
     private double xd,yd,rotate;
     private double mouseX, mouseY;
@@ -17,11 +18,11 @@ public class Turret extends GameObject{
     
     private int coolDown = 20, coolDownCounter = 20;
 
-    public Turret(int x, int y, int width, int height, ID id, Tank t) {
+    public Turret(double x, double y, double width, double height, ID id, Tank t) {
         super(x, y, width, height, id);
 
         tank = t;
-        bounds = new Rectangle(x,y, 10, 10);
+        
         turret = ImageLoader.imageLoader("./graphics/TurretGreen.png");
     }
 
@@ -41,7 +42,7 @@ public class Turret extends GameObject{
         xd = (double) x;
         yd = (double ) y;
         
-        bounds.setLocation(x, y);
+        bounds.setRect(x, y, 10,10);
         rotate = Math.atan2((mouseY - yd), (mouseX - xd)) - Math.PI / 2;
         // sets the amount the turret needs to rotate based on the mouse location
         
@@ -57,7 +58,11 @@ public class Turret extends GameObject{
     public void render(Graphics g) {
         g2d = (Graphics2D) g;
         g2d.rotate(rotate + Math.toRadians(90), xd ,yd );//rotates graphics
-        g2d.drawImage(turret, x - tank.getSize() / 4, y - tank.getSize()/4, tank.getSize(),tank.getSize()/2, null);//renders image
+        AffineTransform t = new AffineTransform();
+        t.translate(x - tank.getSize() / 4, y - tank.getSize()/4);
+        
+        t.scale(tank.getSize()/turret.getWidth(), (tank.getSize()/2)/turret.getHeight());
+        g2d.drawImage(turret, t, null);//renders image
        g2d.rotate(-(rotate + Math.toRadians(90)), xd ,yd );//rotates grpahics back
         
     }

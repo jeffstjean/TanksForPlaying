@@ -1,6 +1,7 @@
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -15,7 +16,7 @@ public final class Mine extends GameObject {
     private boolean animationComplete, allAnimationsComplete;
     
 
-    public Mine(int x, int y, int width, int height, ID id, Handler h) {
+    public Mine(double x, double y, double width, double height, ID id, Handler h) {
         super(x, y, width, height, id);
         this.h = h; // Need the handler to add Explosion from within Mine
         motionX = 0; // No motion is needed
@@ -40,7 +41,7 @@ public final class Mine extends GameObject {
                 animation = null; // Dispose of now unused Animation object
             }
         }
-        if (explosion != null && explosion.isAnimationComplete()) {
+        if (explosion != null) {
             h.removeObject(this); // Let other classes know that all animations are complete
         }
     }
@@ -61,7 +62,10 @@ public final class Mine extends GameObject {
         if (animation != null) { // Animation may not have been instatiated, don't do anything until it has been 
             animation.render(g, x, y, width); // Render the image
         }else{
-            g.drawImage(imgs[0], x, y, width, width, null);
+            AffineTransform t = new AffineTransform();
+        t.translate(x, y);
+        t.scale(width/imgs[0].getWidth(), width/imgs[0].getHeight());
+            g2d.drawImage(imgs[0], t, null);
         }
 
     }
@@ -78,7 +82,7 @@ public final class Mine extends GameObject {
         // Complicated equations that allow you to resize the Explosion realtive to the Mine but still keep it centred
         // 10/10 would recommend not touching unless you want to fish out that scrap piece of paper from my garbage can with the equation
         if(explosion == null)
-        explosion = new Explosion(x - (int) (((width * EXPLOSION_SIZE_FACTOR) - width) / 2), y - (int) (int) (((height * EXPLOSION_SIZE_FACTOR) - height) / 2), (int) (width * EXPLOSION_SIZE_FACTOR), (int) (height * EXPLOSION_SIZE_FACTOR), id, h);
+        explosion = new Explosion(x - (((width * EXPLOSION_SIZE_FACTOR) - width) / 2), y -  (((height * EXPLOSION_SIZE_FACTOR) - height) / 2), (width * EXPLOSION_SIZE_FACTOR),  (height * EXPLOSION_SIZE_FACTOR), id, h);
     }
 
     public boolean isAllAnimationsComplete() {

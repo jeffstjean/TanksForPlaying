@@ -2,28 +2,30 @@
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 
 public class Tank extends GameObject {
 
-    private int size = 64;
+    private double size = 64;
     private int speed = 2;
     private Game game;
     private BufferedImage body;
 private double rotate;
-private Rectangle top, bottom, left, right;
+private Rectangle2D top, bottom, left, right;
 private int coolDown = 20, coolDownCounter = 20; // should boh be 20
 
-    public Tank(int x, int y, int width, int height, ID id, Game g) {
+    public Tank(double x, double y, double width, double height, ID id, Game g) {
         super(x, y, width, height, id);
         game = g;
         rotate = 0;
         size = width;
-        top = new Rectangle(x + 10,y - 10, size - 20, 10);
-        bottom = new Rectangle (x + 10, y+size, size - 20, 10);
-        left = new Rectangle (x - 10, y+10, 10, size -20);
-        right = new Rectangle (x + size , y - 10, 10, size - 20);
+        top = new Rectangle2D.Double(x + 10,y - 10, size - 20, 10);
+        bottom = new Rectangle2D.Double (x + 10, y+size, size - 20, 10);
+        left = new Rectangle2D.Double (x - 10, y+10, 10, size -20);
+        right = new Rectangle2D.Double (x + size , y - 10, 10, size - 20);
         body = ImageLoader.imageLoader("./graphics/TankGreen.png");
 
     
@@ -93,11 +95,11 @@ private int coolDown = 20, coolDownCounter = 20; // should boh be 20
             coolDownCounter = 0;
         }
         
-        bounds.setLocation(x, y);
-        top.setBounds(x + 10,y - 10, size - 20, 10);
-        bottom.setBounds(x + 10, y+size , size - 20, 10);
-        left.setBounds(x-10, y+10, 10, size -20);
-        right.setBounds(x + size , y + 10, 10, size - 20);
+        bounds.setRect(x, y, size, size);
+        top.setRect(x + 10,y - 10, size - 20, 10);
+        bottom.setRect(x + 10, y+size , size - 20, 10);
+        left.setRect(x-10, y+10, 10, size -20);
+        right.setRect(x + size , y + 10, 10, size - 20);
     }
 
     
@@ -180,8 +182,11 @@ private int coolDown = 20, coolDownCounter = 20; // should boh be 20
                 
         }
         // sets the rotation value based on direction
+        AffineTransform t = new AffineTransform();
+        t.translate(x, y);
+        t.scale(size/body.getWidth(), size/body.getHeight());
         g2d.rotate(rotate, x + size/2, y + size/2); // rotates graphics
-        g2d.drawImage(body, x, y, size, size, null);//draws image with rotated graphics
+        g2d.drawImage(body, t, null);//draws image with rotated graphics
         g2d.rotate(-rotate, x + size/2, y + size/2); //rotates graphics back
      //   g2d.draw(top);
        // g2d.draw(bottom);
@@ -190,7 +195,7 @@ private int coolDown = 20, coolDownCounter = 20; // should boh be 20
         
     }
 
-    public int getSize() {
+    public double getSize() {
         return size;
     }
 

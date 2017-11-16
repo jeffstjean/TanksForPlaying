@@ -13,7 +13,7 @@ public class Explosion extends GameObject{
     private boolean animationComplete;
     private final boolean debug = false; // Set to true to see collison boxes
     private Handler h;
-    public Explosion(int x, int y, int width, int height, ID id, Handler h) {
+    public Explosion(double x, double y, double width, double height, ID id, Handler h) {
         super(x, y, width, height, id);
         imgs = SpriteSheetReader.getSprites(9, 9, 100, ImageLoader.imageLoader(explosion.getPath())); // Load from spreadsheet
         explosionAnimation = new Animation(imgs, 1, 1); // Start a new Animation, every tick, only once
@@ -37,9 +37,9 @@ public class Explosion extends GameObject{
 
     @Override
     public void render(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
+        
         if(explosionAnimation!=null) {
-            if(debug) g.drawOval(x, y, width, height); // Draw the collison box of the explosion
+            //if(debug) g.drawOval(x, y, width, height); // Draw the collison box of the explosion
             explosionAnimation.render(g, x, y, width); // Render the image
         }
     }
