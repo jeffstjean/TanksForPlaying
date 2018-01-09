@@ -11,10 +11,10 @@ public class Turret extends GameObject{
     
     private Graphics2D g2d;
     private double xd,yd,rotate;
-    private double mouseX, mouseY;
+    
     private BufferedImage turret;
     private int turretShootCounter = 7;
-    
+    private double rotateChangeAmount = 0.3;
     
     private int coolDown = 20, coolDownCounter = 20;
 
@@ -33,8 +33,7 @@ public class Turret extends GameObject{
             turret = ImageLoader.imageLoader("./graphics/TurretGreen.png");
         turretShootCounter --;
         coolDownCounter++; // increases the time since last shot by 1
-        mouseX = tank.getGame().getMouseX();
-        mouseY = tank.getGame().getMouseY();
+        
         
         x = tank.getX() + tank.getSize() / 2;
         y = tank.getY() + tank.getSize() / 2;
@@ -43,15 +42,34 @@ public class Turret extends GameObject{
         yd = (double ) y;
         
         bounds.setRect(x, y, 10,10);
-        rotate = Math.atan2((mouseY - yd), (mouseX - xd)) - Math.PI / 2;
-        // sets the amount the turret needs to rotate based on the mouse location
         
-        if(Key.shoot.isDown && coolDownCounter > coolDown) {
+        // sets the amount the turret needs to rotate based on the mouse location
+        if(tank.getPlayerNum() == 1){
+        if(Key.shoot1.isDown && coolDownCounter > coolDown) {
             shoot();
             turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
             coolDownCounter = 0;
         }
-     
+        if(Key.turretRight1.isDown) 
+            rotate = rotate - rotateChangeAmount;
+        if(Key.turretLeft1.isDown)
+            rotate = rotate + rotateChangeAmount;
+        
+        }else{
+            if(Key.shoot2.isDown && coolDownCounter > coolDown) {
+            shoot();
+            turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
+            coolDownCounter = 0;
+        }
+            
+            if(Key.turretRight2.isDown) 
+            rotate = rotate - rotateChangeAmount;
+        if(Key.turretLeft2.isDown)
+            rotate = rotate + rotateChangeAmount;
+            
+        }
+        
+        
     }
 
     @Override

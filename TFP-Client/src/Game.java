@@ -264,7 +264,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     @Override
     public void mousePressed(MouseEvent me) {
         //if(MOUSECLICKTYPE == 0) {
-        Key.shoot.isDown = true;
+       
         //sets the key shoot to be down when clicked
         //}
         mouseX = me.getX();
@@ -275,7 +275,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     @Override
     public void mouseReleased(MouseEvent me) {
 
-        Key.shoot.isDown = false;
+       
         //sets the key binding of shoot to up 
 
         mouseX = me.getX();
@@ -388,11 +388,26 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     
     public void init() {
         initConfigs();
-        bind(KeyEvent.VK_W, Key.up);
-        bind(KeyEvent.VK_A, Key.left);
-        bind(KeyEvent.VK_S, Key.down);
-        bind(KeyEvent.VK_D, Key.right);
-        bind(KeyEvent.VK_SPACE, Key.mine);
+        bind(KeyEvent.VK_W, Key.up1);
+        bind(KeyEvent.VK_A, Key.left1);
+        bind(KeyEvent.VK_S, Key.down1);
+        bind(KeyEvent.VK_D, Key.right1);
+        bind(KeyEvent.VK_SHIFT, Key.mine1);
+        bind(KeyEvent.VK_H, Key.turretLeft1);
+        bind(KeyEvent.VK_J, Key.turretRight1);
+        bind(KeyEvent.VK_SPACE, Key.shoot1);
+        
+        
+        
+        bind(KeyEvent.VK_NUMPAD8, Key.up2);
+        bind(KeyEvent.VK_NUMPAD4, Key.left2);
+        bind(KeyEvent.VK_NUMPAD5, Key.down2);
+        bind(KeyEvent.VK_NUMPAD6, Key.right2);
+        bind(KeyEvent.VK_ENTER, Key.mine2);
+        bind(KeyEvent.VK_LEFT, Key.turretLeft2);
+        bind(KeyEvent.VK_RIGHT, Key.turretRight2);
+        bind(KeyEvent.VK_UP, Key.shoot2);
+        
 
         walls = new LinkedList<>();
         
@@ -405,7 +420,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         turret = new Turret[NUM_PLAYERS];
         // inits tank at 100 100 and gives it the game instance
         for (int i = 0; i < NUM_PLAYERS; i++) {
-            tank[i] = new Tank(100 + 100 * i, 100, TANK_SIZE, TANK_SIZE, ID.Tank, game);
+            tank[i] = new Tank(100 + 100 * i, 100, TANK_SIZE, TANK_SIZE, ID.Tank, game, i+1);
             turret[i] = new Turret(tank[i].getX(), tank[i].getY(), 10, 10, ID.Turret, tank[i]);
             handler.addObject(tank[i]);
             handler.addObject(turret[i]);

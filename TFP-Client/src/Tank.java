@@ -16,8 +16,9 @@ public class Tank extends GameObject {
 private double rotate;
 private Rectangle2D top, bottom, left, right;
 private int coolDown = 20, coolDownCounter = 20; // should boh be 20
+private int playerNum;
 
-    public Tank(double x, double y, double width, double height, ID id, Game g) {
+    public Tank(double x, double y, double width, double height, ID id, Game g, int num) {
         super(x, y, width, height, id);
         game = g;
         rotate = 0;
@@ -27,7 +28,7 @@ private int coolDown = 20, coolDownCounter = 20; // should boh be 20
         left = new Rectangle2D.Double (x - 10, y+10, 10, size -20);
         right = new Rectangle2D.Double (x + size , y - 10, 10, size - 20);
         body = ImageLoader.imageLoader("./graphics/TankGreen.png");
-
+        playerNum = num;
     
     
     
@@ -55,19 +56,50 @@ private int coolDown = 20, coolDownCounter = 20; // should boh be 20
     
     @Override
     public void tick() {
-        if (Key.up.isDown) {
+        if(playerNum == 1){
+        if (Key.up1.isDown) {
             motionY = -speed;
-        } else if (Key.down.isDown) {
+        } else if (Key.down1.isDown) {
             motionY = speed;
         } else {
             motionY = 0;
         }
-        if (Key.left.isDown) {
+        if (Key.left1.isDown) {
             motionX = -speed;
-        } else if (Key.right.isDown) {
+        } else if (Key.right1.isDown) {
             motionX = speed;
         } else {
             motionX = 0;
+        }
+        
+        coolDownCounter++;
+        if(Key.mine1.isDown && coolDownCounter >= coolDown){
+            Game.handler.addObject(new Mine(x,y, 16,16, ID.Mine, Game.handler));
+            coolDownCounter = 0;
+        }
+        
+        }else{
+            if (Key.up2.isDown) {
+            motionY = -speed;
+        } else if (Key.down2.isDown) {
+            motionY = speed;
+        } else {
+            motionY = 0;
+        }
+        if (Key.left2.isDown) {
+            motionX = -speed;
+        } else if (Key.right2.isDown) {
+            motionX = speed;
+        } else {
+            motionX = 0;
+        }
+        
+        coolDownCounter++;
+        if(Key.mine2.isDown && coolDownCounter >= coolDown){
+            Game.handler.addObject(new Mine(x,y, 16,16, ID.Mine, Game.handler));
+            coolDownCounter = 0;
+        }        
+        
         }
         // sets movement based on keys pressed
         if (motionX == 0 && motionY == 0) {
@@ -89,11 +121,7 @@ private int coolDown = 20, coolDownCounter = 20; // should boh be 20
         } else if (motionX > 0 && motionY > 0) {
             moveDir = moveDirection.DOWN_RIGHT;
         }
-        coolDownCounter++;
-        if(Key.mine.isDown && coolDownCounter >= coolDown){
-            Game.handler.addObject(new Mine(x,y, 16,16, ID.Mine, Game.handler));
-            coolDownCounter = 0;
-        }
+        
         
         bounds.setRect(x, y, size, size);
         top.setRect(x + 10,y - 10, size - 20, 10);
@@ -102,6 +130,12 @@ private int coolDown = 20, coolDownCounter = 20; // should boh be 20
         right.setRect(x + size , y + 10, 10, size - 20);
     }
 
+    public int getPlayerNum() {
+        return playerNum;
+    }
+
+    
+    
     
     public void setPointing(int i){
                 switch (i) {
@@ -203,6 +237,8 @@ private int coolDown = 20, coolDownCounter = 20; // should boh be 20
         return moveDir;
     }
 
+    
+    
     @Override
     public void collision(GameObject gO) {
         if ( top.intersects(gO.bounds)){
