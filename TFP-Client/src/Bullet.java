@@ -8,12 +8,15 @@ import java.awt.image.BufferedImage;
 public class Bullet extends GameObject {
 
    
-    private final double size = 15;
-    private double speed = 2;
+    private final double size = 10;
+    private double speed = 4;
     
     private BufferedImage bullet;
     private double rotate;
-
+    private int damage = 20;
+    private int canDoDamageTick = 0;
+    
+    
     public Bullet(double x, double y, double width, double height, ID id, double s, double r) {
         super(x, y, width, height, id);
         bounds.setRect(x, y, size, size);
@@ -38,6 +41,7 @@ public class Bullet extends GameObject {
         bounds.setRect(x, y, size,size);
         // moves the bounds box
         if(aliveForTicks > 200) Game.handler.removeObject(this);
+        canDoDamageTick ++;
     }
 
     @Override
@@ -50,6 +54,10 @@ public class Bullet extends GameObject {
        }
        if(gO.id ==ID.BreakableWall){
            gO.collision(this);
+           Game.handler.removeObject(this);
+       }
+       if(gO.id == ID.Tank && canDoDamageTick >= 5){
+           ((Tank)gO).reduceHealth(damage);
            Game.handler.removeObject(this);
        }
     }
@@ -72,6 +80,14 @@ public class Bullet extends GameObject {
         return size;
     }
 
+    public int getDamage() {
+        return damage;
+    }
+
+    
+    
+    
+    
     public void shoot() {
         System.out.println("Shoot");
     }

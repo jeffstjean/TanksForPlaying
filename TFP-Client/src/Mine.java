@@ -14,8 +14,10 @@ public final class Mine extends GameObject {
     private Animation animation;
     private Explosion explosion;
     private boolean animationComplete, allAnimationsComplete;
+    private int damage = 40;
+    private boolean canDoDamage = true;
     
-
+    
     public Mine(double x, double y, double width, double height, ID id, Handler h) {
         super(x, y, width, height, id);
         this.h = h; // Need the handler to add Explosion from within Mine
@@ -50,7 +52,10 @@ public final class Mine extends GameObject {
     public void collision(GameObject gO) {
         if (gO.getID() != ID.Wall && aliveForTicks >= 20) {
             startExplosion();
-            
+            if(gO.id == ID.Tank && canDoDamage){
+                ((Tank)gO).reduceHealth(damage);
+                canDoDamage = false;
+            }
         }
     }
 

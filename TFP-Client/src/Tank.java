@@ -13,11 +13,14 @@ public class Tank extends GameObject {
     private int speed = 2;
     private Game game;
     private BufferedImage body;
-private double rotate;
-private Rectangle2D top, bottom, left, right;
-private int coolDown = 20, coolDownCounter = 20; // should boh be 20
-private int playerNum;
-
+    private double rotate;
+    private Rectangle2D top, bottom, left, right;
+    private int coolDown = 20, coolDownCounter = 20; // should boh be 20
+    private int playerNum;
+    private int health = 100;
+    
+    
+    
     public Tank(double x, double y, double width, double height, ID id, Game g, int num) {
         super(x, y, width, height, id);
         game = g;
@@ -222,6 +225,9 @@ private int playerNum;
         g2d.rotate(rotate, x + size/2, y + size/2); // rotates graphics
         g2d.drawImage(body, t, null);//draws image with rotated graphics
         g2d.rotate(-rotate, x + size/2, y + size/2); //rotates graphics back
+        
+        
+        g2d.drawString("" + health, (float)x, (float)y-20);
      //   g2d.draw(top);
        // g2d.draw(bottom);
         //g2d.draw(left);
@@ -237,10 +243,15 @@ private int playerNum;
         return moveDir;
     }
 
+    public void reduceHealth(int n){
+        health -= n;
+    }
     
     
     @Override
     public void collision(GameObject gO) {
+        
+        
         if ( top.intersects(gO.bounds)){
             
             if (motionY < 0) motionY = 0;
