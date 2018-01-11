@@ -2,25 +2,26 @@
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 public class Bullet extends GameObject {
 
    
-    private final int size = 15;
-    private int speed = 2;
+    private final double size = 15;
+    private double speed = 2;
     
     private BufferedImage bullet;
     private double rotate;
 
-    public Bullet(int x, int y, int width, int height, ID id, int s, double r) {
+    public Bullet(double x, double y, double width, double height, ID id, double s, double r) {
         super(x, y, width, height, id);
-        bounds .setBounds(x, y, size, size);
+        bounds.setRect(x, y, size, size);
         speed = s;
   
-        motionX = (int) (speed * Math.cos(r + Math.toRadians(90)));
+        motionX =  (speed * Math.cos(r + Math.toRadians(90)));
         // sets the x speed of the bullet using trig
-        motionY = (int) (speed * Math.sin(r + Math.toRadians(90)));
+        motionY =  (speed * Math.sin(r + Math.toRadians(90)));
         // sets the y speed of the bullet using trig
         rotate = r;
         bullet = ImageLoader.imageLoader("./graphics/Bullet.png"); 
@@ -33,10 +34,8 @@ public class Bullet extends GameObject {
 
     @Override
     public void tick() {
-        x += motionX;
-        y += motionY;
         // moves bullet by preset x and y speeds
-        bounds.setLocation(x, y);
+        bounds.setRect(x, y, size,size);
         // moves the bounds box
         if(aliveForTicks > 200) Game.handler.removeObject(this);
     }
@@ -62,11 +61,14 @@ public class Bullet extends GameObject {
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.draw(bounds);
+        AffineTransform t = new AffineTransform();
+        t.translate(x, y);
+        t.scale(size/bullet.getWidth(), size/bullet.getHeight());
         // draws the image of the bullet and rectangle
-        g2d.drawImage(bullet, x, y, size, size, null);
+        g2d.drawImage(bullet, t, null);
     }
     
-    public int getSize() {
+    public double getSize() {
         return size;
     }
 

@@ -2,38 +2,38 @@
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 public class Turret extends GameObject{
 
     private Tank tank;
-    private Rectangle bounds;
+    
     private Graphics2D g2d;
     private double xd,yd,rotate;
-    private double mouseX, mouseY;
+    
     private BufferedImage turret;
     private int turretShootCounter = 7;
-    private boolean shooting = false;
+    private double rotateChangeAmount = 0.3;
     
     private int coolDown = 20, coolDownCounter = 20;
 
-    public Turret(int x, int y, int width, int height, ID id, Tank t) {
+    public Turret(double x, double y, double width, double height, ID id, Tank t) {
         super(x, y, width, height, id);
 
         tank = t;
-        bounds = new Rectangle(x,y, 10, 10);
+        
         turret = ImageLoader.imageLoader("./graphics/TurretGreen.png");
     }
 
     @Override
     public void tick() {
-        shooting = false;
+        
         if(turretShootCounter == 0)
             turret = ImageLoader.imageLoader("./graphics/TurretGreen.png");
         turretShootCounter --;
         coolDownCounter++; // increases the time since last shot by 1
-        mouseX = tank.getGame().getMouseX();
-        mouseY = tank.getGame().getMouseY();
+        
         
         x = tank.getX() + tank.getSize() / 2;
         y = tank.getY() + tank.getSize() / 2;
@@ -41,24 +41,46 @@ public class Turret extends GameObject{
         xd = (double) x;
         yd = (double ) y;
         
-        bounds.setLocation(x, y);
-        rotate = Math.atan2((mouseY - yd), (mouseX - xd)) - Math.PI / 2;
+        bounds.setRect(x, y, 10,10);
+        
         // sets the amount the turret needs to rotate based on the mouse location
-        if(Key.shoot.isDown && coolDownCounter > coolDown) {
+        if(tank.getPlayerNum() == 1){
+        if(Key.shoot1.isDown && coolDownCounter > coolDown) {
             shoot();
             turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
             coolDownCounter = 0;
-            // shoots and sets timer back to 0 if conditions are met
+        }
+        if(Key.turretRight1.isDown) 
+            rotate = rotate - rotateChangeAmount;
+        if(Key.turretLeft1.isDown)
+            rotate = rotate + rotateChangeAmount;
+        
+        }else{
+            if(Key.shoot2.isDown && coolDownCounter > coolDown) {
+            shoot();
+            turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
+            coolDownCounter = 0;
+        }
+            
+            if(Key.turretRight2.isDown) 
+            rotate = rotate - rotateChangeAmount;
+        if(Key.turretLeft2.isDown)
+            rotate = rotate + rotateChangeAmount;
+            
         }
         
-     
+        
     }
 
     @Override
     public void render(Graphics g) {
         g2d = (Graphics2D) g;
         g2d.rotate(rotate + Math.toRadians(90), xd ,yd );//rotates graphics
-        g2d.drawImage(turret, x - 16, y - 16, 64,32, null);//renders image
+        AffineTransform t = new AffineTransform();
+        t.translate(x - tank.getSize() / 4, y - tank.getSize()/4);
+        
+        t.scale(tank.getSize()/turret.getWidth(), (tank.getSize()/2)/turret.getHeight());
+        g2d.drawImage(turret, t, null);//renders image
        g2d.rotate(-(rotate + Math.toRadians(90)), xd ,yd );//rotates grpahics back
         
     }
@@ -67,20 +89,23 @@ public class Turret extends GameObject{
         return rotate;
     }
 
-    public boolean isShooting() {
-        return shooting;
-    }
     
     
     
-    private void shoot(){
+    
+    public void shoot(){
 
-        shooting = true;
+        
         turretShootCounter = 10;
         double subX = -(tank.getSize() / 2 * Math.sin(rotate));
         double subY = (tank.getSize() / 2 * Math.cos(rotate));
         Game.getHandler().addObject(new Bullet(x + (int)subX, y + (int)subY, 15, 15, ID.Bullet, 5, rotate));
+        turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
 
+    }
+
+    public void setRotate(double rotate) {
+        this.rotate = rotate;
     }
     
 }

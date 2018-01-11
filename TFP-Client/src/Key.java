@@ -1,10 +1,24 @@
 public class Key{
 
-   public static Key up = new Key();
-   public static Key down = new Key();
-   public static Key left = new Key();
-   public static Key right = new Key();
-   public static Key shoot = new Key();
+   public static Key up1 = new Key();
+   public static Key down1 = new Key();
+   public static Key left1 = new Key();
+   public static Key right1 = new Key();
+   public static Key shoot1 = new Key();
+   public static Key mine1 = new Key();
+   public static Key turretRight1 = new Key();
+   public static Key turretLeft1 = new Key();
+   
+   
+   
+   public static Key up2 = new Key();
+   public static Key down2 = new Key();
+   public static Key left2 = new Key();
+   public static Key right2 = new Key();
+   public static Key shoot2 = new Key();
+   public static Key mine2 = new Key();
+   public static Key turretRight2 = new Key();
+   public static Key turretLeft2 = new Key();
  ;
 
    /* toggles the keys current state*/

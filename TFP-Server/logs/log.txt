@@ -1,4 +1,4 @@
-Oct 20, 2017 12:39:05 PM ServerThreadForTanks run
-INFO: Server started.
-Oct 20, 2017 12:39:05 PM ServerThreadForTanks run
-INFO: Packet made.
+Oct 30, 2017 9:44:32 AM Server main
+INFO: logger started.
+Oct 30, 2017 9:44:32 AM ServerRecieveThread run
+INFO: Packet made original.
