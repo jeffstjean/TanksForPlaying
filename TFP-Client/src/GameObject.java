@@ -11,6 +11,12 @@ public abstract class GameObject {
         protected boolean intersecting;
         protected int aliveForTicks;
         private static int idNum = 0;
+        
+        protected final double xF, yF;
+	public final double motionXF, motionYF;
+	protected final Rectangle2D boundsF;
+        
+        
 	public GameObject(double x, double y, double width, double height, ID id){
 		this.x = x;
 		this.y = y;
@@ -21,6 +27,11 @@ public abstract class GameObject {
                 intersecting = false;
                 aliveForTicks = 0;
                 idNum ++;
+                this.xF = x;
+		this.yF = y;
+                motionXF = 0;
+                motionYF = 0;
+                boundsF = new Rectangle.Double(x,y, width, height);
 	}
         
         public GameObject(double x, double y, double width,  ID id){
@@ -30,9 +41,19 @@ public abstract class GameObject {
                 this.height = width;
                 this.width = width;
                 bounds = new Rectangle.Double(x,y, width, height);
+                
+                this.xF = x;
+		this.yF = y;
+                motionXF = 0;
+                motionYF = 0;
+                boundsF = new Rectangle.Double(x,y, width, height);
+                
+                
+                
                 intersecting = false;
                 aliveForTicks = 0;
                 idNum ++;
+                
 	}
         
 
@@ -83,6 +104,11 @@ public abstract class GameObject {
 	public abstract void render(Graphics g) ;
 	
 	public void reset(){
+            motionX = motionXF;
+            motionY = motionYF;
             
+            bounds = boundsF;
+            x = xF;
+            y = yF;
         }
 }

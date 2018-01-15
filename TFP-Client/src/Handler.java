@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 public class Handler {
 
-    LinkedList<GameObject> object = new LinkedList<GameObject>();
+    static LinkedList<GameObject> object = new LinkedList<GameObject>();
 
     public void tick() {
         for (int i = 0; i < object.size(); i++) {
@@ -53,7 +53,7 @@ public class Handler {
 
     }
     
-    public void reset(){
+    public static void reset(){
          for (int i = 0; i < object.size(); i++) {
             GameObject temp1 = object.get(i);
             temp1.reset();

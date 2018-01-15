@@ -70,6 +70,17 @@ public class Tank extends GameObject {
     
     @Override
     public void tick() {
+        
+        if(health <= 0){
+            Game.handler.reset();
+            WinningScreen screen;
+            if(playerNum == 1)
+            screen = new WinningScreen(Game.frame, true, 2);
+            else
+                screen = new WinningScreen(Game.frame, true, 1);
+            screen.setVisible(true);
+        }
+             
         if(playerNum == 1){
         if (Key.up1.isDown) {
             motionY = -speed;
@@ -276,6 +287,12 @@ public class Tank extends GameObject {
             
             if(motionX < 0) motionX = 0;
         }
+    }
+
+    @Override
+    public void reset() {
+        super.reset(); 
+        health = 100;
     }
     
     
