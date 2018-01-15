@@ -33,8 +33,19 @@ public class Tank extends GameObject {
         body = ImageLoader.imageLoader("./graphics/TankGreen.png");
         playerNum = num;
     
+    }
     
-    
+     public Tank(Game g, int num) {
+        super(100, 100, 64, 64, ID.Tank);
+        game = g;
+        rotate = 0;
+        size = width;
+        top = new Rectangle2D.Double(x + 10,y - 10, size - 20, 10);
+        bottom = new Rectangle2D.Double (x + 10, y+size, size - 20, 10);
+        left = new Rectangle2D.Double (x - 10, y+10, 10, size -20);
+        right = new Rectangle2D.Double (x + size , y - 10, 10, size - 20);
+        body = ImageLoader.imageLoader("./graphics/TankGreen.png");
+        playerNum = num;
     
     }
     

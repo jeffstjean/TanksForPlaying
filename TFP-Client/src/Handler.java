@@ -52,4 +52,12 @@ public class Handler {
         this.object.remove(object);
 
     }
+    
+    public void reset(){
+         for (int i = 0; i < object.size(); i++) {
+            GameObject temp1 = object.get(i);
+            temp1.reset();
+         }
+    }
+    
 }

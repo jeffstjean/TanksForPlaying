@@ -4,6 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Bullet extends GameObject {
 
@@ -46,19 +51,34 @@ public class Bullet extends GameObject {
 
     @Override
     public void collision(GameObject gO) {
-       if(gO.id == ID.TopWall || gO.id == ID.BottomWall) motionY = -motionY;
+       if(gO.id == ID.TopWall || gO.id == ID.BottomWall)motionY = -motionY;        
        if(gO.id == ID.RightWall || gO.id == ID.LeftWall) motionX = -motionX;
        if(gO.id == ID.Bullet) {
            Game.handler.removeObject(gO);
            Game.handler.removeObject(this);
+           try {
+               SoundManager.playHitSound();
+           } catch (IOException | UnsupportedAudioFileException | LineUnavailableException | InterruptedException ex) {
+               Logger.getLogger(Bullet.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
        if(gO.id ==ID.BreakableWall){
            gO.collision(this);
            Game.handler.removeObject(this);
+           try {
+               SoundManager.playHitSound();
+           } catch (IOException | UnsupportedAudioFileException | LineUnavailableException | InterruptedException ex) {
+               Logger.getLogger(Bullet.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
        if(gO.id == ID.Tank && canDoDamageTick >= 5){
            ((Tank)gO).reduceHealth(damage);
            Game.handler.removeObject(this);
+           try {
+               SoundManager.playHitSound();
+           } catch (IOException | UnsupportedAudioFileException | LineUnavailableException | InterruptedException ex) {
+               Logger.getLogger(Bullet.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
     }
 
@@ -84,12 +104,7 @@ public class Bullet extends GameObject {
         return damage;
     }
 
+   
     
-    
-    
-    
-    public void shoot() {
-        System.out.println("Shoot");
-    }
 
 }

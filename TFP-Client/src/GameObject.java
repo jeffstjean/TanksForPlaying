@@ -10,6 +10,7 @@ public abstract class GameObject {
 	protected Rectangle2D bounds;
         protected boolean intersecting;
         protected int aliveForTicks;
+        private static int idNum = 0;
 	public GameObject(double x, double y, double width, double height, ID id){
 		this.x = x;
 		this.y = y;
@@ -19,7 +20,21 @@ public abstract class GameObject {
                 bounds = new Rectangle.Double(x,y, width, height);
                 intersecting = false;
                 aliveForTicks = 0;
+                idNum ++;
 	}
+        
+        public GameObject(double x, double y, double width,  ID id){
+		this.x = x;
+		this.y = y;
+		this.id = id;
+                this.height = width;
+                this.width = width;
+                bounds = new Rectangle.Double(x,y, width, height);
+                intersecting = false;
+                aliveForTicks = 0;
+                idNum ++;
+	}
+        
 
 	public abstract void tick();
 	
@@ -29,12 +44,16 @@ public abstract class GameObject {
 	public void setY(double y){
 		this.y = y;
 	}
+
+    public static int getIdNum() {
+        return idNum;
+    }
 	
-	public double getX(){
+	public final double getX(){
 		return x;
 	}
 	
-	public double getY(){
+	public final double getY(){
 		return y;
 	}
 	
@@ -58,10 +77,12 @@ public abstract class GameObject {
 	}
         
         public void collision(GameObject gO){
-            
+            //gO.collision(this);
         }
         
 	public abstract void render(Graphics g) ;
 	
-	
+	public void reset(){
+            
+        }
 }
