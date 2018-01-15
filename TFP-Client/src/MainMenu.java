@@ -1,5 +1,6 @@
 
 import java.awt.Frame;
+import javax.swing.JFrame;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -21,6 +22,7 @@ public class MainMenu extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.parent = parent;
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
 
     /**
@@ -37,6 +39,11 @@ public class MainMenu extends javax.swing.JDialog {
         btnKeys = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jLabel1.setText("Tanks For Playing");
 
@@ -92,6 +99,10 @@ public class MainMenu extends javax.swing.JDialog {
         KeyBindingMenu keyBinds = new KeyBindingMenu(parent, true);
         keyBinds.setVisible(true);
     }//GEN-LAST:event_btnKeysActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosed
 
     /**
      * @param args the command line arguments
