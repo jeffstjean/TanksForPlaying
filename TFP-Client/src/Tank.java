@@ -157,7 +157,7 @@ public class Tank extends GameObject {
         right.setRect(x + size, y + 10, 10, size - 20);
 
     }
-
+    }
     public int getPlayerNum() {
         return playerNum;
     }
