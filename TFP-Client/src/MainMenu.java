@@ -40,9 +40,12 @@ public class MainMenu extends javax.swing.JDialog {
         btnKeys = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
         setPreferredSize(new java.awt.Dimension(1280, 720));
-
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Castellar", 0, 60)); // NOI18N
         jLabel1.setText("Tanks For Playing");
@@ -102,6 +105,7 @@ public class MainMenu extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
+        Game.game.reset();
         this.dispose();
     }//GEN-LAST:event_btnPlayActionPerformed
 
@@ -109,6 +113,12 @@ public class MainMenu extends javax.swing.JDialog {
         System.exit(0);
     }//GEN-LAST:event_btnExitActionPerformed
 
+    private void formWindowClosed(java.awt.event.WindowEvent evt){
+        
+    }
+    
+    
+    
     private void btnKeysActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeysActionPerformed
         ControlsMenu controls = new ControlsMenu(parent, true);
         controls.setVisible(true);
