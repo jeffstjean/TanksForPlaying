@@ -28,7 +28,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
     static Handler handler;
     private static Game game;
-    private static JFrame frame;
+    static JFrame frame;
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
     public final String TITLE = "Tanks For Playing";

@@ -1,5 +1,6 @@
 
 import java.awt.Frame;
+import javax.swing.JFrame;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -21,6 +22,7 @@ public class MainMenu extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.parent = parent;
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
 
     /**
@@ -38,7 +40,9 @@ public class MainMenu extends javax.swing.JDialog {
         btnKeys = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
         setPreferredSize(new java.awt.Dimension(1280, 720));
+
 
         jLabel1.setFont(new java.awt.Font("Castellar", 0, 60)); // NOI18N
         jLabel1.setText("Tanks For Playing");
@@ -109,6 +113,8 @@ public class MainMenu extends javax.swing.JDialog {
         ControlsMenu controls = new ControlsMenu(parent, true);
         controls.setVisible(true);
     }//GEN-LAST:event_btnKeysActionPerformed
+
+    
 
     /**
      * @param args the command line arguments
