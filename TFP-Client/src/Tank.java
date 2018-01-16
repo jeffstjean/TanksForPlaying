@@ -64,15 +64,16 @@ public class Tank extends GameObject {
     @Override
     public void tick() {
 
-        if(health <= 0){
+        if (health <= 0) {
             Game.handler.reset();
             WinningScreen screen;
-            if(playerNum == 1)
-            screen = new WinningScreen(Game.frame, true, 2);
+            if (playerNum == 1)
+                screen = new WinningScreen(Game.frame, true, 2);
             else
                 screen = new WinningScreen(Game.frame, true, 1);
             screen.setVisible(true);
         }
+
              
         if(playerNum == 1){
         if (Key.up1.isDown) {
@@ -109,6 +110,29 @@ public class Tank extends GameObject {
         } else if (Key.right2.isDown) {
             motionX = speed;
 
+
+        if (playerNum == 1) {
+            if (Key.up1.isDown)
+                motionY = -speed;
+            else if (Key.down1.isDown)
+                motionY = speed;
+            else
+                motionY = 0;
+            if (Key.left1.isDown)
+                motionX = -speed;
+            else if (Key.right1.isDown)
+                motionX = speed;
+            else
+                motionX = 0;
+
+            coolDownCounter++;
+
+            if (Key.mine2.isDown && coolDownCounter >= coolDown) {
+                dropMine();
+
+                coolDownCounter = 0;
+            }
+
         } else {
             if (Key.up2.isDown)
                 motionY = -speed;
@@ -120,15 +144,26 @@ public class Tank extends GameObject {
                 motionX = -speed;
             else if (Key.right2.isDown)
                 motionX = speed;
-            else
-                motionX = 0;
+            else {
+                if (Key.up2.isDown)
+                    motionY = -speed;
+                else if (Key.down2.isDown)
+                    motionY = speed;
+                else
+                    motionY = 0;
+                if (Key.left2.isDown)
+                    motionX = -speed;
+                else if (Key.right2.isDown)
+                    motionX = speed;
+                else
+                    motionX = 0;
 
-            coolDownCounter++;
-            if (Key.mine2.isDown && coolDownCounter >= coolDown) {
-                dropMine();
-                coolDownCounter = 0;
+                coolDownCounter++;
+                if (Key.mine2.isDown && coolDownCounter >= coolDown) {
+                    Game.handler.addObject(new Mine(x, y, 16, 16, ID.Mine, Game.handler));
+                    coolDownCounter = 0;
+                }
             }
-
         }
         }
         // sets movement based on keys pressed
@@ -157,8 +192,10 @@ public class Tank extends GameObject {
         left.setRect(x - 10, y + 10, 10, size - 20);
         right.setRect(x + size, y + 10, 10, size - 20);
 
-    
+
     }
+
+
     public int getPlayerNum() {
         return playerNum;
     }
@@ -294,17 +331,18 @@ public class Tank extends GameObject {
                 motionX = 0;
     }
 
-
     @Override
     public void reset() {
-        super.reset(); 
+        super.reset();
         health = 100;
     }
+
     
     protected void dropMine(){
         Game.handler.addObject(new Mine(x, y, 16, 16, ID.Mine, Game.handler));
     }
     
     
+
 
 }
