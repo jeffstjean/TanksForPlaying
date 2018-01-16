@@ -1,2 +1,2 @@
-Jan 15, 2018 10:35:22 AM Game main
+Jan 15, 2018 10:38:51 AM Game main
 INFO: Logger started.
