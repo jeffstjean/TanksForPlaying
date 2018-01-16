@@ -422,7 +422,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         turret = new Turret[NUM_PLAYERS];
         // inits tank at 100 100 and gives it the game instance
         for (int i = 0; i < NUM_PLAYERS; i++) {
-            tank[i] = new Tank(100 + 100 * i, 100, TANK_SIZE, TANK_SIZE, ID.Tank, game, i + 1);
+            tank[i] = new BigBombTank(100 + 100 * i, 100, TANK_SIZE, TANK_SIZE, ID.Tank, game, i + 1);
             turret[i] = new Turret(tank[i].getX(), tank[i].getY(), 10, 10, ID.Turret, tank[i]);
             handler.addObject(tank[i]);
             handler.addObject(turret[i]);
@@ -508,6 +508,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         LOGGER.info(log);
     }
 
+
     public static void generateOuterWalls() {
         handler.addObject(new Wall(10, 10, 30, (double) HEIGHT - 70, ID.LeftWall));
         handler.addObject(new Wall(10, (double) HEIGHT - 90, (double) WIDTH - 50, 30, ID.BottomWall));
@@ -534,5 +535,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public static void setLevelSelect(int level) {
         levelSelect = level;
     }
+
 
 }

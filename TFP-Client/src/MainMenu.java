@@ -50,7 +50,9 @@ public class MainMenu extends javax.swing.JDialog {
             }
         });
 
+
         jLabel1.setFont(new java.awt.Font("Castellar", 0, 90)); // NOI18N
+
         jLabel1.setText("Tanks For Playing");
 
         btnPlay.setFont(new java.awt.Font("Castellar", 0, 36)); // NOI18N
@@ -144,6 +146,12 @@ public class MainMenu extends javax.swing.JDialog {
         System.exit(0);
     }//GEN-LAST:event_btnExitActionPerformed
 
+    private void formWindowClosed(java.awt.event.WindowEvent evt){
+        
+    }
+    
+    
+    
     private void btnKeysActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeysActionPerformed
         ControlsMenu controls = new ControlsMenu(parent, true);
         controls.setVisible(true);
