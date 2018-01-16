@@ -27,10 +27,11 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private Thread th;
 
     static Handler handler;
-    private static Game game;
+    public static Game game;
     static JFrame frame;
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
+    public static int levelSelect = 0;
     public final String TITLE = "Tanks For Playing";
     private double TANK_SIZE = 64;
     public static HashMap<Integer, Key> keyBindings = new HashMap<>();
@@ -44,7 +45,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private Turret[] turret;
     public long maxMillis = 0;
     private static final Logger LOGGER = Logger.getLogger("ClientLog");
-    private LinkedList<Wall> walls;
+    private static LinkedList<Wall> walls;
     private LinkedList<Powerup> powerups;
 
     //config vars
@@ -165,7 +166,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     }
 
     private void tick() {
-        
+
         renderer.repaint(); // tells renderer to repaint if it hasn't already
         handler.tick(); // tells handler to tick all game objects
 
@@ -190,7 +191,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         try {
             keyBindings.get(ke.getKeyCode()).isDown = true;
         } catch (Exception e) {
-            
+
         }
         //updates the key bindings
     }
@@ -216,7 +217,29 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     }
 
     public void reset() {
+        System.out.println("reset");
         handler.reset();
+        if (levelSelect == 0) {
+            System.out.println("No level selected. Defaulting to level 1.");
+            levelSelect = 1;
+        }
+        switch (levelSelect) {
+            case 1:
+                generateLevel1();
+                break;
+            case 2:
+                generateLevel2();
+                break;
+            case 3:
+                generateLevel3();
+                break;
+            case 4:
+                generateLevel4();
+                break;
+            default:
+                System.out.println("Error");
+                break;
+        }
     }
 
     @Override
@@ -405,12 +428,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
             handler.addObject(turret[i]);
         }
 
-        walls.clear();
-        walls.add(new Wall(10, 10, 30, (double) HEIGHT - 70, ID.LeftWall));
-        walls.add(new Wall(10, (double) HEIGHT - 90, (double) WIDTH - 50, 30, ID.BottomWall));
-        walls.add(new Wall((double) WIDTH - 50, 10, 30, (double) HEIGHT - 70, ID.RightWall));
-        walls.add(new Wall(10, 10, (double) WIDTH - 30, 30, ID.TopWall));
-        walls.add(new Wall(200, 200, 100, 100, ID.BreakableWall));
         for (int i = 0; i < walls.size(); i++) {
             handler.addObject(walls.get(i));
         }
@@ -460,10 +477,62 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         game.start();
         MainMenu menu = new MainMenu(frame, true);
         menu.setVisible(true);
+
+        walls.clear();
+        generateOuterWalls();
+        if (levelSelect == 0) {
+            System.out.println("No level selected. Defaulting to level 1.");
+            levelSelect = 1;
+        }
+        switch (levelSelect) {
+            case 1:
+                generateLevel1();
+                break;
+            case 2:
+                generateLevel2();
+                break;
+            case 3:
+                generateLevel3();
+                break;
+            case 4:
+                generateLevel4();
+                break;
+            default:
+                System.out.println("Error");
+                break;
+        }
+        //walls.add(new Wall(200, 200, 100, 100, ID.BreakableWall));
     }
 
     public static void log(String log) {
         LOGGER.info(log);
+    }
+
+    public static void generateOuterWalls() {
+        handler.addObject(new Wall(10, 10, 30, (double) HEIGHT - 70, ID.LeftWall));
+        handler.addObject(new Wall(10, (double) HEIGHT - 90, (double) WIDTH - 50, 30, ID.BottomWall));
+        handler.addObject(new Wall((double) WIDTH - 50, 10, 30, (double) HEIGHT - 70, ID.RightWall));
+        handler.addObject(new Wall(10, 10, (double) WIDTH - 30, 30, ID.TopWall));
+    }
+
+    public static void generateLevel1() {
+        handler.addObject(new Wall(200, 200, 100, 100, ID.BreakableWall));
+    }
+
+    public static void generateLevel2() {
+        handler.addObject(new Wall(300, 300, 100, 100, ID.BreakableWall));
+    }
+
+    public static void generateLevel3() {
+        handler.addObject(new Wall(400, 400, 100, 100, ID.BreakableWall));
+    }
+
+    public static void generateLevel4() {
+        handler.addObject(new Wall(500, 500, 100, 100, ID.BreakableWall));
+    }
+
+    public static void setLevelSelect(int level) {
+        levelSelect = level;
     }
 
 }
