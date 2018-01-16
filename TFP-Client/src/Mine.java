@@ -4,6 +4,9 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public final class Mine extends GameObject {
 
@@ -80,6 +83,11 @@ public final class Mine extends GameObject {
     }
 
     private void startExplosion() {
+        try {
+               SoundManager.playHitSound();
+           } catch (IOException | InterruptedException | LineUnavailableException | UnsupportedAudioFileException e) {
+               System.err.println("Error playing mine explosion sound.\n" + e.getMessage());
+           }
         if (animation != null) {
             animation.stop();
         }

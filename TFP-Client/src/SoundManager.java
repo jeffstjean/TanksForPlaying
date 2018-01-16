@@ -22,6 +22,14 @@ public class SoundManager {
         playClip(new File(SOUNDS_LOCATION + "death.wav"));
     }
     
+    protected static void playExplosionSound() throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
+        playClip(new File(SOUNDS_LOCATION + "explosion.wav"));
+    }
+    
+    protected static void playTimerSound() throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
+        playClip(new File(SOUNDS_LOCATION + "timer.wav"));
+    }
+    
     private static void playClip(File file) {
         try {
             Clip clip = AudioSystem.getClip();
