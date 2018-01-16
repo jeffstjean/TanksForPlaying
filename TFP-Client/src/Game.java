@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Properties;
@@ -17,15 +16,13 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 import javax.swing.event.MouseInputListener;
 
 public class Game implements Runnable, KeyListener, MouseInputListener {
 
     private static Renderer renderer;
-    
+
     private boolean running = false;
     private Thread th;
 
@@ -36,7 +33,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public static final int HEIGHT = 720;
     public final String TITLE = "Tanks For Playing";
     private double TANK_SIZE = 64;
-    public HashMap<Integer, Key> keyBindings = new HashMap<>();
+    public static HashMap<Integer, Key> keyBindings = new HashMap<>();
 
     public static boolean other[] = new boolean[256];
     private static int mouseX, mouseY;
@@ -49,7 +46,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private static final Logger LOGGER = Logger.getLogger("ClientLog");
     private LinkedList<Wall> walls;
     private LinkedList<Powerup> powerups;
- 
 
     //config vars
     private static final Properties USER_SETTINGS = new Properties(), DEFAULT_SETTINGS = new Properties();
@@ -85,9 +81,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     }
 
     private synchronized void stop() {
-        if (!running) {
+        if (!running)
             return;
-        }
         running = false;
         try {
             th.join();
@@ -100,22 +95,20 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     private synchronized void start() {
         // If the program is already running then do nothing but if not running,
         // make it run and start the thread
-        if (running) {
-            
+        if (running)
+
             return;
-        }
         running = true;
         th = new Thread(this);
 
         th.start();
         System.out.println("started th");
-        
+
     }
 
     public static void render(Graphics2D g) {
-        if (handler != null) {
+        if (handler != null)
             handler.render(g);
-        }
         // Has handler render all gameObjects
         // Checks to see if null to avoid NPE
     }
@@ -123,7 +116,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     @Override
 
     public void run() {
-        
 
         frame.addKeyListener(this);
         frame.add(renderer);
@@ -168,14 +160,12 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         return allBytes;
     }
 
-    
-
     public void startGame() {
         start();
     }
 
     private void tick() {
-       
+        
         renderer.repaint(); // tells renderer to repaint if it hasn't already
         handler.tick(); // tells handler to tick all game objects
 
@@ -200,7 +190,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         try {
             keyBindings.get(ke.getKeyCode()).isDown = true;
         } catch (Exception e) {
-
+            
         }
         //updates the key bindings
     }
@@ -225,18 +215,14 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         //updates the key bindings
     }
 
-    public void reset(){
+    public void reset() {
         handler.reset();
     }
-    
-    
-    
+
     @Override
     public void mouseClicked(MouseEvent me) {
         //Only for testing mines - will be deleted
 
-       
-        
         //Proof of Concept code can be deleted
 //        clickCounter++;
 //        clickCounter = clickCounter % 4;
@@ -258,7 +244,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 //        powerups.add(new Powerup((double) me.getX() - 16, (double) me.getY() - 39, 32, 32, ID.PowerUp, handler, clr));
 //        handler.addObject(powerups.get(powerups.size() - 1));
         //End of POC
-
         mouseX = me.getX();
         mouseY = me.getY();
         // gets the mouse's x and y location
@@ -319,19 +304,18 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public Game() {
         renderer = new Renderer();
         // initiallizes the renderer
-        
+
     }
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc=" Config Stuff ">
     private void initConfigs() {
-        if (!userSettingsLocation.exists()) {
+        if (!userSettingsLocation.exists())
             try {
                 Files.copy(defaultSettingsLocation.toPath(), userSettingsLocation.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 System.out.println("Couldn't copy default config file. Defaults will be used for all params.");
             }
-        }
 
         FileInputStream in;
         try {
@@ -466,7 +450,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // Sets the program so it cannot be re-sizable
         frame.setResizable(false);
-        
+
         // adds the renderer to the jFrame
         frame.setVisible(true);
 
