@@ -13,7 +13,7 @@ public class Powerup extends GameObject {
     private boolean animationComplete;
     private int tickCounter;
 
-    public Powerup(int x, int y, int width, int height, ID id, Handler h, PowerupColor type) {
+    public Powerup(double x, double y, double width, double height, ID id, Handler h, PowerupColor type) {
         super(x, y, width, height, id);
         this.h = h; // Need the handler to add Explosion from within Mine
         this.type = type;

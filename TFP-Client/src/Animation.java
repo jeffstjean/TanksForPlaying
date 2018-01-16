@@ -1,5 +1,7 @@
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 
@@ -67,8 +69,12 @@ public class Animation {
         nextAnimation(); // Switch to the next image in the animations
     }
 
-    public void render(Graphics g, double x, double y, int size) {
-        g.drawImage(currentImage, (int) x, (int) y, size, size, null); // Draw the image
+    public void render(Graphics g, double x, double y, double size) {
+        AffineTransform t = new AffineTransform();
+        t.translate(x, y);
+        t.scale(size/currentImage.getWidth(), size/currentImage.getHeight());
+        Graphics2D g2D = (Graphics2D)g;
+        g2D.drawImage(currentImage, t, null); // Draw the image
     }
 
     public boolean isComplete() { // Boolean is set to true to let other classes know the animation is complete

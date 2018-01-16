@@ -1,39 +1,80 @@
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 
 
 public abstract class GameObject {
-	protected int x, y, height ,width;
+	protected double x, y, height ,width;
 	protected ID id;
-	public int motionX, motionY;
-	protected Rectangle bounds;
+	public double motionX, motionY;
+	protected Rectangle2D bounds;
         protected boolean intersecting;
         protected int aliveForTicks;
-	public GameObject(int x, int y, int width, int height, ID id){
+        private static int idNum = 0;
+        
+        protected final double xF, yF;
+	public final double motionXF, motionYF;
+	protected final Rectangle2D boundsF;
+        
+        
+	public GameObject(double x, double y, double width, double height, ID id){
 		this.x = x;
 		this.y = y;
 		this.id = id;
                 this.height = height;
                 this.width = width;
-                bounds = new Rectangle(x,y, width, height);
+                bounds = new Rectangle.Double(x,y, width, height);
                 intersecting = false;
                 aliveForTicks = 0;
+                idNum ++;
+                this.xF = x;
+		this.yF = y;
+                motionXF = 0;
+                motionYF = 0;
+                boundsF = new Rectangle.Double(x,y, width, height);
 	}
+        
+        public GameObject(double x, double y, double width,  ID id){
+		this.x = x;
+		this.y = y;
+		this.id = id;
+                this.height = width;
+                this.width = width;
+                bounds = new Rectangle.Double(x,y, width, height);
+                
+                this.xF = x;
+		this.yF = y;
+                motionXF = 0;
+                motionYF = 0;
+                boundsF = new Rectangle.Double(x,y, width, height);
+                
+                
+                
+                intersecting = false;
+                aliveForTicks = 0;
+                idNum ++;
+                
+	}
+        
 
 	public abstract void tick();
 	
-	public void setX(int x ){
+	public void setX(double x ){
 		this.x = x;
 	}
-	public void setY(int y){
+	public void setY(double y){
 		this.y = y;
 	}
+
+    public static int getIdNum() {
+        return idNum;
+    }
 	
-	public int getX(){
+	public final double getX(){
 		return x;
 	}
 	
-	public int getY(){
+	public final double getY(){
 		return y;
 	}
 	
@@ -43,24 +84,31 @@ public abstract class GameObject {
 	public ID getID(){
 		return id;
 	}
-	public void setmotionX(int motionX){
+	public void setmotionX(double motionX){
 		this.motionX = motionX;
 	}
-	public void setmotionY(int motionY){
+	public void setmotionY(double motionY){
 		this.motionY = motionY;
 	}
-	public int getmotionX(){
+	public double getmotionX(){
 		return motionX;
 	}
-	public int getmotionY(){
+	public double getmotionY(){
 		return motionY;
 	}
         
         public void collision(GameObject gO){
-            
+            //gO.collision(this);
         }
         
 	public abstract void render(Graphics g) ;
 	
-	
+	public void reset(){
+            motionX = motionXF;
+            motionY = motionYF;
+            
+            bounds = boundsF;
+            x = xF;
+            y = yF;
+        }
 }

@@ -9,7 +9,7 @@ public class Wall extends GameObject{
 
     
     private int health = 5, hits=0;
-    public Wall(int x, int y, int width, int height, ID id) {
+    public Wall(double x, double y, double width, double height, ID id) {
         super(x, y, width, height, id);
         motionX = 0;
         motionY = 0;
