@@ -162,9 +162,6 @@ public class MainMenu extends javax.swing.JDialog {
         levelSelect.setVisible(true);
     }//GEN-LAST:event_btnLevelSelectActionPerformed
 
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {
-        
-    }
 
     /**
      * @param args the command line arguments
