@@ -104,6 +104,10 @@ public class Turret extends GameObject{
         return rotate;
     }
 
+    public void setTank(Tank tank) {
+        this.tank = tank;
+    }
+
     
     
     
@@ -118,7 +122,10 @@ public class Turret extends GameObject{
         turretShootCounter = 10;
         double subX = -(tank.getSize() / 2 * Math.sin(rotate));
         double subY = (tank.getSize() / 2 * Math.cos(rotate));
-        Game.getHandler().addObject(new Bullet(x + (int)subX, y + (int)subY, 15, 15, ID.Bullet, 5, rotate));
+        if(tank.tankClass == TankClasses.Destroyer) 
+            Game.getHandler().addObject(new Bullet(x + (int)subX, y + (int)subY, 15, 15, ID.Bullet, 5, rotate, 40));
+        else
+            Game.getHandler().addObject(new Bullet(x + (int)subX, y + (int)subY, 15, 15, ID.Bullet, 5, rotate));
         turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
 
     }

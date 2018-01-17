@@ -17,7 +17,7 @@ public class Tank extends GameObject {
     protected int coolDown = 30, coolDownCounter = 30; // should boh be 20
     private int playerNum;
     protected int health = 100;
-
+    public TankClasses tankClass;
     public Tank(double x, double y, double width, double height, ID id, Game g, int num) {
         super(x, y, width, height, id);
         game = g;
@@ -29,7 +29,7 @@ public class Tank extends GameObject {
         right = new Rectangle2D.Double(x + size, y - 10, 10, size - 20);
         body = ImageLoader.imageLoader("./graphics/TankGreen.png");
         playerNum = num;
-
+        tankClass = TankClasses.Normal;
     }
 
     public Tank(Game g, int num) {
@@ -43,7 +43,7 @@ public class Tank extends GameObject {
         right = new Rectangle2D.Double(x + size, y - 10, 10, size - 20);
         body = ImageLoader.imageLoader("./graphics/TankGreen.png");
         playerNum = num;
-
+        tankClass = TankClasses.Normal;
     }
 
     public enum moveDirection {
@@ -76,6 +76,8 @@ public class Tank extends GameObject {
 
              
         if(playerNum == 1){
+            
+            //move up  and down player 1
         if (Key.up1.isDown) {
             motionY = -speed;
         } else if (Key.down1.isDown) {
@@ -83,6 +85,9 @@ public class Tank extends GameObject {
         } else {
             motionY = 0;
         }
+        
+        
+        // move left and right player 1
         if (Key.left1.isDown) {
             motionX = -speed;
         } else if (Key.right1.isDown) {
@@ -98,33 +103,27 @@ public class Tank extends GameObject {
         }
         
         }else{
+            
+            
+            //up and down player 2
             if (Key.up2.isDown) {
-            motionY = -speed;
-        } else if (Key.down2.isDown) {
-            motionY = speed;
-        } else {
-            motionY = 0;
-        }
+                motionY = -speed;
+            } else if (Key.down2.isDown) {
+                motionY = speed;
+            } else {
+                motionY = 0;
+            }
+            
+            
         if (Key.left2.isDown) {
             motionX = -speed;
         } else if (Key.right2.isDown) {
             motionX = speed;
+        }else {
+            motionX = 0;
+        }
 
-
-        if (playerNum == 1) {
-            if (Key.up1.isDown)
-                motionY = -speed;
-            else if (Key.down1.isDown)
-                motionY = speed;
-            else
-                motionY = 0;
-            if (Key.left1.isDown)
-                motionX = -speed;
-            else if (Key.right1.isDown)
-                motionX = speed;
-            else
-                motionX = 0;
-
+        
             coolDownCounter++;
 
             if (Key.mine2.isDown && coolDownCounter >= coolDown) {
@@ -133,39 +132,11 @@ public class Tank extends GameObject {
                 coolDownCounter = 0;
             }
 
-        } else {
-            if (Key.up2.isDown)
-                motionY = -speed;
-            else if (Key.down2.isDown)
-                motionY = speed;
-            else
-                motionY = 0;
-            if (Key.left2.isDown)
-                motionX = -speed;
-            else if (Key.right2.isDown)
-                motionX = speed;
-            else {
-                if (Key.up2.isDown)
-                    motionY = -speed;
-                else if (Key.down2.isDown)
-                    motionY = speed;
-                else
-                    motionY = 0;
-                if (Key.left2.isDown)
-                    motionX = -speed;
-                else if (Key.right2.isDown)
-                    motionX = speed;
-                else
-                    motionX = 0;
-
-                coolDownCounter++;
-                if (Key.mine2.isDown && coolDownCounter >= coolDown) {
-                    Game.handler.addObject(new Mine(x, y, 16, 16, ID.Mine, Game.handler));
-                    coolDownCounter = 0;
-                }
-            }
+        
+            
         }
-        }
+        
+        
         // sets movement based on keys pressed
         if (motionX == 0 && motionY == 0)
             moveDir = moveDirection.NONE;
@@ -192,7 +163,7 @@ public class Tank extends GameObject {
         left.setRect(x - 10, y + 10, 10, size - 20);
         right.setRect(x + size, y + 10, 10, size - 20);
 
-
+        
     }
 
 

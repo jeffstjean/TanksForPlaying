@@ -33,7 +33,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public static final int HEIGHT = 720;
     public static int levelSelect = 0;
     public final String TITLE = "Tanks For Playing";
-    private double TANK_SIZE = 64;
+    public static double TANK_SIZE = 64;
     public static HashMap<Integer, Key> keyBindings = new HashMap<>();
 
     public static boolean other[] = new boolean[256];
@@ -41,8 +41,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public static int NUM_PLAYERS;
     private ByteBuffer bb;
     private byte[] allBytes = new byte[256];
-    private Tank[] tank;
-    private Turret[] turret;
+    private Tank tank1, tank2;
+    private Turret turret1, turret2;
     public long maxMillis = 0;
     private static final Logger LOGGER = Logger.getLogger("ClientLog");
     private static LinkedList<Wall> walls;
@@ -196,12 +196,28 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         //updates the key bindings
     }
 
-    public Tank[] getTank() {
-        return tank;
+    public void setTank(int num, Tank t) {
+        if(num == 1){
+            handler.removeObject(tank1);
+            tank1 = t;
+            handler.addObject(tank1);
+            turret1.setTank(tank1);
+            handler.removeObject(turret1);
+            handler.addObject(turret1);
+        }else{
+            handler.removeObject(tank2);
+            tank2 = t;
+            handler.addObject(tank2);
+            turret2.setTank(tank2);
+            handler.removeObject(turret2);
+            handler.addObject(turret2);
+        }
     }
 
-    public Turret[] getTurret() {
-        return turret;
+    public Turret getTurret(int num) {
+        if(num == 1)
+        return turret1;
+        else return turret2;
     }
 
     @Override
@@ -418,19 +434,24 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
         // sets the keybindings
         handler = new Handler();
-        tank = new Tank[NUM_PLAYERS];
-        turret = new Turret[NUM_PLAYERS];
+        
+        
         // inits tank at 100 100 and gives it the game instance
-        for (int i = 0; i < NUM_PLAYERS; i++) {
-            tank[i] = new BigBombTank(100 + 100 * i, 100, TANK_SIZE, TANK_SIZE, ID.Tank, game, i + 1);
-            turret[i] = new Turret(tank[i].getX(), tank[i].getY(), 10, 10, ID.Turret, tank[i]);
-            handler.addObject(tank[i]);
-            handler.addObject(turret[i]);
-        }
+        
+            tank1 = new Tank(100, 100, TANK_SIZE, TANK_SIZE, ID.Tank, game, 1);
+            turret1 = new Turret(tank1.getX(), tank1.getY(), 10, 10, ID.Turret, tank1);
+            handler.addObject(tank1);
+            handler.addObject(turret1);
+            
+            
+            
+            tank2= new Tank(1125, 525, TANK_SIZE, TANK_SIZE, ID.Tank, game, 2);
+            turret2 = new Turret(tank2.getX(), tank2.getY(), 10, 10, ID.Turret, tank2);
+            handler.addObject(tank2);
+            handler.addObject(turret2); 
+        
 
-        for (int i = 0; i < walls.size(); i++) {
-            handler.addObject(walls.get(i));
-        }
+        
         frame.addKeyListener(this);
 // adds the two objects to the handler
     }
