@@ -19,7 +19,7 @@ public class Turret extends GameObject{
     
     private BufferedImage turret;
     private int turretShootCounter = 7;
-    private double rotateChangeAmount = 0.3;
+    private double rotateChangeAmount = -0.1;
     
     private int coolDown = 20, coolDownCounter = 20;
 

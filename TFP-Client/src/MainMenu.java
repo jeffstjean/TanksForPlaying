@@ -162,7 +162,7 @@ public class MainMenu extends javax.swing.JDialog {
         levelSelect.setVisible(true);
     }//GEN-LAST:event_btnLevelSelectActionPerformed
 
-   
+
 
     /**
      * @param args the command line arguments

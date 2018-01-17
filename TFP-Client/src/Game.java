@@ -529,7 +529,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         LOGGER.info(log);
     }
 
-
     public static void generateOuterWalls() {
         handler.addObject(new Wall(10, 10, 30, (double) HEIGHT - 70, ID.LeftWall));
         handler.addObject(new Wall(10, (double) HEIGHT - 90, (double) WIDTH - 50, 30, ID.BottomWall));
@@ -537,25 +536,151 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         handler.addObject(new Wall(10, 10, (double) WIDTH - 30, 30, ID.TopWall));
     }
 
-    public static void generateLevel1() {
-        handler.addObject(new Wall(200, 200, 100, 100, ID.BreakableWall));
-    }
 
+    public static void generateLevel1() {
+        //Left Side
+        handler.addObject(new Wall(200, 100, 50, 50, ID.BreakableWall, true));
+        handler.addObject(new Wall(200, 150, 50, 50, ID.BreakableWall, true));
+        handler.addObject(new Wall(250, 150, 50, 50, ID.BreakableWall, true));
+        for (int i = 200; i <= 400; i+=50) {
+            handler.addObject(new Wall(250, i, 50, 50, ID.BreakableWall, false));
+        }
+        handler.addObject(new Wall(250, 450, 50, 50, ID.BreakableWall, true));
+        handler.addObject(new Wall(200, 450, 50, 50, ID.BreakableWall, true));
+        handler.addObject(new Wall(200, 500, 50, 50, ID.BreakableWall, true));
+        
+        //Right Side
+        handler.addObject(new Wall(1000, 100, 50, 50, ID.BreakableWall, true));
+        handler.addObject(new Wall(1000, 150, 50, 50, ID.BreakableWall, true));
+        handler.addObject(new Wall(950, 150, 50, 50, ID.BreakableWall, true));
+        for (int i = 200; i <= 400; i+=50) {
+            handler.addObject(new Wall(950, i, 50, 50, ID.BreakableWall, false));
+        }
+        handler.addObject(new Wall(950, 450, 50, 50, ID.BreakableWall, true));
+        handler.addObject(new Wall(1000, 450, 50, 50, ID.BreakableWall, true));
+        handler.addObject(new Wall(1000, 500, 50, 50, ID.BreakableWall, true));
+        
+        //Top
+        handler.addObject(new Wall(500, 150, 50, 50, ID.BreakableWall, true));
+        for (int i = 550; i <= 650; i+=50) {
+            handler.addObject(new Wall(i, 150, 50, 50, ID.BreakableWall, false));
+        }
+        handler.addObject(new Wall(700, 150, 50, 50, ID.BreakableWall, true));
+        
+        //Bottom
+        handler.addObject(new Wall(500, 450, 50, 50, ID.BreakableWall, true));
+        for (int i = 550; i <= 650; i+=50) {
+            handler.addObject(new Wall(i, 450, 50, 50, ID.BreakableWall, false));
+        }
+        handler.addObject(new Wall(700, 450, 50, 50, ID.BreakableWall, true));
+        
+        //Center Right
+        handler.addObject(new Wall(800, 300, 50, 50, ID.BreakableWall, true));
+        
+        
+        //Center Left
+        handler.addObject(new Wall(400, 300, 50, 50, ID.BreakableWall, true));
+    }
+    
     public static void generateLevel2() {
-        handler.addObject(new Wall(300, 300, 100, 100, ID.BreakableWall));
+        boolean breakable;
+
+        //Left Line
+        breakable = false;
+        for (int i = 100; i <= 500; i += 50) {
+            if (i >= 200)
+                breakable = true;
+            if (i >= 450)
+                breakable = false;
+            handler.addObject(new Wall(300, i, 50, 50, ID.BreakableWall, breakable));
+        }
+
+        //Center Line
+        breakable = false;
+        for (int i = 150; i <= 450; i += 50) {
+            handler.addObject(new Wall(600, i, 50, 50, ID.BreakableWall, breakable));
+        }
+
+        //Right Line
+        breakable = false;
+        for (int i = 100; i <= 500; i += 50) {
+            if (i >= 200)
+                breakable = true;
+            if (i >= 450)
+                breakable = false;
+            handler.addObject(new Wall(900, i, 50, 50, ID.BreakableWall, breakable));
+        }
     }
 
     public static void generateLevel3() {
-        handler.addObject(new Wall(400, 400, 100, 100, ID.BreakableWall));
+        boolean breakable;
+        //Top Left
+        handler.addObject(new Wall(250, 100, 50, 50, ID.BreakableWall, true));
+        handler.addObject(new Wall(250, 150, 50, 50, ID.BreakableWall, false));
+        handler.addObject(new Wall(250, 200, 50, 50, ID.BreakableWall, false));
+        handler.addObject(new Wall(250, 250, 50, 50, ID.BreakableWall, true));
+
+        //Bottom Left
+        handler.addObject(new Wall(250, 350, 50, 50, ID.BreakableWall, true));
+        handler.addObject(new Wall(250, 400, 50, 50, ID.BreakableWall, false));
+        handler.addObject(new Wall(250, 450, 50, 50, ID.BreakableWall, false));
+        handler.addObject(new Wall(250, 500, 50, 50, ID.BreakableWall, true));
+
+        //Center Top
+        breakable = false;
+        for (int i = 450; i <= 750; i += 50) {
+            if (i >= 550)
+                breakable = true;
+            if (i >= 700)
+                breakable = false;
+            handler.addObject(new Wall(i, 100, 50, 50, ID.BreakableWall, breakable));
+        }
+
+        //Center
+        handler.addObject(new Wall(600, 250, 50, 50, ID.BreakableWall, false));
+        handler.addObject(new Wall(600, 300, 50, 50, ID.BreakableWall, false));
+        handler.addObject(new Wall(600, 350, 50, 50, ID.BreakableWall, false));
+
+        //Center Bottom
+        breakable = false;
+        for (int i = 450; i <= 750; i += 50) {
+            if (i >= 550)
+                breakable = true;
+            if (i >= 700)
+                breakable = false;
+            handler.addObject(new Wall(i, 500, 50, 50, ID.BreakableWall, breakable));
+        }
+
+        //Top Right
+        handler.addObject(new Wall(950, 100, 50, 50, ID.BreakableWall, true));
+        handler.addObject(new Wall(950, 150, 50, 50, ID.BreakableWall, false));
+        handler.addObject(new Wall(950, 200, 50, 50, ID.BreakableWall, false));
+        handler.addObject(new Wall(950, 250, 50, 50, ID.BreakableWall, true));
+
+        //Bottom Right
+        handler.addObject(new Wall(950, 350, 50, 50, ID.BreakableWall, true));
+        handler.addObject(new Wall(950, 400, 50, 50, ID.BreakableWall, false));
+        handler.addObject(new Wall(950, 450, 50, 50, ID.BreakableWall, false));
+        handler.addObject(new Wall(950, 500, 50, 50, ID.BreakableWall, true));
     }
 
     public static void generateLevel4() {
-        handler.addObject(new Wall(500, 500, 100, 100, ID.BreakableWall));
+        boolean place = true;
+        boolean breakable = true;
+        for (int i = 225; i < 1125; i+=150) {
+            
+            for (int j = 50; j < 600; j += 50) {
+                if (place) {
+                    handler.addObject(new Wall(i, j, 50, 50, ID.BreakableWall, breakable)); 
+                    breakable = !breakable;
+                }
+                place = !place;
+            }
+        }
     }
 
     public static void setLevelSelect(int level) {
         levelSelect = level;
     }
-
 
 }

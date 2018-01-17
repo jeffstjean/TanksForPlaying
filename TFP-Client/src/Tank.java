@@ -11,7 +11,7 @@ public class Tank extends GameObject {
     protected double size = 64;
     protected int speed = 2;
     protected final Game game;
-    protected  final BufferedImage body;
+    protected final BufferedImage body;
     private double rotate;
     private final Rectangle2D top, bottom, left, right;
     protected int coolDown = 30, coolDownCounter = 30; // should boh be 20
@@ -74,7 +74,7 @@ public class Tank extends GameObject {
             screen.setVisible(true);
         }
 
-             
+   
         if(playerNum == 1){
             
             //move up  and down player 1
@@ -124,19 +124,20 @@ public class Tank extends GameObject {
         }
 
         
+
             coolDownCounter++;
-
-            if (Key.mine2.isDown && coolDownCounter >= coolDown) {
+            if (Key.mine1.isDown && coolDownCounter >= coolDown) {
                 dropMine();
-
                 coolDownCounter = 0;
             }
+
 
         
             
         }
         
         
+
         // sets movement based on keys pressed
         if (motionX == 0 && motionY == 0)
             moveDir = moveDirection.NONE;
@@ -163,9 +164,8 @@ public class Tank extends GameObject {
         left.setRect(x - 10, y + 10, 10, size - 20);
         right.setRect(x + size, y + 10, 10, size - 20);
 
-        
-    }
 
+    }
 
     public int getPlayerNum() {
         return playerNum;
@@ -308,12 +308,8 @@ public class Tank extends GameObject {
         health = 100;
     }
 
-    
-    protected void dropMine(){
+    protected void dropMine() {
         Game.handler.addObject(new Mine(x, y, 16, 16, ID.Mine, Game.handler));
     }
-    
-    
-
 
 }
