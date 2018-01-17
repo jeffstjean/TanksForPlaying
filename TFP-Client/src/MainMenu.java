@@ -50,9 +50,7 @@ public class MainMenu extends javax.swing.JDialog {
             }
         });
 
-
         jLabel1.setFont(new java.awt.Font("Castellar", 0, 90)); // NOI18N
-
         jLabel1.setText("Tanks For Playing");
 
         btnPlay.setFont(new java.awt.Font("Castellar", 0, 36)); // NOI18N
@@ -139,6 +137,8 @@ public class MainMenu extends javax.swing.JDialog {
 
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
         Game.game.reset();
+        TankSelectMenu tsMenu = new TankSelectMenu(parent, true);
+        tsMenu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnPlayActionPerformed
 
@@ -161,6 +161,7 @@ public class MainMenu extends javax.swing.JDialog {
         LevelSelectMenu levelSelect = new LevelSelectMenu(parent, true);
         levelSelect.setVisible(true);
     }//GEN-LAST:event_btnLevelSelectActionPerformed
+
 
 
     /**
