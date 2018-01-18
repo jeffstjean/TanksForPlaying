@@ -14,6 +14,7 @@ public class BigBombTank extends Tank{
         super(x, y, width, height, id, g, num);
         health = 140;
         speed = 1;
+        tankClass = TankClasses.BigBomb;
     }
 
     @Override

@@ -1,4 +1,4 @@
 
 public enum TankClasses {
-    Normal, Fast, BigBomb, PowerfulShot;
+    Normal, Fast, BigBomb, Destroyer;
 }

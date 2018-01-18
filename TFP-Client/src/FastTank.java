@@ -5,7 +5,7 @@ public class FastTank extends Tank{
         super(x, y, width, height, id, g, num);
         this.speed = 3;
         this.health = 80;
-        
+        tankClass = TankClasses.Fast;
     }
 
     @Override

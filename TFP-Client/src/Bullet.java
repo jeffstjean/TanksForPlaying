@@ -35,7 +35,19 @@ public class Bullet extends GameObject {
         bullet = ImageLoader.imageLoader("./graphics/Bullet.png"); 
     }
     
-    
+    public Bullet(double x, double y, double width, double height, ID id, double s, double r, int damage) {
+        super(x, y, width, height, id);
+        bounds.setRect(x, y, size, size);
+        speed = s;
+  
+        motionX =  (speed * Math.cos(r + Math.toRadians(90)));
+        // sets the x speed of the bullet using trig
+        motionY =  (speed * Math.sin(r + Math.toRadians(90)));
+        // sets the y speed of the bullet using trig
+        rotate = r;
+        bullet = ImageLoader.imageLoader("./graphics/Bullet.png"); 
+        this.damage = damage;
+    }
 
     
 
