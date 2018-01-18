@@ -169,7 +169,14 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
 
         renderer.repaint(); // tells renderer to repaint if it hasn't already
         handler.tick(); // tells handler to tick all game objects
-
+        
+        if(Key.pause.isDown){
+            PauseMenu pm = new PauseMenu(frame, true);
+            pm.setVisible(true);
+            releaseAll();
+        }
+            
+        
         for (int i = 0; i < powerups.size(); i++) {
             if (powerups.get(i).isAnimationComplete()) {
                 // Delete any old powerups
@@ -428,6 +435,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         bind(KeyEvent.VK_RIGHT, Key.turretRight2);
         bind(KeyEvent.VK_UP, Key.shoot2);
 
+        bind(KeyEvent.VK_P, Key.pause);
+        
         walls = new LinkedList<>();
 
         powerups = new LinkedList<>();

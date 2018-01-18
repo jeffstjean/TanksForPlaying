@@ -27,8 +27,10 @@ public class Turret extends GameObject{
         super(x, y, width, height, id);
 
         tank = t;
-        
+        if(tank.getPlayerNum() == 1)
         turret = ImageLoader.imageLoader("./graphics/TurretGreen.png");
+        else
+            turret = ImageLoader.imageLoader("./graphics/TurretRed.png");
     }
     
     public Turret(Tank t) {
@@ -36,7 +38,10 @@ public class Turret extends GameObject{
 
         tank = t;
         
+        if(tank.getPlayerNum() == 1)
         turret = ImageLoader.imageLoader("./graphics/TurretGreen.png");
+        else
+            turret = ImageLoader.imageLoader("./graphics/TurretRed.png");
     }
     
     
@@ -44,8 +49,12 @@ public class Turret extends GameObject{
     @Override
     public void tick() {
         
-        if(turretShootCounter == 0)
-            turret = ImageLoader.imageLoader("./graphics/TurretGreen.png");
+        if(turretShootCounter == 0){
+            if(tank.getPlayerNum() == 1)
+        turret = ImageLoader.imageLoader("./graphics/TurretGreen.png");
+        else
+            turret = ImageLoader.imageLoader("./graphics/TurretRed.png");
+        }
         turretShootCounter --;
         coolDownCounter++; // increases the time since last shot by 1
         
@@ -62,7 +71,10 @@ public class Turret extends GameObject{
         if(tank.getPlayerNum() == 1){
         if(Key.shoot1.isDown && coolDownCounter > coolDown) {
             shoot();
-            turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
+            if(tank.getPlayerNum() == 1)
+        turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
+        else
+            turret = ImageLoader.imageLoader("./graphics/TurretShotRed.png");
             coolDownCounter = 0;
         }
         if(Key.turretRight1.isDown) 
@@ -73,7 +85,10 @@ public class Turret extends GameObject{
         }else{
             if(Key.shoot2.isDown && coolDownCounter > coolDown) {
             shoot();
-            turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
+            if(tank.getPlayerNum() == 1)
+        turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
+        else
+            turret = ImageLoader.imageLoader("./graphics/TurretShotRed.png");
             coolDownCounter = 0;
         }
             
@@ -126,7 +141,10 @@ public class Turret extends GameObject{
             Game.getHandler().addObject(new Bullet(x + (int)subX, y + (int)subY, 15, 15, ID.Bullet, 5, rotate, 40));
         else
             Game.getHandler().addObject(new Bullet(x + (int)subX, y + (int)subY, 15, 15, ID.Bullet, 5, rotate));
+        if(tank.getPlayerNum() == 1)
         turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
+        else
+            turret = ImageLoader.imageLoader("./graphics/TurretShotRed.png");
 
     }
 

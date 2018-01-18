@@ -19,7 +19,10 @@ public class Key{
    public static Key mine2 = new Key();
    public static Key turretRight2 = new Key();
    public static Key turretLeft2 = new Key();
- ;
+ 
+   
+   public static Key pause = new Key();
+   
 
    /* toggles the keys current state*/
    public void toggle(){

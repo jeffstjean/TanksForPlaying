@@ -20,6 +20,7 @@ public class Bullet extends GameObject {
     private double rotate;
     private int damage = 20;
     private int canDoDamageTick = 0;
+    private static int shotsFired = 0, hits;
     
     
     public Bullet(double x, double y, double width, double height, ID id, double s, double r) {
@@ -32,7 +33,8 @@ public class Bullet extends GameObject {
         motionY =  (speed * Math.sin(r + Math.toRadians(90)));
         // sets the y speed of the bullet using trig
         rotate = r;
-        bullet = ImageLoader.imageLoader("./graphics/Bullet.png"); 
+        bullet = ImageLoader.imageLoader("./graphics/Bullet.png");
+        shotsFired ++;
     }
     
     public Bullet(double x, double y, double width, double height, ID id, double s, double r, int damage) {
@@ -47,6 +49,15 @@ public class Bullet extends GameObject {
         rotate = r;
         bullet = ImageLoader.imageLoader("./graphics/Bullet.png"); 
         this.damage = damage;
+        shotsFired++;
+    }
+
+    public static int getShotsFired() {
+        return shotsFired;
+    }
+
+    public static int getHits() {
+        return hits;
     }
 
     
@@ -75,6 +86,7 @@ public class Bullet extends GameObject {
            }
        }
        if(gO.id ==ID.BreakableWall){
+           hits++;
            gO.collision(this);
            Game.handler.removeObject(this);
            try {
@@ -84,6 +96,7 @@ public class Bullet extends GameObject {
            }
        }
        if(gO.id == ID.Tank && canDoDamageTick >= 5){
+           hits++;
            ((Tank)gO).reduceHealth(damage);
            Game.handler.removeObject(this);
            try {
