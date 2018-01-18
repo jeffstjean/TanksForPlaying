@@ -88,7 +88,7 @@ public class Bullet extends GameObject {
     @Override
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        g2d.draw(bounds);
+        //g2d.draw(bounds);
         AffineTransform t = new AffineTransform();
         t.translate(x, y);
         t.scale(size/bullet.getWidth(), size/bullet.getHeight());
