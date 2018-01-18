@@ -1,4 +1,0 @@
-Oct 30, 2017 9:44:32 AM Server main
-INFO: logger started.
-Oct 30, 2017 9:44:32 AM ServerRecieveThread run
-INFO: Packet made original.
