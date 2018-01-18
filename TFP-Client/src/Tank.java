@@ -126,7 +126,7 @@ public class Tank extends GameObject {
         
 
             coolDownCounter++;
-            if (Key.mine1.isDown && coolDownCounter >= coolDown) {
+            if (Key.mine2.isDown && coolDownCounter >= coolDown) {
                 dropMine();
                 coolDownCounter = 0;
             }
