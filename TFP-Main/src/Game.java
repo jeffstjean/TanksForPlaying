@@ -46,7 +46,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
     public long maxMillis = 0;
     private static final Logger LOGGER = Logger.getLogger("ClientLog");
     private static LinkedList<Wall> walls;
-    private LinkedList<Powerup> powerups;
+    
 
     //config vars
     private static final Properties USER_SETTINGS = new Properties(), DEFAULT_SETTINGS = new Properties();
@@ -150,6 +150,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
                 System.out.println("Main Thread Ticks: " + updates + "      Frames Per Second(FPS): " + frames);
+                System.out.println(GameObject.getTotalObjects() + " Objects Created");
                 updates = 0;
                 frames = 0;
             }
@@ -177,13 +178,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         }
             
         
-        for (int i = 0; i < powerups.size(); i++) {
-            if (powerups.get(i).isAnimationComplete()) {
-                // Delete any old powerups
-                handler.removeObject(powerups.get(i));
-                powerups.remove(i);
-            }
-        }
+
     }
 
     @Override
@@ -439,7 +434,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         
         walls = new LinkedList<>();
 
-        powerups = new LinkedList<>();
+        
 
         // sets the keybindings
         handler = new Handler();
