@@ -67,11 +67,13 @@ public final class Mine extends GameObject {
 
     @Override
     public void collision(GameObject gO) {
-        if (gO.getID() != ID.Wall && aliveForTicks >= 20) {
-            startExplosion();
-            if(gO.id == ID.Tank && canDoDamage){
+        if (gO.getID() != ID.Wall && aliveForTicks >= 20) { 
+            startExplosion(); // start the explosion
+            if(gO.id == ID.Tank && canDoDamage){ 
+                // if it can do damage damage the tank that hit it
                 ((Tank)gO).reduceHealth(damage);
-                canDoDamage = false;
+                
+                canDoDamage = false; // cannot do damage twice
             }
         }
     }
