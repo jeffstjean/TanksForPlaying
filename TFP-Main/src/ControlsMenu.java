@@ -1,16 +1,6 @@
-
-import java.awt.Frame;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author owen7900
+ * ControlsMenu lets you see the controls for the game 
+ * Currently controls are unable to be changed
  */
 public class ControlsMenu extends javax.swing.JDialog {
 

@@ -1,86 +1,84 @@
+/*
+* Tanks For Playing
+* Jeff St. Jean & Owen Hooper
+* Mr. Martens ICS4UP - ISU
+* January 24th, 2018 
+*
+* Objective: To eliminate enemny players
+* Number of Players: 2
+* Controls: Click on "controls" in main menu
+*
+*/
+
 
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Properties;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 import javax.swing.JFrame;
-import javax.swing.event.MouseInputListener;
 
-public class Game implements Runnable, KeyListener, MouseInputListener {
+public class Game implements Runnable, KeyListener {
 
-    private static Renderer renderer;
-
-    private boolean running = false;
-    private Thread th;
-
-    static Handler handler;
-    public static Game game;
-    static JFrame frame;
-    public static final int WIDTH = 1280;
-    public static final int HEIGHT = 720;
-    public static int levelSelect = 0;
-    public final String TITLE = "Tanks For Playing";
-    public static double TANK_SIZE = 64;
-    public static HashMap<Integer, Key> keyBindings = new HashMap<>();
-
+    private static Renderer renderer; // Holds the renderer
+    private boolean running = false; // Is the game running
+    private Thread th; // Holds the thread
+    static Handler handler; // Holds the handler
+    public static Game game; // Holds the game
+    static JFrame frame; // Holds the JFrame
+    public static final int WIDTH = 1280; // The width of the JFrame
+    public static final int HEIGHT = 720; // The height of the JFrame
+    public static int levelSelect = 0; // Allows for changing of levels or "maps"
+    public final String TITLE = "Tanks For Playing"; // The title
+    public static double TANK_SIZE = 64; // Size of the tanks
+    public static HashMap<Integer, Key> keyBindings = new HashMap<>(); // Hashmap that holds the keybindings (ex. WASD)
     public static boolean other[] = new boolean[256];
-    private static int mouseX, mouseY;
-    public static int NUM_PLAYERS;
-    private ByteBuffer bb;
-    private byte[] allBytes = new byte[256];
-    private Tank tank1, tank2;
-    private Turret turret1, turret2;
-    public long maxMillis = 0;
-    private static final Logger LOGGER = Logger.getLogger("ClientLog");
-    private static LinkedList<Wall> walls;
-    private LinkedList<Powerup> powerups;
+    private Tank tank1, tank2; // Holds Tanks
+    private Turret turret1, turret2; // Holds turrets 
 
-    //config vars
+    // Properties
     private static final Properties USER_SETTINGS = new Properties(), DEFAULT_SETTINGS = new Properties();
     private final File userSettingsLocation = new File("src/resources/config/config.properties"), defaultSettingsLocation = new File("src/resources/default_config/default_config.properties");
 
-    public static int PLAYERNUMBER;
-    private static Logger logger;
 
-    //POC var for Powerups
-    private int clickCounter = 0;
 
     //<editor-fold defaultstate="collapsed" desc=" Getters, setters, constructs and listeners">
+    
+    // Binds a key to a action
     public void bind(Integer keyCode, Key key) {
         keyBindings.put(keyCode, key);
     }
-
+    
+    // Releases all keys
     public void releaseAll() {
         for (Key key : keyBindings.values()) {
             key.isDown = false;
         }
     }
-
+    
+    // Return handler
     public static Handler getHandler() {
         return handler;
     }
-
-    public static int getMouseX() {
-        return mouseX;
+    
+    // Get tank1
+    public Tank getTank1() {
+        return tank1;
     }
-
-    public static int getMouseY() {
-        return mouseY;
+    
+    // Get tank2
+    public Tank getTank2() {
+        return tank2;
     }
-
+    
+    // Code called on exit
     private synchronized void stop() {
         if (!running)
             return;
@@ -103,8 +101,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         th = new Thread(this);
 
         th.start();
-        System.out.println("started th");
-
     }
 
     public static void render(Graphics2D g) {
@@ -113,21 +109,21 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         // Has handler render all gameObjects
         // Checks to see if null to avoid NPE
     }
-
+    
+    // Run on start
     @Override
-
     public void run() {
-
+        // Add Listeners
         frame.addKeyListener(this);
         frame.add(renderer);
         frame.setVisible(true);
-        frame.addMouseMotionListener(this);
-        frame.addMouseListener(this);
         frame.addKeyListener(this);
         renderer.requestFocus();
         renderer.addKeyListener(this);
 
         init();
+        
+        // Timing control vars
         long lastTime = System.nanoTime();
         final double numberOfTicks = 60.0;
         double ns = 1000000000 / numberOfTicks;
@@ -135,7 +131,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         int updates = 0;
         int frames = 0;
         long timer = System.currentTimeMillis();
-
+        
+        //Timing control
         while (running) {
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
@@ -156,15 +153,8 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         }
         stop();
     }
-
-    public byte[] getAllBytes() {
-        return allBytes;
-    }
-
-    public void startGame() {
-        start();
-    }
-
+    
+    // Called on every tick
     private void tick() {
 
         renderer.repaint(); // tells renderer to repaint if it hasn't already
@@ -177,32 +167,23 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         }
             
         
-        for (int i = 0; i < powerups.size(); i++) {
-            if (powerups.get(i).isAnimationComplete()) {
-                // Delete any old powerups
-                handler.removeObject(powerups.get(i));
-                powerups.remove(i);
-            }
-        }
     }
 
     @Override
-    public void keyTyped(KeyEvent ke) {
-
-    }
+    public void keyTyped(KeyEvent ke) {}
 
     @Override
     public void keyPressed(KeyEvent ke) {
-
+        // Updates the key bindings
         other[ke.getExtendedKeyCode()] = true;
         try {
             keyBindings.get(ke.getKeyCode()).isDown = true;
         } catch (Exception e) {
 
         }
-        //updates the key bindings
     }
-
+    
+    // Set/reset tank and tank type
     public void setTank(int num, Tank t) {
         if(num == 1){
             handler.removeObject(tank1);
@@ -220,13 +201,15 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
             handler.addObject(turret2);
         }
     }
-
+    
+    // Gets the turret
     public Turret getTurret(int num) {
         if(num == 1)
         return turret1;
         else return turret2;
     }
-
+    
+    // Updates keys
     @Override
     public void keyReleased(KeyEvent ke) {
         other[ke.getExtendedKeyCode()] = false;
@@ -236,14 +219,14 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         } catch (Exception e) {
 
         }
-        //updates the key bindings
     }
 
+    // Run on game reset
     public void reset() {
-        System.out.println("reset");
-        handler.reset();
+        Handler.reset();
+        
+        // Level Selection
         if (levelSelect == 0) {
-            System.out.println("No level selected. Defaulting to level 1.");
             levelSelect = 1;
         }
         switch (levelSelect) {
@@ -265,96 +248,21 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         }
     }
 
-    @Override
-    public void mouseClicked(MouseEvent me) {
-        //Only for testing mines - will be deleted
 
-        //Proof of Concept code can be deleted
-//        clickCounter++;
-//        clickCounter = clickCounter % 4;
-//        PowerupColor clr;
-//        switch (clickCounter) {
-//            case 0:
-//                clr = PowerupColor.Red;
-//                break;
-//            case 1:
-//                clr = PowerupColor.Green;
-//                break;
-//            case 2:
-//                clr = PowerupColor.Yellow;
-//                break;
-//            default:
-//                clr = PowerupColor.Blue;
-//                break;
-//        }
-//        powerups.add(new Powerup((double) me.getX() - 16, (double) me.getY() - 39, 32, 32, ID.PowerUp, handler, clr));
-//        handler.addObject(powerups.get(powerups.size() - 1));
-        //End of POC
-        mouseX = me.getX();
-        mouseY = me.getY();
-        // gets the mouse's x and y location
-    }
-
-    @Override
-    public void mousePressed(MouseEvent me) {
-        //if(MOUSECLICKTYPE == 0) {
-
-        //sets the key shoot to be down when clicked
-        //}
-        mouseX = me.getX();
-        mouseY = me.getY();
-        //get the x and y location of the mouse for aiming
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent me) {
-
-        //sets the key binding of shoot to up 
-        mouseX = me.getX();
-        mouseY = me.getY();
-        //gets the x and y location of the mouse
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent me) {
-        mouseX = me.getX();
-        mouseY = me.getY();
-        //gets the x and y location of the mouse
-    }
-
-    @Override
-    public void mouseExited(MouseEvent me) {
-        mouseX = me.getX();
-        mouseY = me.getY();
-        // gets the x and y location of the mouse
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent me) {
-        mouseX = me.getX();
-        mouseY = me.getY();
-        // gets the x and y location of the mouse
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent me) {
-        mouseX = me.getX();
-        mouseY = me.getY();
-        //gets the x and y location of the mouse
-    }
-
+    // Game state
     public static enum STATE {
         MENU, GAME, PAUSE, CONTROLS, WIN
     };
-
+    
     public Game() {
+        // Initiallizes the renderer
         renderer = new Renderer();
-        // initiallizes the renderer
-
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc=" Config Stuff ">
+    //<editor-fold defaultstate="collapsed" desc=" Config Methods ">
+    
+    // Loads configs
     private void initConfigs() {
         if (!userSettingsLocation.exists())
             try {
@@ -379,10 +287,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, e);
         }
 
-        NUM_PLAYERS = getIntUserPropertyThenDefault("numPlayers", 2);
-
         TANK_SIZE = getDoubleUserPropertyThenDefault("tankSize", 64);
-        PLAYERNUMBER = getIntUserPropertyThenDefault("playerNumber", 0);
 
     }
 
@@ -413,10 +318,14 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
             }
         }
     }
+    
 //</editor-fold>
 
     public void init() {
         initConfigs();
+        
+        // Bind keys
+        // Player 1
         bind(KeyEvent.VK_W, Key.up1);
         bind(KeyEvent.VK_A, Key.left1);
         bind(KeyEvent.VK_S, Key.down1);
@@ -425,7 +334,7 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         bind(KeyEvent.VK_H, Key.turretLeft1);
         bind(KeyEvent.VK_J, Key.turretRight1);
         bind(KeyEvent.VK_SPACE, Key.shoot1);
-
+        // Player 2
         bind(KeyEvent.VK_NUMPAD8, Key.up2);
         bind(KeyEvent.VK_NUMPAD4, Key.left2);
         bind(KeyEvent.VK_NUMPAD5, Key.down2);
@@ -434,61 +343,38 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         bind(KeyEvent.VK_LEFT, Key.turretLeft2);
         bind(KeyEvent.VK_RIGHT, Key.turretRight2);
         bind(KeyEvent.VK_UP, Key.shoot2);
-
+        
+        // Pause
         bind(KeyEvent.VK_P, Key.pause);
         
-        walls = new LinkedList<>();
 
-        powerups = new LinkedList<>();
 
-        // sets the keybindings
+        // Sets the keybindings
         handler = new Handler();
         
         
-        // inits tank at 100 100 and gives it the game instance
-        
-            tank1 = new Tank(100, 100, TANK_SIZE, TANK_SIZE, ID.Tank, game, 1);
-            turret1 = new Turret(tank1.getX(), tank1.getY(), 10, 10, ID.Turret, tank1);
-            handler.addObject(tank1);
-            handler.addObject(turret1);
+        // Inits tank1 at 100, 100 and gives it the game instance
+        tank1 = new Tank(100, 100, TANK_SIZE, TANK_SIZE, ID.Tank, game, 1);
+        turret1 = new Turret(tank1.getX(), tank1.getY(), 10, 10, ID.Turret, tank1);
+        handler.addObject(tank1);
+        handler.addObject(turret1);
             
-            
-            
-            tank2= new Tank(1125, 525, TANK_SIZE, TANK_SIZE, ID.Tank, game, 2);
-            turret2 = new Turret(tank2.getX(), tank2.getY(), 10, 10, ID.Turret, tank2);
-            handler.addObject(tank2);
-            handler.addObject(turret2); 
+        // Inits tank2 at 100, 100 and gives it the game instance
+        tank2= new Tank(1125, 525, TANK_SIZE, TANK_SIZE, ID.Tank, game, 2);
+        turret2 = new Turret(tank2.getX(), tank2.getY(), 10, 10, ID.Turret, tank2);
+        handler.addObject(tank2);
+        handler.addObject(turret2);
         
-
-        
+        // Adds the two objects to the handler
         frame.addKeyListener(this);
-// adds the two objects to the handler
     }
 
     public static void main(String[] args) {
-        FileHandler fh;
-        File file = new File("src/resources/logs/log.txt");
-
-        try {
-            // This block configure the logger with handler and formatter
-            file.createNewFile();
-            fh = new FileHandler(file.getPath());
-            LOGGER.addHandler(fh);
-            SimpleFormatter formatter = new SimpleFormatter();
-            fh.setFormatter(formatter);
-            LOGGER.setUseParentHandlers(false);
-            // the following statement is used to log any messages
-            LOGGER.info("Logger started.");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         game = new Game();
-
         frame = new JFrame(game.TITLE);
         frame.setIconImage(ImageLoader.imageLoader("./graphics/icon.png"));
-        // Ads the instance of the game to the JFrame
+        // Adds the instance of the game to the JFrame
         // frame.add(game);
         // Causes the window to be at preferred size initially
         frame.setSize(WIDTH, HEIGHT);
@@ -498,18 +384,17 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         // Sets the program so it cannot be re-sizable
         frame.setResizable(false);
 
-        // adds the renderer to the jFrame
+        // Adds the renderer to the jFrame
         frame.setVisible(true);
 
         frame.addKeyListener(game);
-        frame.addMouseMotionListener(game);
-        frame.addMouseListener(game);
         game.start();
         MainMenu menu = new MainMenu(frame, true);
         menu.setVisible(true);
 
-        walls.clear();
         generateOuterWalls();
+        
+        // Level selection
         if (levelSelect == 0) {
             System.out.println("No level selected. Defaulting to level 1.");
             levelSelect = 1;
@@ -534,9 +419,6 @@ public class Game implements Runnable, KeyListener, MouseInputListener {
         //walls.add(new Wall(200, 200, 100, 100, ID.BreakableWall));
     }
 
-    public static void log(String log) {
-        LOGGER.info(log);
-    }
 
     public static void generateOuterWalls() {
         handler.addObject(new Wall(10, 10, 30, (double) HEIGHT - 70, ID.LeftWall));

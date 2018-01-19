@@ -1,18 +1,10 @@
+/*
+ * The menu that pops up from the main menu
+ * Allows you to change the level layout from four pretermined maps
+ */
 
 import javax.swing.JFrame;
 
-
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author jeff4821
- */
 public class LevelSelectMenu extends javax.swing.JDialog {
 
     public LevelSelectMenu(java.awt.Frame parent, boolean modal) {
@@ -128,7 +120,8 @@ public class LevelSelectMenu extends javax.swing.JDialog {
     }//GEN-LAST:event_btnLevel4ActionPerformed
 
     private void btnLevel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLevel1ActionPerformed
-        // TODO add your handling code here:
+        Game.setLevelSelect(1);
+        this.dispose();
     }//GEN-LAST:event_btnLevel1ActionPerformed
 
     /**

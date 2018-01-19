@@ -1,15 +1,11 @@
 
 import javax.swing.JFrame;
 
-
-
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author owen7900
@@ -20,9 +16,12 @@ public class TankSelectMenu extends javax.swing.JDialog {
      * Creates new form TankSelectMenu
      */
     Game g = Game.game;
+
     public TankSelectMenu(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        txtTank1.setText(Game.game.getTank1().toString());
+        txtTank2.setText(Game.game.getTank2().toString());
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
 
@@ -49,6 +48,8 @@ public class TankSelectMenu extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         btnPlay1 = new javax.swing.JButton();
+        txtTank1 = new javax.swing.JLabel();
+        txtTank2 = new javax.swing.JLabel();
 
         btnPlay.setFont(new java.awt.Font("Castellar", 0, 36)); // NOI18N
         btnPlay.setText("Play");
@@ -69,14 +70,14 @@ public class TankSelectMenu extends javax.swing.JDialog {
             }
         });
 
-        btnFast1.setText("Fast Tank");
+        btnFast1.setText("Speedy");
         btnFast1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFast1ActionPerformed(evt);
             }
         });
 
-        btnDestroyer1.setText("Tank Destroyer");
+        btnDestroyer1.setText("Destroyer");
         btnDestroyer1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDestroyer1ActionPerformed(evt);
@@ -86,14 +87,16 @@ public class TankSelectMenu extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("Castellar", 0, 36)); // NOI18N
         jLabel1.setText("Tank Select");
 
-        btnBasic1.setText("Basic");
+        btnBasic1.setText("Balanced");
         btnBasic1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBasic1ActionPerformed(evt);
             }
         });
 
-        btnBasic2.setText("Basic");
+        btnBasic2.setText("Balanced");
+        btnBasic2.setMaximumSize(new java.awt.Dimension(89, 23));
+        btnBasic2.setMinimumSize(new java.awt.Dimension(89, 23));
         btnBasic2.setPreferredSize(new java.awt.Dimension(89, 23));
         btnBasic2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -108,14 +111,14 @@ public class TankSelectMenu extends javax.swing.JDialog {
             }
         });
 
-        btnFast2.setText("Fast Tank");
+        btnFast2.setText("Speedy");
         btnFast2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFast2ActionPerformed(evt);
             }
         });
 
-        btnDestroyer2.setText("Tank Destroyer");
+        btnDestroyer2.setText("Destroyer");
         btnDestroyer2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDestroyer2ActionPerformed(evt);
@@ -136,104 +139,135 @@ public class TankSelectMenu extends javax.swing.JDialog {
             }
         });
 
+        txtTank1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtTank1.setText("Balanced");
+
+        txtTank2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtTank2.setText("Balanced");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(64, 64, 64)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnBomber2)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(btnBomber1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(btnBasic1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(btnBasic2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(70, 70, 70)))
+                        .addComponent(btnPlay1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(84, 84, 84))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtTank1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(81, 81, 81)
+                                    .addComponent(jLabel2))
+                                .addGroup(layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(btnFast2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnDestroyer1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnFast1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnDestroyer2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(145, 145, 145)
-                        .addComponent(jLabel2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(140, 140, 140)
-                        .addComponent(jLabel3)))
-                .addContainerGap(70, Short.MAX_VALUE))
-            .addComponent(btnPlay1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnBasic1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnBomber1, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
+                                    .addGap(66, 66, 66)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnDestroyer1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnFast1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(177, 177, 177))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(txtTank2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(btnBasic2, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                                            .addComponent(btnBomber2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGap(66, 66, 66)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(btnFast2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(btnDestroyer2, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))))
+                                .addGap(84, 84, 84))))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(244, 244, 244)
+                .addComponent(jLabel1)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnPlay1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(btnPlay1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(42, 42, 42)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnBasic1)
+                            .addComponent(btnFast1))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnBomber1)
+                            .addComponent(btnDestroyer1)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnFast2)
+                            .addComponent(btnBasic2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnBomber2)
+                            .addComponent(btnDestroyer2))))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBasic1)
-                    .addComponent(btnFast1))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBomber1)
-                    .addComponent(btnDestroyer1))
-                .addGap(8, 8, 8)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBasic2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnFast2))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBomber2)
-                    .addComponent(btnDestroyer2))
-                .addGap(25, 25, 25))
+                    .addComponent(txtTank1)
+                    .addComponent(txtTank2))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBomber1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBomber1ActionPerformed
+        setClassLabel(1, "Bomber Boy");
         g.setTank(1, new BigBombTank(100, 100, Game.TANK_SIZE, Game.TANK_SIZE, ID.Tank, g, 1));
     }//GEN-LAST:event_btnBomber1ActionPerformed
 
     private void btnFast1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFast1ActionPerformed
+        setClassLabel(1, "Speedy");
         g.setTank(1, new FastTank(100, 100, Game.TANK_SIZE, Game.TANK_SIZE, ID.Tank, g, 1));
     }//GEN-LAST:event_btnFast1ActionPerformed
 
     private void btnDestroyer1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDestroyer1ActionPerformed
+        setClassLabel(1, "Destroyer");
         g.setTank(1, new TankDestroyer(100, 100, Game.TANK_SIZE, Game.TANK_SIZE, ID.Tank, g, 1));
     }//GEN-LAST:event_btnDestroyer1ActionPerformed
 
     private void btnBasic1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBasic1ActionPerformed
+        setClassLabel(1, "Balanced");
         g.setTank(1, new Tank(100, 100, Game.TANK_SIZE, Game.TANK_SIZE, ID.Tank, g, 1));
     }//GEN-LAST:event_btnBasic1ActionPerformed
 
     private void btnBasic2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBasic2ActionPerformed
+        setClassLabel(2, "Balanced");
         g.setTank(2, new Tank(1125, 525, Game.TANK_SIZE, Game.TANK_SIZE, ID.Tank, g, 2));
     }//GEN-LAST:event_btnBasic2ActionPerformed
 
     private void btnBomber2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBomber2ActionPerformed
+        setClassLabel(2, "Bomber Boy");
         g.setTank(2, new BigBombTank(1125, 525, Game.TANK_SIZE, Game.TANK_SIZE, ID.Tank, g, 2));
     }//GEN-LAST:event_btnBomber2ActionPerformed
 
     private void btnFast2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFast2ActionPerformed
+        setClassLabel(2, "Speedy");
         g.setTank(2, new FastTank(1125, 525, Game.TANK_SIZE, Game.TANK_SIZE, ID.Tank, g, 2));
     }//GEN-LAST:event_btnFast2ActionPerformed
 
     private void btnDestroyer2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDestroyer2ActionPerformed
+        setClassLabel(2, "Destroyer");
         g.setTank(2, new TankDestroyer(1125, 525, Game.TANK_SIZE, Game.TANK_SIZE, ID.Tank, g, 2));
     }//GEN-LAST:event_btnDestroyer2ActionPerformed
 
@@ -289,6 +323,13 @@ public class TankSelectMenu extends javax.swing.JDialog {
         });
     }
 
+    public void setClassLabel(int tankNum, String tankClass) {
+        if (tankNum == 1)
+            txtTank1.setText(tankClass);
+        if (tankNum == 2)
+            txtTank2.setText(tankClass);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBasic1;
     private javax.swing.JButton btnBasic2;
@@ -304,5 +345,7 @@ public class TankSelectMenu extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel txtTank1;
+    private javax.swing.JLabel txtTank2;
     // End of variables declaration//GEN-END:variables
 }

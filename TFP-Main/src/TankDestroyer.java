@@ -7,6 +7,11 @@ public class TankDestroyer extends Tank{
         
         tankClass = TankClasses.Destroyer;
     }
+
+    @Override
+    public String toString() {
+        return "Destroyer";
+    }
     
     
     

@@ -7,11 +7,12 @@ import java.awt.image.BufferedImage;
 
 public class Animation {
 
-    private final BufferedImage[] imgs; 
-    private final int speed, timesToRun;
-    private int index, tickCounter, timesRun;
-    private BufferedImage currentImage;
-    private boolean complete, runForever;
+    private final BufferedImage[] imgs; // Holds images to animate
+    private final int speed, timesToRun; // Allows control over speed and number of times to run animation
+    private int index, tickCounter, timesRun; // index is where the animation is, tick counts the life of the instance of Animation
+    private BufferedImage currentImage; // Image to display
+    private boolean complete; // Sets to true when animation is complete
+    private final boolean runForever; // Run a set number of time or forever
 
     public Animation(BufferedImage imgs[], int speed, int timesToRun) {
         this.imgs = imgs;
@@ -82,7 +83,7 @@ public class Animation {
     }
     
     public void stop() {
-        complete = true;
+        complete = true; // Stop the animation
     }
     
     

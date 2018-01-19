@@ -1,6 +1,5 @@
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -12,7 +11,7 @@ public class Explosion extends GameObject{
     private Animation explosionAnimation;
     private boolean animationComplete;
     private final boolean debug = false; // Set to true to see collison boxes
-    private Handler h;
+    private final Handler h;
     public Explosion(double x, double y, double width, double height, ID id, Handler h) {
         super(x, y, width, height, id);
         imgs = SpriteSheetReader.getSprites(9, 9, 100, ImageLoader.imageLoader(explosion.getPath())); // Load from spreadsheet

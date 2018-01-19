@@ -45,7 +45,7 @@ public class WinningScreen extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         txtHits = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         lbl2.setFont(new java.awt.Font("Castellar", 0, 18)); // NOI18N
         lbl2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

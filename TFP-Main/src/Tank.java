@@ -61,7 +61,7 @@ public class Tank extends GameObject {
 
     @Override
     public String toString() {
-        return " x: " + x + " Y: " + y;
+        return "Balanced";
     }
 
     @Override
@@ -314,5 +314,7 @@ public class Tank extends GameObject {
     protected void dropMine() {
         Game.handler.addObject(new Mine(x, y, 16, 16, ID.Mine, Game.handler));
     }
+    
+
 
 }

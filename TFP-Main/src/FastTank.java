@@ -14,4 +14,9 @@ public class FastTank extends Tank{
         health = 80;
     }
     
+        @Override
+    public String toString() {
+        return "Speedy";
+    }
+    
 }

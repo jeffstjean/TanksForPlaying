@@ -28,4 +28,9 @@ public class BigBombTank extends Tank{
         Game.handler.addObject(new Mine(x, y, 16, 16, ID.Mine, Game.handler, 1.5));
     }
     
+        @Override
+    public String toString() {
+        return "Bomber Boy";
+    }
+    
 }

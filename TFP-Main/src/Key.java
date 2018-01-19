@@ -1,3 +1,7 @@
+/*
+ * Holder for all key bindings
+*/
+
 public class Key{
 
    public static Key up1 = new Key();

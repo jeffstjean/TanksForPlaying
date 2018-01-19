@@ -1,17 +1,10 @@
+/*
+ * The first menu that pops up and gives the user some information on the game
+ */
 
 import java.awt.Frame;
 import javax.swing.JFrame;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author owen7900
- */
 public class MainMenu extends javax.swing.JDialog {
 
     /**
