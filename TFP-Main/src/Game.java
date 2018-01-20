@@ -40,25 +40,11 @@ public class Game implements Runnable, KeyListener {
     public static double TANK_SIZE = 64; // Size of the tanks
     public static HashMap<Integer, Key> keyBindings = new HashMap<>(); // Hashmap that holds the keybindings (ex. WASD)
     public static boolean other[] = new boolean[256];
-<<<<<<< HEAD
+
     private Tank tank1, tank2; // Holds Tanks
     private Turret turret1, turret2; // Holds turrets 
 
     // Properties
-=======
-    private static int mouseX, mouseY;
-    public static int NUM_PLAYERS;
-    private ByteBuffer bb;
-    private byte[] allBytes = new byte[256];
-    private Tank tank1, tank2;
-    private Turret turret1, turret2;
-    public long maxMillis = 0;
-    private static final Logger LOGGER = Logger.getLogger("ClientLog");
-    private static LinkedList<Wall> walls;
-    
-
-    //config vars
->>>>>>> sildafh
     private static final Properties USER_SETTINGS = new Properties(), DEFAULT_SETTINGS = new Properties();
     private final File userSettingsLocation = new File("src/resources/config/config.properties"), defaultSettingsLocation = new File("src/resources/default_config/default_config.properties");
 
@@ -180,12 +166,6 @@ public class Game implements Runnable, KeyListener {
             pm.setVisible(true);
             releaseAll();
         }
-            
-        
-<<<<<<< HEAD
-=======
-
->>>>>>> sildafh
     }
 
     @Override
@@ -367,10 +347,6 @@ public class Game implements Runnable, KeyListener {
         bind(KeyEvent.VK_P, Key.pause);
         
 
-<<<<<<< HEAD
-=======
-        
->>>>>>> sildafh
 
         // Sets the keybindings
         handler = new Handler();
