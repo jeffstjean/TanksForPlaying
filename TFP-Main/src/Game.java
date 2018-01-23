@@ -221,7 +221,10 @@ public class Game implements Runnable, KeyListener {
 
     // Run on game reset
     public void reset() {
-        Handler.reset();
+
+        releaseAll(); // relaeases all keys
+        handler.reset();
+       
 
         // Level Selection
         if (levelSelect == 0)

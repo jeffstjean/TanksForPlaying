@@ -61,6 +61,7 @@ public class Handler {
         existingObjects++;
     }
 
+
     public void removeObject(GameObject object) {
         this.object.remove(object); 
         // remove an object from the list
@@ -69,11 +70,22 @@ public class Handler {
     }
     
     public static void reset(){
+
          for (int i = 0; i < object.size(); i++) {
             GameObject temp1 = object.get(i);
             // rest all objects to original position
             temp1.reset();
+            if(temp1.id == ID.Mine) removeObject(temp1);
          }
     }
+    
+    
+    public void removeObject(GameObject object) {
+        this.object.remove(object); 
+        // remove an object from the list
+        object = null;
+    }
+    
+    
     
 }

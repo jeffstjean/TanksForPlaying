@@ -143,6 +143,11 @@ public class Bullet extends GameObject {
         return damage;
     }
 
+    @Override
+    public void reset() {
+        Game.game.handler.removeObject(this);
+    }
+
    
     
 
