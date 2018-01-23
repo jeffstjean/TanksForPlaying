@@ -10,7 +10,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public final class Mine extends GameObject {
 
-    private final File BOMB_FILE_LOCATION = new File("./graphics/bomb.png"), BOMB_FLASH_FILE_LOCATION = new File("./graphics/bombFlash.png");
+    private final File BOMB_FILE_LOCATION = new File("src/resources/graphics/bomb.png"), BOMB_FLASH_FILE_LOCATION = new File("src/resources/graphics/bombFlash.png");
     private final double EXPLOSION_SIZE_FACTOR;
     private final Handler h;
     private final BufferedImage[] imgs;

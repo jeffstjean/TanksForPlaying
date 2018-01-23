@@ -6,7 +6,7 @@ import java.io.File;
 
 public class Explosion extends GameObject{
     
-    private final File explosion = new File("./graphics/explosionSheet.png");
+    private final File explosion = new File("src/resources/graphics/explosionSheet.png");
     private final BufferedImage[] imgs;
     private Animation explosionAnimation;
     private boolean animationComplete;

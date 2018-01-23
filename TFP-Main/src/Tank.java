@@ -28,9 +28,9 @@ public class Tank extends GameObject {
         left = new Rectangle2D.Double(x - 10, y + 10, 10, size - 20);
         right = new Rectangle2D.Double(x + size, y - 10, 10, size - 20);
         if(num == 1)
-        body = ImageLoader.imageLoader("./graphics/TankGreen.png");
+        body = ImageLoader.imageLoader("src/resources/graphics/TankGreen.png");
         else 
-           body = ImageLoader.imageLoader("./graphics/TankRed.png"); 
+           body = ImageLoader.imageLoader("src/resources/graphics/TankRed.png"); 
         playerNum = num;
         tankClass = TankClasses.Normal;
     }
@@ -44,7 +44,7 @@ public class Tank extends GameObject {
         bottom = new Rectangle2D.Double(x + 10, y + size, size - 20, 10);
         left = new Rectangle2D.Double(x - 10, y + 10, 10, size - 20);
         right = new Rectangle2D.Double(x + size, y - 10, 10, size - 20);
-        body = ImageLoader.imageLoader("./graphics/TankGreen.png");
+        body = ImageLoader.imageLoader("src/resources/graphics/TankGreen.png");
         playerNum = num;
         tankClass = TankClasses.Normal;
     }

@@ -40,7 +40,7 @@ public class Bullet extends GameObject {
         motionY =  (speed * Math.sin(r + Math.toRadians(90)));
         // sets the y speed of the bullet using trig
         rotate = r; 
-        bullet = ImageLoader.imageLoader("./graphics/Bullet.png"); // gets the graphic image for the bullet
+        bullet = ImageLoader.imageLoader("src/resources/graphics/Bullet.png"); // gets the graphic image for the bullet
         shotsFired ++; // increases static variable for shots fired
     }
     // same as previous constructor but with a custom amount of damage
@@ -54,7 +54,7 @@ public class Bullet extends GameObject {
         motionY =  (speed * Math.sin(r + Math.toRadians(90)));
         // sets the y speed of the bullet using trig
         rotate = r;
-        bullet = ImageLoader.imageLoader("./graphics/Bullet.png"); 
+        bullet = ImageLoader.imageLoader("src/resources/graphics/Bullet.png"); 
         this.damage = damage;
         shotsFired++;
     }
