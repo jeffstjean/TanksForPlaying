@@ -1,22 +1,14 @@
-
+/*
+* This is the Pause Menu 
+*
+*/
 import java.awt.Frame;
 
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author owen7900
- */
 public class PauseMenu extends javax.swing.JDialog {
 
-    /**
-     * Creates new form PauseMenu
-     */
+    
     Frame parent;
     public PauseMenu(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

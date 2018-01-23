@@ -40,6 +40,7 @@ public class Game implements Runnable, KeyListener {
     public static double TANK_SIZE = 64; // Size of the tanks
     public static HashMap<Integer, Key> keyBindings = new HashMap<>(); // Hashmap that holds the keybindings (ex. WASD)
     public static boolean other[] = new boolean[256];
+
     private Tank tank1, tank2; // Holds Tanks
     private Turret turret1, turret2; // Holds turrets 
 
@@ -165,8 +166,6 @@ public class Game implements Runnable, KeyListener {
             pm.setVisible(true);
             releaseAll();
         }
-            
-        
     }
 
     @Override

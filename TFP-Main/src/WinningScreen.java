@@ -37,6 +37,9 @@ public class WinningScreen extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
         lbl2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -46,6 +49,10 @@ public class WinningScreen extends javax.swing.JDialog {
         txtHits = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        jMenu1.setText("File");
+        jMenuBar1.add(jMenu1);
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
 
         lbl2.setFont(new java.awt.Font("Castellar", 0, 18)); // NOI18N
         lbl2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -169,6 +176,9 @@ public class WinningScreen extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JLabel lbl2;
     private javax.swing.JTextField txtHits;
     private javax.swing.JTextField txtShotsFired;
