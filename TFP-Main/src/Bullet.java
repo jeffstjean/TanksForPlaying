@@ -13,8 +13,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -40,7 +38,7 @@ public class Bullet extends GameObject {
         motionY =  (speed * Math.sin(r + Math.toRadians(90)));
         // sets the y speed of the bullet using trig
         rotate = r; 
-        bullet = ImageLoader.imageLoader("./graphics/Bullet.png"); // gets the graphic image for the bullet
+        bullet = ImageLoader.imageLoader("src/resources/graphics/Bullet.png"); // gets the graphic image for the bullet
         shotsFired ++; // increases static variable for shots fired
     }
     // same as previous constructor but with a custom amount of damage
@@ -54,7 +52,7 @@ public class Bullet extends GameObject {
         motionY =  (speed * Math.sin(r + Math.toRadians(90)));
         // sets the y speed of the bullet using trig
         rotate = r;
-        bullet = ImageLoader.imageLoader("./graphics/Bullet.png"); 
+        bullet = ImageLoader.imageLoader("src/resources/graphics/Bullet.png"); 
         this.damage = damage;
         shotsFired++;
     }
@@ -97,7 +95,7 @@ public class Bullet extends GameObject {
            try {
                SoundManager.playHitSound(); // use the sound manager to play a hit sound
            } catch (IOException | UnsupportedAudioFileException | LineUnavailableException | InterruptedException ex) {
-               Logger.getLogger(Bullet.class.getName()).log(Level.SEVERE, null, ex);
+               
            }
        }
        
@@ -109,7 +107,6 @@ public class Bullet extends GameObject {
            try {
                SoundManager.playHitSound(); // play sound
            } catch (IOException | UnsupportedAudioFileException | LineUnavailableException | InterruptedException ex) {
-               Logger.getLogger(Bullet.class.getName()).log(Level.SEVERE, null, ex);
            }
        }
        
@@ -121,7 +118,6 @@ public class Bullet extends GameObject {
            try {
                SoundManager.playHitSound(); // play hit sound
            } catch (IOException | UnsupportedAudioFileException | LineUnavailableException | InterruptedException ex) {
-               Logger.getLogger(Bullet.class.getName()).log(Level.SEVERE, null, ex);
            }
        }
     }

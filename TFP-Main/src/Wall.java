@@ -1,4 +1,8 @@
-
+/*
+ * Walls are what allow the game to be adaptable and have different layouts
+ * Contains two variables: health and color
+ * Color changes depending on wall type and health contains the number of hits left on a breakable wall 
+ */
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -8,8 +12,8 @@ import java.awt.Graphics2D;
 public class Wall extends GameObject{
 
     
-    private int health = 5, hits=0;
-    private Color color;
+    private int health = 5;
+    private final Color color;
     
     public Wall(double x, double y, double width, double height, ID id) {
         super(x, y, width, height, id);
@@ -23,7 +27,7 @@ public class Wall extends GameObject{
         motionX = 0;
         motionY = 0;
         if(!breakable) {
-            health = 2147483647;
+            health = Integer.MAX_VALUE;
             color = Color.darkGray;
         }
         else 
@@ -34,7 +38,8 @@ public class Wall extends GameObject{
 
     @Override
     public void tick() {
-        if(hits >= health){
+        // If health is 0, remove itself
+        if(health <= 0){
             Game.handler.removeObject(this);
         }
     }
@@ -54,7 +59,7 @@ public class Wall extends GameObject{
     @Override
     public void collision(GameObject gO) {
         if(id == ID.BreakableWall){
-            hits++;
+            health--;
             System.out.println("Hit");
         }
     }

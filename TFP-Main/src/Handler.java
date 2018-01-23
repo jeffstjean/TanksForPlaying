@@ -11,7 +11,8 @@ import java.awt.Graphics;
 import java.util.LinkedList;
 
 public class Handler {
-
+    
+    static int totalObjects = 0, existingObjects = 0;
     static LinkedList<GameObject> object = new LinkedList<GameObject>(); // list of all objects that are in use
 
     // gets run every tick
@@ -56,10 +57,20 @@ public class Handler {
 
     public void addObject(GameObject object) {
         this.object.add(object); // add an object to the bottom of the list
-
+        totalObjects++;
+        existingObjects++;
     }
 
-    public void reset(){
+
+    public void removeObject(GameObject object) {
+        this.object.remove(object); 
+        // remove an object from the list
+        object = null;
+        existingObjects--;
+    }
+    
+    public static void reset(){
+
          for (int i = 0; i < object.size(); i++) {
             GameObject temp1 = object.get(i);
             // rest all objects to original position

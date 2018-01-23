@@ -8,7 +8,7 @@
 * Number of Players: 2
 * Controls: Click on "controls" in main menu
 *
-*/
+ */
 
 
 import java.awt.Graphics2D;
@@ -22,11 +22,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 public class Game implements Runnable, KeyListener {
-
+    
     private static Renderer renderer; // Holds the renderer
     private boolean running = false; // Is the game running
     private Thread th; // Holds the thread
@@ -48,37 +47,35 @@ public class Game implements Runnable, KeyListener {
     private static final Properties USER_SETTINGS = new Properties(), DEFAULT_SETTINGS = new Properties();
     private final File userSettingsLocation = new File("src/resources/config/config.properties"), defaultSettingsLocation = new File("src/resources/default_config/default_config.properties");
 
-
-
-    //<editor-fold defaultstate="collapsed" desc=" Getters, setters, constructs and listeners">
     
+    //<editor-fold defaultstate="collapsed" desc=" Getters, setters, constructs and listeners">
     // Binds a key to a action
     public void bind(Integer keyCode, Key key) {
         keyBindings.put(keyCode, key);
     }
-    
+
     // Releases all keys
     public void releaseAll() {
         for (Key key : keyBindings.values()) {
             key.isDown = false;
         }
     }
-    
+
     // Return handler
     public static Handler getHandler() {
         return handler;
     }
-    
+
     // Get tank1
     public Tank getTank1() {
         return tank1;
     }
-    
+
     // Get tank2
     public Tank getTank2() {
         return tank2;
     }
-    
+
     // Code called on exit
     private synchronized void stop() {
         if (!running)
@@ -110,7 +107,7 @@ public class Game implements Runnable, KeyListener {
         // Has handler render all gameObjects
         // Checks to see if null to avoid NPE
     }
-    
+
     // Run on start
     @Override
     public void run() {
@@ -123,7 +120,7 @@ public class Game implements Runnable, KeyListener {
         renderer.addKeyListener(this);
 
         init();
-        
+
         // Timing control vars
         long lastTime = System.nanoTime();
         final double numberOfTicks = 60.0;
@@ -132,7 +129,7 @@ public class Game implements Runnable, KeyListener {
         int updates = 0;
         int frames = 0;
         long timer = System.currentTimeMillis();
-        
+
         //Timing control
         while (running) {
             long now = System.nanoTime();
@@ -154,14 +151,14 @@ public class Game implements Runnable, KeyListener {
         }
         stop();
     }
-    
+
     // Called on every tick
     private void tick() {
 
         renderer.repaint(); // tells renderer to repaint if it hasn't already
         handler.tick(); // tells handler to tick all game objects
-        
-        if(Key.pause.isDown){
+
+        if (Key.pause.isDown) {
             PauseMenu pm = new PauseMenu(frame, true);
             pm.setVisible(true);
             releaseAll();
@@ -169,7 +166,8 @@ public class Game implements Runnable, KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent ke) {}
+    public void keyTyped(KeyEvent ke) {
+    }
 
     @Override
     public void keyPressed(KeyEvent ke) {
@@ -181,17 +179,17 @@ public class Game implements Runnable, KeyListener {
 
         }
     }
-    
+
     // Set/reset tank and tank type
     public void setTank(int num, Tank t) {
-        if(num == 1){
+        if (num == 1) {
             handler.removeObject(tank1);
             tank1 = t;
             handler.addObject(tank1);
             turret1.setTank(tank1);
             handler.removeObject(turret1);
             handler.addObject(turret1);
-        }else{
+        } else {
             handler.removeObject(tank2);
             tank2 = t;
             handler.addObject(tank2);
@@ -200,14 +198,15 @@ public class Game implements Runnable, KeyListener {
             handler.addObject(turret2);
         }
     }
-    
+
     // Gets the turret
     public Turret getTurret(int num) {
-        if(num == 1)
-        return turret1;
-        else return turret2;
+        if (num == 1)
+            return turret1;
+        else
+            return turret2;
     }
-    
+
     // Updates keys
     @Override
     public void keyReleased(KeyEvent ke) {
@@ -222,13 +221,14 @@ public class Game implements Runnable, KeyListener {
 
     // Run on game reset
     public void reset() {
+
         releaseAll(); // relaeases all keys
         handler.reset();
        
+
         // Level Selection
-        if (levelSelect == 0) {
+        if (levelSelect == 0)
             levelSelect = 1;
-        }
         switch (levelSelect) {
             case 1:
                 generateLevel1();
@@ -248,12 +248,11 @@ public class Game implements Runnable, KeyListener {
         }
     }
 
-
     // Game state
     public static enum STATE {
         MENU, GAME, PAUSE, CONTROLS, WIN
     };
-    
+
     public Game() {
         // Initiallizes the renderer
         renderer = new Renderer();
@@ -261,7 +260,6 @@ public class Game implements Runnable, KeyListener {
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc=" Config Methods ">
-    
     // Loads configs
     private void initConfigs() {
         if (!userSettingsLocation.exists())
@@ -277,14 +275,13 @@ public class Game implements Runnable, KeyListener {
             DEFAULT_SETTINGS.load(in);
             in.close();
         } catch (IOException e) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, e);
         }
         try {
             in = new FileInputStream(userSettingsLocation);
             USER_SETTINGS.load(in);
             in.close();
         } catch (IOException e) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, e);
+            
         }
 
         TANK_SIZE = getDoubleUserPropertyThenDefault("tankSize", 64);
@@ -318,12 +315,12 @@ public class Game implements Runnable, KeyListener {
             }
         }
     }
-    
-//</editor-fold>
 
+//</editor-fold>
     public void init() {
         initConfigs();
         
+
         // Bind keys
         // Player 1
         bind(KeyEvent.VK_W, Key.up1);
@@ -343,37 +340,33 @@ public class Game implements Runnable, KeyListener {
         bind(KeyEvent.VK_LEFT, Key.turretLeft2);
         bind(KeyEvent.VK_RIGHT, Key.turretRight2);
         bind(KeyEvent.VK_UP, Key.shoot2);
-        
+
         // Pause
         bind(KeyEvent.VK_P, Key.pause);
-        
-
 
         // Sets the keybindings
         handler = new Handler();
-        
-        
+
         // Inits tank1 at 100, 100 and gives it the game instance
         tank1 = new Tank(100, 100, TANK_SIZE, TANK_SIZE, ID.Tank, game, 1);
         turret1 = new Turret(tank1.getX(), tank1.getY(), 10, 10, ID.Turret, tank1);
         handler.addObject(tank1);
         handler.addObject(turret1);
-            
+
         // Inits tank2 at 100, 100 and gives it the game instance
-        tank2= new Tank(1125, 525, TANK_SIZE, TANK_SIZE, ID.Tank, game, 2);
+        tank2 = new Tank(1125, 525, TANK_SIZE, TANK_SIZE, ID.Tank, game, 2);
         turret2 = new Turret(tank2.getX(), tank2.getY(), 10, 10, ID.Turret, tank2);
         handler.addObject(tank2);
         handler.addObject(turret2);
-        
+
         // Adds the two objects to the handler
         frame.addKeyListener(this);
     }
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args) {     
         game = new Game();
         frame = new JFrame(game.TITLE);
-        frame.setIconImage(ImageLoader.imageLoader("./graphics/icon.png"));
+        frame.setIconImage(ImageLoader.imageLoader("src/resources/graphics/icon.png"));
         // Adds the instance of the game to the JFrame
         // frame.add(game);
         // Causes the window to be at preferred size initially
@@ -393,7 +386,7 @@ public class Game implements Runnable, KeyListener {
         menu.setVisible(true);
 
         generateOuterWalls();
-        
+
         // Level selection
         if (levelSelect == 0) {
             System.out.println("No level selected. Defaulting to level 1.");
@@ -416,9 +409,7 @@ public class Game implements Runnable, KeyListener {
                 System.out.println("Error");
                 break;
         }
-        //walls.add(new Wall(200, 200, 100, 100, ID.BreakableWall));
     }
-
 
     public static void generateOuterWalls() {
         handler.addObject(new Wall(10, 10, 30, (double) HEIGHT - 70, ID.LeftWall));
@@ -427,52 +418,50 @@ public class Game implements Runnable, KeyListener {
         handler.addObject(new Wall(10, 10, (double) WIDTH - 30, 30, ID.TopWall));
     }
 
-
     public static void generateLevel1() {
         //Left Side
         handler.addObject(new Wall(200, 100, 50, 50, ID.BreakableWall, true));
         handler.addObject(new Wall(200, 150, 50, 50, ID.BreakableWall, true));
         handler.addObject(new Wall(250, 150, 50, 50, ID.BreakableWall, true));
-        for (int i = 200; i <= 400; i+=50) {
+        for (int i = 200; i <= 400; i += 50) {
             handler.addObject(new Wall(250, i, 50, 50, ID.BreakableWall, false));
         }
         handler.addObject(new Wall(250, 450, 50, 50, ID.BreakableWall, true));
         handler.addObject(new Wall(200, 450, 50, 50, ID.BreakableWall, true));
         handler.addObject(new Wall(200, 500, 50, 50, ID.BreakableWall, true));
-        
+
         //Right Side
         handler.addObject(new Wall(1000, 100, 50, 50, ID.BreakableWall, true));
         handler.addObject(new Wall(1000, 150, 50, 50, ID.BreakableWall, true));
         handler.addObject(new Wall(950, 150, 50, 50, ID.BreakableWall, true));
-        for (int i = 200; i <= 400; i+=50) {
+        for (int i = 200; i <= 400; i += 50) {
             handler.addObject(new Wall(950, i, 50, 50, ID.BreakableWall, false));
         }
         handler.addObject(new Wall(950, 450, 50, 50, ID.BreakableWall, true));
         handler.addObject(new Wall(1000, 450, 50, 50, ID.BreakableWall, true));
         handler.addObject(new Wall(1000, 500, 50, 50, ID.BreakableWall, true));
-        
+
         //Top
         handler.addObject(new Wall(500, 150, 50, 50, ID.BreakableWall, true));
-        for (int i = 550; i <= 650; i+=50) {
+        for (int i = 550; i <= 650; i += 50) {
             handler.addObject(new Wall(i, 150, 50, 50, ID.BreakableWall, false));
         }
         handler.addObject(new Wall(700, 150, 50, 50, ID.BreakableWall, true));
-        
+
         //Bottom
         handler.addObject(new Wall(500, 450, 50, 50, ID.BreakableWall, true));
-        for (int i = 550; i <= 650; i+=50) {
+        for (int i = 550; i <= 650; i += 50) {
             handler.addObject(new Wall(i, 450, 50, 50, ID.BreakableWall, false));
         }
         handler.addObject(new Wall(700, 450, 50, 50, ID.BreakableWall, true));
-        
+
         //Center Right
         handler.addObject(new Wall(800, 300, 50, 50, ID.BreakableWall, true));
-        
-        
+
         //Center Left
         handler.addObject(new Wall(400, 300, 50, 50, ID.BreakableWall, true));
     }
-    
+
     public static void generateLevel2() {
         boolean breakable;
 
@@ -558,11 +547,11 @@ public class Game implements Runnable, KeyListener {
     public static void generateLevel4() {
         boolean place = true;
         boolean breakable = true;
-        for (int i = 225; i < 1125; i+=150) {
-            
+        for (int i = 225; i < 1125; i += 150) {
+
             for (int j = 50; j < 600; j += 50) {
                 if (place) {
-                    handler.addObject(new Wall(i, j, 50, 50, ID.BreakableWall, breakable)); 
+                    handler.addObject(new Wall(i, j, 50, 50, ID.BreakableWall, breakable));
                     breakable = !breakable;
                 }
                 place = !place;

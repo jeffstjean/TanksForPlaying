@@ -4,12 +4,10 @@
 */
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -30,11 +28,12 @@ public class Turret extends GameObject{
         super(x, y, width, height, id);
 
         tank = t;
-        
-        if(tank.getPlayerNum() == 1) // sets the colour to match the tank
-        turret = ImageLoader.imageLoader("./graphics/TurretGreen.png");
+
+        if(tank.getPlayerNum() == 1)
+        turret = ImageLoader.imageLoader("src/resources/graphics/TurretGreen.png");
+
         else
-            turret = ImageLoader.imageLoader("./graphics/TurretRed.png");
+            turret = ImageLoader.imageLoader("src/resources/graphics/TurretRed.png");
     }
     // quick access defaul values
     public Turret(Tank t) {
@@ -43,9 +42,9 @@ public class Turret extends GameObject{
         tank = t;
         
         if(tank.getPlayerNum() == 1)
-        turret = ImageLoader.imageLoader("./graphics/TurretGreen.png");
+        turret = ImageLoader.imageLoader("src/resources/graphics/TurretGreen.png");
         else
-            turret = ImageLoader.imageLoader("./graphics/TurretRed.png");
+            turret = ImageLoader.imageLoader("src/resources/graphics/TurretRed.png");
     }
     
     
@@ -57,9 +56,9 @@ public class Turret extends GameObject{
         // for animation of tuuret when shooting, resets to original image when done
         if(turretShootCounter == 0){
             if(tank.getPlayerNum() == 1)
-        turret = ImageLoader.imageLoader("./graphics/TurretGreen.png");
+        turret = ImageLoader.imageLoader("src/resources/graphics/TurretGreen.png");
         else
-            turret = ImageLoader.imageLoader("./graphics/TurretRed.png");
+            turret = ImageLoader.imageLoader("src/resources/graphics/TurretRed.png");
         }
         turretShootCounter --;
         coolDownCounter++; // increases the time since last shot by 1
@@ -78,10 +77,12 @@ public class Turret extends GameObject{
         if(Key.shoot1.isDown && coolDownCounter > coolDown) {
             shoot();
             if(tank.getPlayerNum() == 1)
-        turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
+        turret = ImageLoader.imageLoader("src/resources/graphics/TurretShotGreen.png");
         else
-            turret = ImageLoader.imageLoader("./graphics/TurretShotRed.png");
-        coolDownCounter = 0;
+
+            turret = ImageLoader.imageLoader("src/resources/graphics/TurretShotRed.png");
+            coolDownCounter = 0;
+
         }
         // rotates 
         if(Key.turretRight1.isDown) 
@@ -94,9 +95,9 @@ public class Turret extends GameObject{
             if(Key.shoot2.isDown && coolDownCounter > coolDown) {
             shoot();
             if(tank.getPlayerNum() == 1)
-        turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
+        turret = ImageLoader.imageLoader("src/resources/graphics/TurretShotGreen.png");
         else
-            turret = ImageLoader.imageLoader("./graphics/TurretShotRed.png");
+            turret = ImageLoader.imageLoader("src/resources/graphics/TurretShotRed.png");
             coolDownCounter = 0;
         }
             // rotates player 2
@@ -140,7 +141,7 @@ public class Turret extends GameObject{
         try {
             SoundManager.playShootSound(); // plays shoot sound
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException | InterruptedException ex) {
-            
+
         }
         turretShootCounter = 10; // sets the graphics counter to the first animation
         double subX = -(tank.getSize() / 2 * Math.sin(rotate)); // sets the spawn point of the bullet
@@ -148,11 +149,13 @@ public class Turret extends GameObject{
         if(tank.tankClass == TankClasses.Destroyer) 
             Game.getHandler().addObject(new Bullet(x + subX, y + subY, 15, 15, ID.Bullet, 5, rotate, 40));
         else
-            Game.getHandler().addObject(new Bullet(x + subX, y + subY, 15, 15, ID.Bullet, 5, rotate));
-        if(tank.getPlayerNum() == 1) // sets the image to the first frame
-        turret = ImageLoader.imageLoader("./graphics/TurretShotGreen.png");
+
+            Game.getHandler().addObject(new Bullet(x + (int)subX, y + (int)subY, 15, 15, ID.Bullet, 5, rotate));
+        if(tank.getPlayerNum() == 1)// sets the image to the first frame
+        turret = ImageLoader.imageLoader("src/resources/graphics/TurretShotGreen.png");
+
         else
-            turret = ImageLoader.imageLoader("./graphics/TurretShotRed.png");
+            turret = ImageLoader.imageLoader("src/resources/graphics/TurretShotRed.png");
 
     }
 

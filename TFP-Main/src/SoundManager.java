@@ -1,4 +1,7 @@
-
+/*
+ * Class allows entire project to easily play sounds
+ * The file paths for sounds is contained here
+ */
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.AudioSystem;
@@ -35,8 +38,8 @@ public class SoundManager {
             Clip clip = AudioSystem.getClip();
             clip.open(AudioSystem.getAudioInputStream(file));
             clip.start();
-        } catch (Exception e) {
-            System.out.println("UHHHH");
+        } catch (IOException | LineUnavailableException | UnsupportedAudioFileException e) {
+            System.out.println("Sound unable to be played");
         }
     }
 }
