@@ -1,12 +1,10 @@
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -132,7 +130,6 @@ public class Turret extends GameObject{
         try {
             SoundManager.playShootSound();
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException | InterruptedException ex) {
-            Logger.getLogger(Turret.class.getName()).log(Level.SEVERE, null, ex);
         }
         turretShootCounter = 10;
         double subX = -(tank.getSize() / 2 * Math.sin(rotate));

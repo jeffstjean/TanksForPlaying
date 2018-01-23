@@ -22,7 +22,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 public class Game implements Runnable, KeyListener {
@@ -273,14 +272,13 @@ public class Game implements Runnable, KeyListener {
             DEFAULT_SETTINGS.load(in);
             in.close();
         } catch (IOException e) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, e);
         }
         try {
             in = new FileInputStream(userSettingsLocation);
             USER_SETTINGS.load(in);
             in.close();
         } catch (IOException e) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, e);
+            
         }
 
         TANK_SIZE = getDoubleUserPropertyThenDefault("tankSize", 64);
