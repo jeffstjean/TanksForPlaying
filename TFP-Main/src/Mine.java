@@ -32,6 +32,7 @@ public final class Mine extends GameObject {
         animationComplete = false; // Animation isn't yet complete
 
         this.EXPLOSION_SIZE_FACTOR = Game.getIntUserPropertyThenDefault("explosionRealtiveSizeToMine", 4); // Allows for resizing of explosion
+        System.out.println("Made mine");
     }
 
     public Mine(double x, double y, double width, double height, ID id, Handler h, double explosionMultiplier ) {
@@ -45,6 +46,7 @@ public final class Mine extends GameObject {
         animationComplete = false; // Animation isn't yet complete
         damage = (int) (damage*1.5);
         this.EXPLOSION_SIZE_FACTOR = explosionMultiplier * Game.getIntUserPropertyThenDefault("explosionRealtiveSizeToMine", 4); // Allows for resizing of explosion
+        System.out.println("made mine");
     }
     
     
@@ -118,4 +120,14 @@ public final class Mine extends GameObject {
         return allAnimationsComplete; // Lets other classes know that the animations are complete and we can dispose of the object
     }
 
+    @Override
+    public void reset() {
+        Game.game.handler.removeObject(this);
+        
+    }
+
+    
+    
+    
+    
 }

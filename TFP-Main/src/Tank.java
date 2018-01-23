@@ -1,4 +1,8 @@
-
+/*
+* The parent class for all tank objects, also the class for any default tank
+* Has a whole bunch of code, extends GameObject and is extended by the other tank classes
+* has a render method and a tick method that get called to render and tick
+*/
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -14,27 +18,33 @@ public class Tank extends GameObject {
     protected final BufferedImage body;
     private double rotate;
     private final Rectangle2D top, bottom, left, right;
-    protected int coolDown = 30, coolDownCounter = 30; // should boh be 20
+    protected int coolDown = 100, coolDownCounter = 100; 
     private int playerNum;
     protected int health = 100;
     public TankClasses tankClass;
+    boolean canPlaceMine = true;
+    
+    //main constructor
     public Tank(double x, double y, double width, double height, ID id, Game g, int num) {
         super(x, y, width, height, id);
         game = g;
         rotate = 0;
         size = width;
-        top = new Rectangle2D.Double(x + 10, y - 10, size - 20, 10);
+        // sets collision boxes
+        top = new Rectangle2D.Double(x + 10, y - 10, size - 20, 10); 
         bottom = new Rectangle2D.Double(x + 10, y + size, size - 20, 10);
         left = new Rectangle2D.Double(x - 10, y + 10, 10, size - 20);
         right = new Rectangle2D.Double(x + size, y - 10, 10, size - 20);
+        // sets the tank image to the colour of the player number
         if(num == 1)
-        body = ImageLoader.imageLoader("./graphics/TankGreen.png");
+            body = ImageLoader.imageLoader("./graphics/TankGreen.png");
         else 
            body = ImageLoader.imageLoader("./graphics/TankRed.png"); 
         playerNum = num;
         tankClass = TankClasses.Normal;
+        canPlaceMine = true;
     }
-
+    // quick access default constructor with default values
     public Tank(Game g, int num) {
         super(100, 100, 64, 64, ID.Tank);
         game = g;
@@ -48,17 +58,17 @@ public class Tank extends GameObject {
         playerNum = num;
         tankClass = TankClasses.Normal;
     }
-
+// enum of which direction the tank is faceing/moving
     public enum moveDirection {
         NONE, UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT,
     };
 
     private moveDirection moveDir = moveDirection.NONE;
-
+// getter
     public Game getGame() {
         return game;
     }
-
+// tosrting that returns the tank Class name
     @Override
     public String toString() {
         return "Balanced";
@@ -66,15 +76,18 @@ public class Tank extends GameObject {
 
     @Override
     public void tick() {
-
+        // tick, gets run every tick
+        
+        //when the tank dies run this
         if (health <= 0) {
-            Game.handler.reset();
-            WinningScreen screen;
-            if (playerNum == 1)
-                screen = new WinningScreen(Game.frame, true, 2);
+            canPlaceMine = false; // stops it from placing more mines
+            Game.game.handler.reset(); // resets everything
+            WinningScreen screen; 
+            if (playerNum == 1 ) 
+                screen = new WinningScreen(Game.frame, true, 2); // wakes a winning screen with the corect player number 
             else
                 screen = new WinningScreen(Game.frame, true, 1);
-            screen.setVisible(true);
+            screen.setVisible(true); // sets the winning screen to visible
         }
 
    
@@ -99,10 +112,13 @@ public class Tank extends GameObject {
             motionX = 0;
         }
         
+        // plave mine player 1
         coolDownCounter++;
         if(Key.mine1.isDown && coolDownCounter >= coolDown){
+            if(canPlaceMine){
             dropMine();
             coolDownCounter = 0;
+            }
         }
         
         }else{
@@ -127,11 +143,13 @@ public class Tank extends GameObject {
         }
 
         
-
+        // place mine player 2
             coolDownCounter++;
             if (Key.mine2.isDown && coolDownCounter >= coolDown) {
+                if(canPlaceMine){
                 dropMine();
                 coolDownCounter = 0;
+                }
             }
 
 
@@ -141,7 +159,7 @@ public class Tank extends GameObject {
         
         
 
-        // sets movement based on keys pressed
+        // sets movement based on motion pressed
         if (motionX == 0 && motionY == 0)
             moveDir = moveDirection.NONE;
         else if (motionX < 0 && motionY == 0)
@@ -161,6 +179,7 @@ public class Tank extends GameObject {
         else if (motionX > 0 && motionY > 0)
             moveDir = moveDirection.DOWN_RIGHT;
 
+        //moves the rectangle to the new X and Y
         bounds.setRect(x, y, size, size);
         top.setRect(x + 10, y - 10, size - 20, 10);
         bottom.setRect(x + 10, y + size, size - 20, 10);
@@ -169,62 +188,18 @@ public class Tank extends GameObject {
 
 
     }
-
+//getter
     public int getPlayerNum() {
         return playerNum;
     }
 
-    public void setPointing(int i) {
-        switch (i) {
-            case 0:
-                moveDir = moveDirection.NONE;
-                break;
-            case 1:
-                moveDir = moveDirection.UP;
-                break;
-            case 2:
-                moveDir = moveDirection.UP_RIGHT;
-                break;
 
-            case 3:
-                moveDir = moveDirection.RIGHT;
-                break;
-
-            case 4:
-                moveDir = moveDirection.DOWN_RIGHT;
-                break;
-
-            case 5:
-                moveDir = moveDirection.DOWN;
-                break;
-
-            case 6:
-                moveDir = moveDirection.DOWN_LEFT;
-                break;
-
-            case 7:
-                moveDir = moveDirection.LEFT;
-                break;
-
-            case 8:
-                moveDir = moveDirection.UP_LEFT;
-                break;
-
-            default:
-                moveDir = moveDirection.NONE;
-                break;
-        }
-    }
-
-    @Override
+    @Override //gets run everytime the screen repaints
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        //g2d.draw(bounds);
-        // draws rectangle
-        //g2d.drawImage(body, x, y, size, size, null);
+      // sets the amount that the image has too rotate 
         switch (moveDir) {
             case NONE:
-
                 break;
             case LEFT:
                 rotate = Math.toRadians(0);
@@ -261,10 +236,7 @@ public class Tank extends GameObject {
         g2d.rotate(-rotate, x + size / 2, y + size / 2); //rotates graphics back
 
         g2d.drawString("" + health, (float) x, (float) y - 20);
-        //   g2d.draw(top);
-        // g2d.draw(bottom);
-        //g2d.draw(left);
-        //g2d.draw(right);
+        
 
     }
 
@@ -284,9 +256,9 @@ public class Tank extends GameObject {
         return health;
     }
 
-    @Override
+    @Override // is run when it collides
     public void collision(GameObject gO) {
-
+        // sets the motion based on the side that is being collided with
         if (top.intersects(gO.bounds))
 
             if (motionY < 0)
@@ -305,12 +277,17 @@ public class Tank extends GameObject {
                 motionX = 0;
     }
 
-    @Override
+    public void setCanPlaceMine(boolean canPlaceMine) {
+        this.canPlaceMine = canPlaceMine;
+    }
+
+    @Override // resets the tank
     public void reset() {
         super.reset();
         health = 100;
+       
     }
-
+    // drops a mine, is overridden
     protected void dropMine() {
         Game.handler.addObject(new Mine(x, y, 16, 16, ID.Mine, Game.handler));
     }

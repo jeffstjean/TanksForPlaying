@@ -46,5 +46,14 @@ public class Explosion extends GameObject{
     public boolean isAnimationComplete() { // Lets other classes know that the animation has been completed
         return animationComplete;
     }
+
+    @Override
+    public void reset() {
+         Game.game.handler.removeObject(this);
+    }
+    
+    
+    
+    
     
 }
