@@ -373,7 +373,7 @@ public class Game implements Runnable, KeyListener {
 
         game = new Game();
         frame = new JFrame(game.TITLE);
-        frame.setIconImage(ImageLoader.imageLoader("./graphics/icon.png"));
+        frame.setIconImage(ImageLoader.imageLoader("src/resources/graphics/icon.png"));
         // Adds the instance of the game to the JFrame
         // frame.add(game);
         // Causes the window to be at preferred size initially
