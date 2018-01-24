@@ -1,4 +1,4 @@
-/*
+/**
 * The parent class for all tank objects, also the class for any default tank
 * Has a whole bunch of code, extends GameObject and is extended by the other tank classes
 * has a render method and a tick method that get called to render and tick
@@ -24,7 +24,9 @@ public class Tank extends GameObject {
     public TankClasses tankClass;
     boolean canPlaceMine = true;
     boolean canShoot = true;
-    //main constructor
+    /**
+     * main constructor
+    */
     public Tank(double x, double y, double width, double height, ID id, Game g, int num) {
         super(x, y, width, height, id);
         game = g;
@@ -46,7 +48,9 @@ public class Tank extends GameObject {
         tankClass = TankClasses.Normal;
         canPlaceMine = true;
     }
-    // quick access default constructor with default values
+    /**
+     * quick access default constructor with default values
+     */
     public Tank(Game g, int num) {
         super(100, 100, 64, 64, ID.Tank);
         game = g;
@@ -60,22 +64,32 @@ public class Tank extends GameObject {
         playerNum = num;
         tankClass = TankClasses.Normal;
     }
-// enum of which direction the tank is faceing/moving
+/** 
+ * enum of which direction the tank is faceing/moving
+*/
     public enum moveDirection {
         NONE, UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT,
     };
 
     private moveDirection moveDir = moveDirection.NONE;
-// getter
+/** 
+ * gets Game from tank
+ * the tanks instance of game
+ */
     public Game getGame() {
         return game;
     }
-// tosrting that returns the tank Class name
+/**
+ * tosrting that returns the tank Class name
+ */
     @Override
     public String toString() {
         return "Balanced";
     }
 
+    /**
+     * gets run every tick
+     */
     @Override
     public void tick() {
         // tick, gets run every tick
@@ -191,13 +205,19 @@ public class Tank extends GameObject {
 
 
     }
-//getter
+/**
+ * getter for player num
+ * returns the player num
+ */
     public int getPlayerNum() {
         return playerNum;
     }
 
-
-    @Override //gets run everytime the screen repaints
+/**
+ * gets run every time the screen repaints
+ * allows the handler to render the tank
+ */
+    @Override 
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
       // sets the amount that the image has too rotate 
@@ -259,7 +279,10 @@ public class Tank extends GameObject {
         return health;
     }
 
-    @Override // is run when it collides
+    /** 
+     * is run when it collides with another gameObject
+     */
+    @Override 
     public void collision(GameObject gO) {
         // sets the motion based on the side that is being collided with
         if (top.intersects(gO.bounds))
@@ -279,22 +302,33 @@ public class Tank extends GameObject {
             if (motionX < 0)
                 motionX = 0;
     }
-
+    /**
+     * sets the canPlaceMine property of tank
+     * @param canPlaceMine 
+     */
     public void setCanPlaceMine(boolean canPlaceMine) {
         this.canPlaceMine = canPlaceMine;
     }
-
+/**
+     * sets the canShoot property of tank
+     * @param canShoot 
+     */
     public void setCanShoot(boolean canShoot) {
         this.canShoot = canShoot;
     }
 
-    @Override // resets the tank
+    /**
+     * resets the tank to original values
+     */
+    @Override 
     public void reset() {
         super.reset();
         health = 100;
        
     }
-    // drops a mine, is overridden
+    /**
+     * drops a mine
+     */
     protected void dropMine() {
         Game.handler.addObject(new Mine(x, y, 16, 16, ID.Mine, Game.handler));
     }
