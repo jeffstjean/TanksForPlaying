@@ -69,7 +69,7 @@ public class Handler {
         existingObjects--;
     }
     
-    public static void reset(){
+    public void reset(){
 
          for (int i = 0; i < object.size(); i++) {
             GameObject temp1 = object.get(i);
@@ -80,11 +80,7 @@ public class Handler {
     }
     
     
-    public void removeObject(GameObject object) {
-        this.object.remove(object); 
-        // remove an object from the list
-        object = null;
-    }
+    
     
     
     
