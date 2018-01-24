@@ -74,7 +74,7 @@ public class Turret extends GameObject{
         
         // shoots for player one when the cooldown time is up
         if(tank.getPlayerNum() == 1){
-        if(Key.shoot1.isDown && coolDownCounter > coolDown) {
+        if(Key.shoot1.isDown && coolDownCounter > coolDown && tank.canShoot) {
             shoot();
             if(tank.getPlayerNum() == 1)
         turret = ImageLoader.imageLoader("src/resources/graphics/TurretShotGreen.png");
@@ -92,7 +92,7 @@ public class Turret extends GameObject{
         
         }else{
             //shoots player 2 when cooldown is over
-            if(Key.shoot2.isDown && coolDownCounter > coolDown) {
+            if(Key.shoot2.isDown && coolDownCounter > coolDown && tank.canShoot) {
             shoot();
             if(tank.getPlayerNum() == 1)
         turret = ImageLoader.imageLoader("src/resources/graphics/TurretShotGreen.png");
