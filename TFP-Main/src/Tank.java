@@ -23,7 +23,7 @@ public class Tank extends GameObject {
     protected int health = 100;
     public TankClasses tankClass;
     boolean canPlaceMine = true;
-    
+    boolean canShoot = true;
     //main constructor
     public Tank(double x, double y, double width, double height, ID id, Game g, int num) {
         super(x, y, width, height, id);
@@ -83,6 +83,7 @@ public class Tank extends GameObject {
         //when the tank dies run this
         if (health <= 0) {
             canPlaceMine = false; // stops it from placing more mines
+            canShoot =  false;
             Game.game.handler.reset(); // resets everything
             WinningScreen screen; 
             if (playerNum == 1 ) 
@@ -281,6 +282,10 @@ public class Tank extends GameObject {
 
     public void setCanPlaceMine(boolean canPlaceMine) {
         this.canPlaceMine = canPlaceMine;
+    }
+
+    public void setCanShoot(boolean canShoot) {
+        this.canShoot = canShoot;
     }
 
     @Override // resets the tank

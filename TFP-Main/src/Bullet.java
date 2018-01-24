@@ -111,7 +111,7 @@ public class Bullet extends GameObject {
        }
        
        // if it hits a tank and it has exited the barrel
-       if(gO.id == ID.Tank && aliveForTicks >= 5){
+       if(gO.id == ID.Tank && aliveForTicks >= 10){
            hits++; // increase hits for stats
            ((Tank)gO).reduceHealth(damage); // cast gO to tank and take health off 
            Game.handler.removeObject(this); // remove this bullet

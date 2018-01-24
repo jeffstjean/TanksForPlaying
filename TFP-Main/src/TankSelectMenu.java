@@ -276,6 +276,8 @@ public class TankSelectMenu extends javax.swing.JDialog {
         this.dispose();
         Game.game.getTank1().setCanPlaceMine(true);
         Game.game.getTank2().setCanPlaceMine(true);
+        Game.game.getTank1().setCanShoot(true);
+        Game.game.getTank2().setCanShoot(true);
     }//GEN-LAST:event_btnPlayActionPerformed
 
     private void btnPlay1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlay1ActionPerformed
@@ -283,6 +285,8 @@ public class TankSelectMenu extends javax.swing.JDialog {
         this.dispose();
         Game.game.getTank1().setCanPlaceMine(true);
         Game.game.getTank2().setCanPlaceMine(true);
+        Game.game.getTank1().setCanShoot(true);
+        Game.game.getTank2().setCanShoot(true);
     }//GEN-LAST:event_btnPlay1ActionPerformed
 
     /**
